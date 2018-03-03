@@ -43,40 +43,120 @@ void inimigosTodos() {
 }
 
 public class InimigoGeral{
-  private PImage sprite;
-  private PImage inimigo;
+  protected PImage sprite;
+  protected PImage enemy;
 
-  private int x;
-  private int y;
-  private int movement;
+  protected int x;
+  protected int y;
+  protected int movementY;
 
-  private int step;
-  private int tempoSprite;
-  private int tempoIntervaloSprite;
+  protected int step;
+  protected int spriteTime;
+  protected int spriteInterval;
 
-  private int spriteWidth;
-  private int spriteHeight;
+  protected int spriteWidth;
+  protected int spriteHeight;
 
+  public PImage getSprite(){
+    return sprite;
+  }
+
+  public PImage setSprite(PImage sprite){
+    this.sprite = sprite;
+  }
+
+  public PImage getEnemy(){
+    return enemy;
+  }
+
+  public PImage setEnemy(PImage enemy){
+    this.enemy = enemy;
+  }
+
+  public int getX(){
+    return x;
+  }
+
+  public int setX(int x){
+    this.x = x;
+  }
+
+  public int getY(){
+    return y;
+  }
+
+  public int setY(int y){
+    this.y = y;
+  }
+
+  public int getmovementY(){
+    return movementY;
+  }
+
+  public int setmovementY(int movementY){
+    this.movementY = movementY;
+  }
+
+  public int getStep(){
+    return step;
+  }
+
+  public int setStep(int step){
+    this.step = step;
+  }
+
+  public int getSpriteTime(){
+    return spriteTime;
+  }
+
+  public int setSpriteTime(int spriteTime){
+    this.spriteTime = spriteTime;
+  }
+
+  public int getSpriteInterval(){
+    return spriteInterval;
+  }
+
+  public int setSpriteInterval(int spriteInterval){
+    this.spriteInterval = spriteInterval;
+  }
+
+  public int getSpriteWidth(){
+    return spriteWidth;
+  }
+
+  public int setSpriteWidth(int spriteWidth){
+    this.spriteWidth = spriteWidth;
+  }
+
+  public int getSpriteHeight(){
+    return spriteHeight;
+  }
+
+  public int setSpriteHeight(int spriteHeight){
+    this.spriteHeight = spriteHeight;
+  }
+  
   void display(){
-    if (millis() > tempoSprite + tempoIntervaloSprite) {
-      sprite = inimigo.get(step, 0, spriteWidth, spriteHeight);
-      step = step % inimigo.width + spriteWidth;
+    if (millis() > spriteTime + spriteInterval) {
+      sprite = enemy.get(step, 0, spriteWidth, spriteHeight);
+      step = step % enemy.width + spriteWidth;
       image(sprite, x, y);
-      tempoSprite = millis();
+      spriteTime = millis();
     } else {
       image(sprite, x, y);      
     }
 
-    if (step == inimigo.width) {
+    if (step == enemy.width) {
       step = 0;
     }
   }
 
   void update(){
-    y = y + movement;
+    y = y + movementY;
   }
 
-  boolean ataque(){
+  boolean hasAttacked(){
     if (x + spriteWidth > jLeiteX && x < jLeiteX + 63 && y + spriteHeight > jLeiteY && y < jLeiteY + 126) {
       return true;
     }
@@ -84,7 +164,7 @@ public class InimigoGeral{
     return false;
   }
 
-  boolean saiuDaTela(){
+  boolean hasExitScreen(){
     if (Y > height) {
       return true;
     }
@@ -93,214 +173,34 @@ public class InimigoGeral{
   }
 }
 
-PImage esqueleto;
-PImage sombraEsqueleto;
-
-final int ESQUELETO = 0;
-
-int[] valoresEsqueletoXMapaCoveiro = {200, 520};
-
-public class Esqueleto {
-  public Esqueleto(x, y) {
-    this.x = x;
-    this.y = y;
-    
-  }
-
-  void display() {
-    image (sombraEsqueleto, esqueletoX + 16, esqueletoY + 114);
-
-    if (millis() > tempoSpriteEsqueleto + 155) { 
-      spriteEsqueleto = esqueleto.get(stepEsqueleto, 0, 76, 126); 
-      stepEsqueleto = stepEsqueleto % 228 + 76;
-      image(spriteEsqueleto, esqueletoX, esqueletoY); 
-      tempoSpriteEsqueleto = millis();
-    } else {
-      image(spriteEsqueleto, esqueletoX, esqueletoY);
-    }
-
-    if (stepEsqueleto == esqueleto.width) {
-      stepEsqueleto = 0;
-    }
-  }
-
-  void update() {
-    esqueletoY = esqueletoY + 3;
-  }
-
-  boolean ataque() {
-    if (esqueletoX + 76 > jLeiteX && esqueletoX < jLeiteX + 63 && esqueletoY + 126 > jLeiteY && esqueletoY < jLeiteY + 126) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  boolean saiuDaTela() {
-    if (esqueletoY > height) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
-
-ArrayList<Esqueleto> esqueletos;
-
-int esqueletoC, esqueletoL;
-
-int indexRandomEsqueletoXMapaBoss;
-
-void esqueleto() {
-  if (indexInimigos == 0) {
-    if (estadoJogo == "MapaCoveiro") {
-      if (esqueletos.size() == 0 && !coveiro.coveiroMorreu && !coveiroTomouDanoAgua) {
-        for (int i = 0; i < 2; i = i + 1) {
-          indexRandomEsqueletoXMapaBoss = int(random(0, 2));
-          esqueletos.add(new Esqueleto(valoresEsqueletoXMapaCoveiro[indexRandomEsqueletoXMapaBoss], 0));
-        }
-      }
-    }
-
-    if (estadoJogo == "MapaPadre") { 
-      if (esqueletos.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
-        indexRandomEsqueletoXMapaBoss = int(random(0, valoresInimigosXMapaPadre.length));
-        esqueletos.add(new Esqueleto(valoresInimigosXMapaPadre[indexRandomEsqueletoXMapaBoss], 0));
-        totalInimigos = totalInimigos + 1;
-      }
-    }
-
-    if (!telaTutorialAndandoAtiva && totalCenariosCriados < totalCenariosPossiveis) {
-      if (estadoJogo == "PrimeiroMapa" && esqueletos.size() < 2 && totalInimigos < 6) {
-        esqueletoC = int(random(0, 7));
-        esqueletoL = int(random(0, 4));
-
-        if (posicoesInimigosNoPrimeiroMapa[esqueletoC][esqueletoL] == ESQUELETO) {
-          esqueletos.add(new Esqueleto(100 + (esqueletoC * (600 / 7)), -150 - (esqueletoL * 150)));
-          totalInimigos = totalInimigos + 1;
-        }
-      }
-
-      if (estadoJogo == "SegundoMapa" && esqueletos.size() < 2 && totalInimigos < 6) {
-        esqueletoC = int(random(0, 7));
-        esqueletoL = int(random(0, 4));
-
-        if (posicoesInimigosNoSegundoMapa[esqueletoC][esqueletoL] == ESQUELETO) {
-          esqueletos.add(new Esqueleto(100 + (esqueletoC * (600 / 7)), -150 - (esqueletoL * 150)));
-          totalInimigos = totalInimigos + 1;
-        }
-      }
-
-      if (estadoJogo == "TerceiroMapa" && esqueletos.size() < 2 && totalInimigos < 6) {
-        esqueletoC = int(random(0, 7));
-        esqueletoL = int(random(0, 4));
-
-        if (posicoesInimigosNoTerceiroMapa[esqueletoC][esqueletoL] == ESQUELETO) {
-          esqueletos.add(new Esqueleto(100 + (esqueletoC * (600 / 7)), -150 - (esqueletoL * 150)));
-          totalInimigos = totalInimigos + 1;
-        }
-      }
-    }
-  }
-
-  for (int i = esqueletos.size() - 1; i >= 0; i = i - 1) {
-    Esqueleto e = esqueletos.get(i);
-    e.display();
-    e.update();
-    if (e.saiuDaTela()) {
-      totalInimigos = totalInimigos - 1;
-      esqueletos.remove(e);
-    }
-    if (e.ataque() && !jLeiteImune) {
-      vidaJLeiteAtual = vidaJLeiteAtual - 2;
-      jLeiteImune = true;
-      tempoImune = millis();
-    }
-  }
-
-  for (int i = esqueletos.size() - 1; i >= 0; i = i - 1) {
-    Esqueleto e = esqueletos.get(i);
-    for (int j = pasAtaque.size() - 1; j >= 0; j = j - 1) {
-      PaAtaque p = pasAtaque.get(j);
-      if (p.acertouEsqueleto(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.esqueletoX, e.esqueletoY);
-        esqueletos.remove(e);
-      }
-    }
-    for (int j = pedrasAtiradas.size() - 1; j >= 0; j = j - 1) {
-      PedraAtirada p = pedrasAtiradas.get(j);
-      if (p.acertouEsqueleto(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.esqueletoX, e.esqueletoY);
-        pedrasAtiradas.remove(p);
-        esqueletos.remove(e);
-      }
-    }
-    for (int j = chicotes.size() - 1; j >= 0; j = j - 1) {
-      ChicoteAtaque c = chicotesAtaque.get(j);
-      if (c.acertouEsqueleto(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.esqueletoX, e.esqueletoY);
-        esqueletos.remove(e);
-      }
-    }
-  }
-}
-
-void posicoesEsqueleto() {
-  posicoesInimigosNoPrimeiroMapa[0][0] = ESQUELETO;
-  posicoesInimigosNoPrimeiroMapa[1][2] = ESQUELETO;
-  posicoesInimigosNoPrimeiroMapa[2][0] = ESQUELETO;
-  posicoesInimigosNoPrimeiroMapa[3][2] = ESQUELETO;
-  posicoesInimigosNoPrimeiroMapa[4][0] = ESQUELETO;
-  posicoesInimigosNoPrimeiroMapa[5][2] = ESQUELETO;
-  posicoesInimigosNoPrimeiroMapa[6][0] = ESQUELETO;
-
-  posicoesInimigosNoSegundoMapa [0][1] = ESQUELETO;
-  posicoesInimigosNoSegundoMapa [1][3] = ESQUELETO;
-  posicoesInimigosNoSegundoMapa [2][0] = ESQUELETO;
-  posicoesInimigosNoSegundoMapa [3][2] = ESQUELETO;
-  posicoesInimigosNoSegundoMapa [4][0] = ESQUELETO;
-  posicoesInimigosNoSegundoMapa [5][0] = ESQUELETO;
-  posicoesInimigosNoSegundoMapa [6][0] = ESQUELETO;
-
-  posicoesInimigosNoTerceiroMapa[0][3] = ESQUELETO;
-  posicoesInimigosNoTerceiroMapa[2][0] = ESQUELETO;
-  posicoesInimigosNoTerceiroMapa[4][2] = ESQUELETO;
-  posicoesInimigosNoTerceiroMapa[6][3] = ESQUELETO;
-}
-
 PImage esqueletoChuteAtaque;
 PImage esqueletoChuteMovimento;
 PImage sombraEsqueletoChute;
 
 final int ESQUELETOCHUTE = 1;
 
-public class EsqueletoChute {
+public class EsqueletoChute extends InimigoGeral{
   private PImage spriteEsqueletoChuteAtaque;
-  private PImage spriteEsqueletoChuteMovimento;
-
-  private int esqueletoChuteX;
-  private int esqueletoChuteY;
 
   private int movimentoEsqueletoChuteX;
-  private int movimentoEsqueletoChuteY;
 
   private int tempoTrocaDirecaoEsqueletoChuteX;
 
   private int stepEsqueletoChuteAtaque;
   private int tempoSpriteEsqueletoChuteAtaque;
 
-  private int stepEsqueletoChuteMovimento;
-  private int tempoSpriteEsqueletoChuteMovimento;
-
   private boolean perdeuCabeca;
   private boolean gatilhoEsqueletoCabeca, esqueletoCabecaSaiu;
 
-  public EsqueletoChute(int esqueletoChuteX, int esqueletoChuteY) {
-    this.esqueletoChuteX = esqueletoChuteX;
-    this.esqueletoChuteY = esqueletoChuteY;
+  public EsqueletoChute(int x, int y) {
+    this.x = x;
+    this.y = y;
+
+    tempoIntervaloSprite = 200;
+    inimigo = esqueletoChuteMovimento;
+    spriteWidth = 48;
+    spriteHeight = 74;
+    movementY = int(movimentoCenario);
   }
 
   void display() {
