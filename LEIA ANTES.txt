@@ -1,0 +1,11 @@
+Professor, para ativar o modo imortal basta clicar na tecla "i" durante qualquer fase, seja de boss, seja normal.
+
+Se der algum bug e você não conseguir avançar, use os números de 1 a 6 enquanto estiver no MenuInicial para mudar de fase.
+
+1 - Primeiro mapa.
+2 - Segundo mapa.
+3 - Terceiro mapa.
+
+4 - Primeiro boss.
+5 - Segundo boss.
+6 - Terceiro boss.
