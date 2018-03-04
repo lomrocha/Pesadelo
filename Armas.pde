@@ -217,7 +217,7 @@ public class PaAtaque {
   }
 
   boolean acertouEsqueleto(Esqueleto e) {
-    if (jLeiteX + 160 > e.esqueletoX && jLeiteX - 70 < e.esqueletoX + 76 && jLeiteY + 56 > e.esqueletoY && jLeiteY - 44 < e.esqueletoY + 126) {
+    if (jLeiteX + 160 > e.x && jLeiteX - 70 < e.x + 76 && jLeiteY + 56 > e.y && jLeiteY - 44 < e.y + 126) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -226,7 +226,7 @@ public class PaAtaque {
   }
 
   boolean acertouEsqueletoChute(EsqueletoChute e) {
-    if (jLeiteX + 160 > e.esqueletoChuteX && jLeiteX - 70 < e.esqueletoChuteX + 49 && jLeiteY + 56 > e.esqueletoChuteY && jLeiteY - 44 < e.esqueletoChuteY + 74) {
+    if (jLeiteX + 160 > e.x && jLeiteX - 70 < e.x + 49 && jLeiteY + 56 > e.y && jLeiteY - 44 < e.y + 74) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -235,7 +235,7 @@ public class PaAtaque {
   }
 
   boolean acertouCachorro(Cachorro c) {
-    if (jLeiteX + 160 > c.cachorroX && jLeiteX - 70 < c.cachorroX + 45 && jLeiteY + 56 > c.cachorroY && jLeiteY - 44 < c.cachorroY + 83) {
+    if (jLeiteX + 160 > c.x && jLeiteX - 70 < c.x + 45 && jLeiteY + 56 > c.y && jLeiteY - 44 < c.y + 83) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -244,7 +244,7 @@ public class PaAtaque {
   }
 
   boolean acertouCorvo(Corvo c) {
-    if (jLeiteX + 160 > c.corvoX + 45 && jLeiteX - 70 < c.corvoX + 75 && jLeiteY + 56 > c.corvoY && jLeiteY - 44 < c.corvoY + 86) {
+    if (jLeiteX + 160 > c.x + 45 && jLeiteX - 70 < c.x + 75 && jLeiteY + 56 > c.y && jLeiteY - 44 < c.y + 86) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -253,7 +253,7 @@ public class PaAtaque {
   }
 
   boolean acertouEsqueletoRaiva(EsqueletoRaiva e) {
-    if (jLeiteX + 160 > e.esqueletoRaivaX && jLeiteX - 70 < e.esqueletoRaivaX + 76 && jLeiteY + 56 > e.esqueletoRaivaY && jLeiteY - 44 < e.esqueletoRaivaY + 126) {
+    if (jLeiteX + 160 > e.x && jLeiteX - 70 < e.x + 76 && jLeiteY + 56 > e.y && jLeiteY - 44 < e.y + 126) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -493,7 +493,7 @@ public class PedraAtirada {
   }
 
   boolean acertouEsqueleto(Esqueleto e) {
-    if (pedraFogoX + 16 > e.esqueletoX && pedraFogoX < e.esqueletoX + 76 && pedraFogoY + 26 > e.esqueletoY && pedraFogoY < e.esqueletoY + 126) {
+    if (pedraFogoX + 16 > e.x && pedraFogoX < e.x + 76 && pedraFogoY + 26 > e.y && pedraFogoY < e.y + 126) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -502,7 +502,7 @@ public class PedraAtirada {
   }
 
   boolean acertouEsqueletoChute(EsqueletoChute e) {
-    if (pedraFogoX + 16 > e.esqueletoChuteX && pedraFogoX < e.esqueletoChuteX + 49 && pedraFogoY + 26 > e.esqueletoChuteY && pedraFogoY < e.esqueletoChuteY + 74) {
+    if (pedraFogoX + 16 > e.x && pedraFogoX < e.x + 49 && pedraFogoY + 26 > e.y && pedraFogoY < e.y + 74) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -511,7 +511,7 @@ public class PedraAtirada {
   }
 
   boolean acertouCachorro(Cachorro c) {
-    if (pedraFogoX + 16 > c.cachorroX && pedraFogoX < c.cachorroX + 45 && pedraFogoY + 26 > c.cachorroY && pedraFogoY < c.cachorroY + 83) {
+    if (pedraFogoX + 16 > c.x && pedraFogoX < c.x + 45 && pedraFogoY + 26 > c.y && pedraFogoY < c.y + 83) {
       return true;
     } else { 
       return false;
@@ -519,7 +519,7 @@ public class PedraAtirada {
   }
 
   boolean acertouCorvo(Corvo c) {
-    if (pedraFogoX + 16 > c.corvoX + 45 && pedraFogoX < c.corvoX + 75 && pedraFogoY + 26 > c.corvoY && pedraFogoY < c.corvoY + 86) {
+    if (pedraFogoX + 16 > c.x + 45 && pedraFogoX < c.x + 75 && pedraFogoY + 26 > c.y && pedraFogoY < c.y + 86) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -528,7 +528,7 @@ public class PedraAtirada {
   }
 
   boolean acertouEsqueletoRaiva(EsqueletoRaiva e) {
-    if (pedraFogoX + 16 > e.esqueletoRaivaX && pedraFogoX < e.esqueletoRaivaX + 76 && pedraFogoY + 26 > e.esqueletoRaivaY && pedraFogoY < e.esqueletoRaivaY + 126) {
+    if (pedraFogoX + 16 > e.x && pedraFogoX < e.x + 76 && pedraFogoY + 26 > e.y && pedraFogoY < e.y + 126) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -760,7 +760,7 @@ public class ChicoteAtaque {
   }
 
   boolean acertouEsqueleto(Esqueleto e) {
-    if (jLeiteX + 56 > e.esqueletoX && jLeiteX + 50 < e.esqueletoX + 76 && jLeiteY > e.esqueletoY && jLeiteY - 140 < e.esqueletoY + 126) {
+    if (jLeiteX + 56 > e.x && jLeiteX + 50 < e.x + 76 && jLeiteY > e.y && jLeiteY - 140 < e.y + 126) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -769,7 +769,7 @@ public class ChicoteAtaque {
   }
 
   boolean acertouEsqueletoChute(EsqueletoChute e) {
-    if (jLeiteX + 56 > e.esqueletoChuteX && jLeiteX + 50 < e.esqueletoChuteX + 49 && jLeiteY > e.esqueletoChuteY && jLeiteY - 140 < e.esqueletoChuteY + 74) {
+    if (jLeiteX + 56 > e.x && jLeiteX + 50 < e.x + 49 && jLeiteY > e.y && jLeiteY - 140 < e.y + 74) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -778,7 +778,7 @@ public class ChicoteAtaque {
   }
 
   boolean acertouCachorro(Cachorro c) {
-    if (jLeiteX + 56 > c.cachorroX && jLeiteX + 50 < c.cachorroX + 45 && jLeiteY > c.cachorroY && jLeiteY - 140 < c.cachorroY + 83) {
+    if (jLeiteX + 56 > c.x && jLeiteX + 50 < c.x + 45 && jLeiteY > c.y && jLeiteY - 140 < c.y + 83) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -787,7 +787,7 @@ public class ChicoteAtaque {
   }
 
   boolean acertouCorvo(Corvo c) {
-    if (jLeiteX + 56 > c.corvoX + 45 && jLeiteX + 50 < c.corvoX + 75 && jLeiteY > c.corvoY && jLeiteY - 140 < c.corvoY + 86) {
+    if (jLeiteX + 56 > c.x + 45 && jLeiteX + 50 < c.x + 75 && jLeiteY > c.y && jLeiteY - 140 < c.y + 86) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -796,7 +796,7 @@ public class ChicoteAtaque {
   }
 
   boolean acertouEsqueletoRaiva(EsqueletoRaiva e) {
-    if (jLeiteX + 56 > e.esqueletoRaivaX && jLeiteX + 50 < e.esqueletoRaivaX + 76 && jLeiteY > e.esqueletoRaivaY && jLeiteY - 140 < e.esqueletoRaivaY + 126) {
+    if (jLeiteX + 56 > e.x && jLeiteX + 50 < e.x + 76 && jLeiteY > e.y && jLeiteY - 140 < e.y + 126) {
       hitInimigosMostrando = true;
       return true;
     } else { 

@@ -15,9 +15,9 @@ String ultimoEstado;
 
 float millisAvancada, millisAvancadaMapa;
 
-int posicoesInimigosNoPrimeiroMapa[][];
-int posicoesInimigosNoSegundoMapa [][];
-int posicoesInimigosNoTerceiroMapa[][];
+int enemyPositionsFirstMap[][];
+int enemyPositionsSecondMap [][];
+int enemyPositionsThirdMap[][];
 
 int[] valoresXMapaCoveiro = {50, 720};
 int[] valoresYMapaCoveiro = {380, 380};
@@ -203,18 +203,18 @@ void setup() {
   vidaJLeiteLayoutBackground = loadImage ("vidaJLeiteLayoutBackground.png");
   vidaJLeiteBarra = loadImage ("vidaJLeiteBarra.png");
 
-  esqueleto = loadImage ("esqueleto.png");
-  sombraEsqueleto = loadImage ("sombraEsqueleto.png");
-  esqueletoChuteAtaque = loadImage ("esqueletoChuteAtaque.png");
-  esqueletoChuteMovimento = loadImage ("esqueletoChuteMovimento.png");
-  cabecaEsqueletoChute = loadImage ("cabecaEsqueletoChute.png");
-  sombraEsqueletoChute = loadImage ("sombraEsqueletoChute.png");
-  cachorro = loadImage ("cachorro.png");
-  sombraCachorro = loadImage ("sombraCachorro.png");
-  corvo = loadImage ("corvo.png");
-  sombraCorvo = loadImage ("sombraCorvo.png");
-  esqueletoRaiva = loadImage ("esqueletoRaiva.png");
-  sombraEsqueletoRaiva = loadImage ("sombraEsqueletoRaiva.png");
+  skeleton = loadImage ("esqueleto.png");
+  skeletonShadow = loadImage ("sombraEsqueleto.png");
+  kickingSkeleton = loadImage ("esqueletoChuteAtaque.png");
+  headlessKickingSkeleton = loadImage ("esqueletoChuteMovimento.png");
+  skeletonHead = loadImage ("cabecaEsqueletoChute.png");
+  kickingSkeletonShadow = loadImage ("sombraEsqueletoChute.png");
+  skeletonDog = loadImage ("cachorro.png");
+  skeletonDogShadow = loadImage ("sombraCachorro.png");
+  skeletonCrow = loadImage ("corvo.png");
+  skeletonCrowShadow = loadImage ("sombraCorvo.png");
+  redSkeleton = loadImage ("esqueletoRaiva.png");
+  redSkeletonShadow = loadImage ("sombraEsqueletoRaiva.png");
 
   hitInimigos = loadImage ("hitInimigos.png");
 
@@ -328,9 +328,9 @@ void setup() {
   hitBosses = loadImage ("hitBosses.png");
   hitEscudo = loadImage ("hitEscudo.png");
 
-  posicoesInimigosNoPrimeiroMapa = new int [7][4];
-  posicoesInimigosNoSegundoMapa  = new int [7][4];
-  posicoesInimigosNoTerceiroMapa = new int [7][4];
+  enemyPositionsFirstMap = new int [7][4];
+  enemyPositionsSecondMap  = new int [7][4];
+  enemyPositionsThirdMap = new int [7][4];
 
   posicoesEsqueleto();
   posicoesEsqueletoChute();

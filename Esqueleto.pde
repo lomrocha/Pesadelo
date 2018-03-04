@@ -7,14 +7,14 @@ int[] valoresEsqueletoXMapaCoveiro = {200, 520};
 
 public class Esqueleto extends InimigoGeral {
   public Esqueleto(int x, int y) {
-    x = x;
-    y = y;
+    this.x = x;
+    this.y = y;
 
     spriteInterval = 155;
     enemy = skeleton;
     spriteWidth = 76;
     spriteHeight = 126;
-    movementY = 3;    
+    movementY = 3;
   }
 
   void display() {
@@ -54,7 +54,7 @@ void esqueleto() {
         esqueletoC = int(random(0, 7));
         esqueletoL = int(random(0, 4));
 
-        if (posicoesInimigosNoPrimeiroMapa[esqueletoC][esqueletoL] == SKELETON) {
+        if (enemyPositionsFirstMap[esqueletoC][esqueletoL] == SKELETON) {
           esqueletos.add(new Esqueleto(100 + (esqueletoC * (600 / 7)), -150 - (esqueletoL * 150)));
           totalInimigos = totalInimigos + 1;
         }
@@ -64,7 +64,7 @@ void esqueleto() {
         esqueletoC = int(random(0, 7));
         esqueletoL = int(random(0, 4));
 
-        if (posicoesInimigosNoSegundoMapa[esqueletoC][esqueletoL] == SKELETON) {
+        if (enemyPositionsSecondMap[esqueletoC][esqueletoL] == SKELETON) {
           esqueletos.add(new Esqueleto(100 + (esqueletoC * (600 / 7)), -150 - (esqueletoL * 150)));
           totalInimigos = totalInimigos + 1;
         }
@@ -74,7 +74,7 @@ void esqueleto() {
         esqueletoC = int(random(0, 7));
         esqueletoL = int(random(0, 4));
 
-        if (posicoesInimigosNoTerceiroMapa[esqueletoC][esqueletoL] == SKELETON) {
+        if (enemyPositionsThirdMap[esqueletoC][esqueletoL] == SKELETON) {
           esqueletos.add(new Esqueleto(100 + (esqueletoC * (600 / 7)), -150 - (esqueletoL * 150)));
           totalInimigos = totalInimigos + 1;
         }
@@ -86,11 +86,11 @@ void esqueleto() {
     Esqueleto e = esqueletos.get(i);
     e.display();
     e.update();
-    if (e.saiuDaTela()) {
+    if (e.hasExitScreen()) {
       totalInimigos = totalInimigos - 1;
       esqueletos.remove(e);
     }
-    if (e.ataque() && !jLeiteImune) {
+    if (e.hasAttacked() && !jLeiteImune) {
       vidaJLeiteAtual = vidaJLeiteAtual - 2;
       jLeiteImune = true;
       tempoImune = millis();
@@ -103,7 +103,7 @@ void esqueleto() {
       PaAtaque p = pasAtaque.get(j);
       if (p.acertouEsqueleto(e)) {
         totalInimigos = totalInimigos - 1;
-        hitInimigos(e.esqueletoX, e.esqueletoY);
+        hitInimigos(e.x, e.y);
         esqueletos.remove(e);
       }
     }
@@ -111,7 +111,7 @@ void esqueleto() {
       PedraAtirada p = pedrasAtiradas.get(j);
       if (p.acertouEsqueleto(e)) {
         totalInimigos = totalInimigos - 1;
-        hitInimigos(e.esqueletoX, e.esqueletoY);
+        hitInimigos(e.x, e.y);
         pedrasAtiradas.remove(p);
         esqueletos.remove(e);
       }
@@ -120,7 +120,7 @@ void esqueleto() {
       ChicoteAtaque c = chicotesAtaque.get(j);
       if (c.acertouEsqueleto(e)) {
         totalInimigos = totalInimigos - 1;
-        hitInimigos(e.esqueletoX, e.esqueletoY);
+        hitInimigos(e.x, e.y);
         esqueletos.remove(e);
       }
     }
@@ -128,24 +128,24 @@ void esqueleto() {
 }
 
 void posicoesEsqueleto() {
-  posicoesInimigosNoPrimeiroMapa[0][0] = SKELETON;
-  posicoesInimigosNoPrimeiroMapa[1][2] = SKELETON;
-  posicoesInimigosNoPrimeiroMapa[2][0] = SKELETON;
-  posicoesInimigosNoPrimeiroMapa[3][2] = SKELETON;
-  posicoesInimigosNoPrimeiroMapa[4][0] = SKELETON;
-  posicoesInimigosNoPrimeiroMapa[5][2] = SKELETON;
-  posicoesInimigosNoPrimeiroMapa[6][0] = SKELETON;
+  enemyPositionsFirstMap  [0][0] = SKELETON;
+  enemyPositionsFirstMap  [1][2] = SKELETON;
+  enemyPositionsFirstMap  [2][0] = SKELETON;
+  enemyPositionsFirstMap  [3][2] = SKELETON;
+  enemyPositionsFirstMap  [4][0] = SKELETON;
+  enemyPositionsFirstMap  [5][2] = SKELETON;
+  enemyPositionsFirstMap  [6][0] = SKELETON;
 
-  posicoesInimigosNoSegundoMapa [0][1] = SKELETON;
-  posicoesInimigosNoSegundoMapa [1][3] = SKELETON;
-  posicoesInimigosNoSegundoMapa [2][0] = SKELETON;
-  posicoesInimigosNoSegundoMapa [3][2] = SKELETON;
-  posicoesInimigosNoSegundoMapa [4][0] = SKELETON;
-  posicoesInimigosNoSegundoMapa [5][0] = SKELETON;
-  posicoesInimigosNoSegundoMapa [6][0] = SKELETON;
+  enemyPositionsSecondMap [0][1] = SKELETON;
+  enemyPositionsSecondMap [1][3] = SKELETON;
+  enemyPositionsSecondMap [2][0] = SKELETON;
+  enemyPositionsSecondMap [3][2] = SKELETON;
+  enemyPositionsSecondMap [4][0] = SKELETON;
+  enemyPositionsSecondMap [5][0] = SKELETON;
+  enemyPositionsSecondMap [6][0] = SKELETON;
 
-  posicoesInimigosNoTerceiroMapa[0][3] = SKELETON;
-  posicoesInimigosNoTerceiroMapa[2][0] = SKELETON;
-  posicoesInimigosNoTerceiroMapa[4][2] = SKELETON;
-  posicoesInimigosNoTerceiroMapa[6][3] = SKELETON;
+  enemyPositionsThirdMap  [0][3] = SKELETON;
+  enemyPositionsThirdMap  [2][0] = SKELETON;
+  enemyPositionsThirdMap  [4][2] = SKELETON;
+  enemyPositionsThirdMap  [6][3] = SKELETON;
 }

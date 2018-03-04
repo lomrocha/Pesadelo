@@ -4,7 +4,7 @@ PImage[] imagensCenariosBoss =  new PImage [3];
 PImage porta;
 PImage cerca;
 
-float movimentoCenario = 42;
+float sceneryMovement = 42;
 
 int indexCenario;
 
@@ -92,10 +92,10 @@ public class Cenario {
 
   void update() {
     if (indexCenarioCriado != totalCenariosPossiveis) {
-      cenarioY = cenarioY + movimentoCenario;
+      cenarioY = cenarioY + sceneryMovement;
     } else {
       if (cenarioY <= 0) {
-        cenarioY = cenarioY + movimentoCenario;
+        cenarioY = cenarioY + sceneryMovement;
       }
     }
   }
@@ -116,9 +116,9 @@ double tempoCenario;
 
 void cenario() {
   if (!jLeiteMorreu) {
-    movimentoCenario = 2;
+    sceneryMovement = 2;
   } else {
-    movimentoCenario = 0;
+    sceneryMovement = 0;
   }
 
   cenario.display();
@@ -138,7 +138,7 @@ void cenario() {
       tempoCenario = millisAvancadaMapa;
     }
 
-    if (cenarios.size() < 2 && millisAvancadaMapa + 200 > tempoCenario + ((imagensCenarios[2].height / (60 * movimentoCenario)) * 1000)) {
+    if (cenarios.size() < 2 && millisAvancadaMapa + 200 > tempoCenario + ((imagensCenarios[2].height / (60 * sceneryMovement)) * 1000)) {
       totalCenariosCriados = totalCenariosCriados + 1;
       if (estadoJogo == "PrimeiroMapa") {
         if (totalCenariosCriados != totalCenariosPossiveis) {
