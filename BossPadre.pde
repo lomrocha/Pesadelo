@@ -149,7 +149,7 @@ public class Padre {
 
   private int tempoNovoAtaqueCruz, tempoDanoCruz;
 
-  private int tempoNovoAtaqueLevantem = int(millisAvancada), tempoDuracaoAtaqueLevantem, totalRecuperadoLevantem;
+  private int tempoNovoAtaqueLevantem = int(millisAvancada), tempoDuracaoAtaqueLevantem, amountRecoveredLevantem;
 
   private int tempoNovoAtaqueCaveira = int(millisAvancada);
 
@@ -359,8 +359,8 @@ public class Padre {
           }
 
           if (!padreRaivaCurou) {
-            while (vidaPadreRaivaAtual < 40 && totalRecuperadoLevantem < 3) {
-              totalRecuperadoLevantem = totalRecuperadoLevantem + 1;
+            while (vidaPadreRaivaAtual < 40 && amountRecoveredLevantem < 3) {
+              amountRecoveredLevantem = amountRecoveredLevantem + 1;
               vidaPadreRaivaAtual = vidaPadreRaivaAtual + 1;
             }
             padreRaivaCurou = true;
@@ -584,7 +584,7 @@ public class Padre {
         if (!gatilhoNovoAtaqueLevantem) {
           tempoNovoAtaqueLevantem = int(millisAvancada);
           gatilhoNovoAtaqueLevantem = true;
-          totalRecuperadoLevantem = 0;
+          amountRecoveredLevantem = 0;
           padreRaivaCurou = false;
         }
         if (millisAvancada > tempoNovoAtaqueLevantem + 5000 && !gatilhoNovoAtaqueLevantemAtivo) {

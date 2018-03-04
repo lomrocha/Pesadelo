@@ -3,15 +3,15 @@ PImage redSkeletonShadow;
 
 final int REDSKELETON = 3;
 
-public class EsqueletoRaiva extends InimigoGeral {
+public class EsqueletoRaiva extends Geral {
   private int movementX = 3;
 
   public EsqueletoRaiva(int x, int y) {
     this.x = x;
     this.y = y;
     
+    spriteImage = redSkeleton;
     spriteInterval = 75;
-    enemy = redSkeleton;
     spriteWidth = 76;
     spriteHeight = 126;
     movementY = 3;
@@ -75,7 +75,7 @@ void esqueletoRaiva() {
       totalInimigos = totalInimigos - 1;
       esqueletosRaiva.remove(e);
     }
-    if (e.hasAttacked() && !jLeiteImune) {
+    if (e.hasCollided() && !jLeiteImune) {
       vidaJLeiteAtual = vidaJLeiteAtual - 3;
       jLeiteImune = true;
       tempoImune = millis();

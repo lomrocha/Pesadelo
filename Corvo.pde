@@ -1,7 +1,7 @@
 PImage skeletonCrow;
 PImage skeletonCrowShadow;
 
-public class Corvo extends InimigoGeral {
+public class Corvo extends Geral {
   private int targetX = jLeiteX;
 
   private int newTargetInterval;
@@ -13,8 +13,8 @@ public class Corvo extends InimigoGeral {
     x = int(random(100, width - 163));
     y = int(random(-300, -1000));
     
+    spriteImage = skeletonCrow;
     spriteInterval = 75;
-    enemy = skeletonCrow;
     spriteWidth = 121;
     spriteHeight = 86;
     movementY = 4;
@@ -24,8 +24,8 @@ public class Corvo extends InimigoGeral {
     this.x = x;
     this.y = y;
 
+    spriteImage = skeletonCrow;
     spriteInterval = 75;
-    enemy = skeletonCrow;
     spriteWidth = 121;
     spriteHeight = 86;
     movementY = 4;

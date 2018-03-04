@@ -1,9 +1,9 @@
-PImage sombraComidas;
+PImage foodShadow;
 
 int tempoGerarComida;
 int indexComida;
 
-int totalRecuperado;
+int amountRecovered;
 
 int totalComidas;
 
@@ -29,63 +29,35 @@ void comidaTodos() {
 
 PImage coxinha;
 
-public class Coxinha {
-  private PImage spriteCoxinha;
+public class Coxinha extends Geral {
+  private int amountRecovered = 0;
 
-  private int coxinhaX = int(random(200, 500));
-  private int coxinhaY = int(random(-300, -1000));
+  public Coxinha(int x, int y) {
+    this.x = x;
+    this.y = y;
 
-  private int stepCoxinha;
-  private int tempoSpriteCoxinha;
-
-  private int totalRecuperado = 0;
-
-  public Coxinha(int coxinhaX, int coxinhaY) {
-    this.coxinhaX = coxinhaX;
-    this.coxinhaY = coxinhaY;
+    spriteImage = coxinha;
+    spriteInterval = 75;
+    spriteWidth = 28;
+    spriteHeight = 30;
+    movementY = 1;
   }
 
   public Coxinha() {
+    this.x = int(random(200, 500));
+    this.y = int(random(-300, -1000));
+
+    spriteImage = coxinha;
+    spriteInterval = 75;
+    spriteWidth = 28;
+    spriteHeight = 30;
+    movementY = 1;
   }
 
   void display() {
-    image (sombraComidas, coxinhaX, coxinhaY + 20);
+    image (foodShadow, x, y + 20);
 
-    if (millis() > tempoSpriteCoxinha + 75) {
-      spriteCoxinha = coxinha.get(stepCoxinha, 0, 28, 30);
-      stepCoxinha = stepCoxinha % 168 + 28;
-      image(spriteCoxinha, coxinhaX, coxinhaY);
-      tempoSpriteCoxinha = millis();
-    } else {
-      image(spriteCoxinha, coxinhaX, coxinhaY);
-    }
-
-    if (stepCoxinha == coxinha.width) {
-      stepCoxinha = 0;
-    }
-  }
-
-  void update() {
-    coxinhaY = coxinhaY + 1;
-  }
-
-  boolean apanhado() {
-    if (coxinhaX + 27 > jLeiteX && coxinhaX < jLeiteX + 63 && coxinhaY + 30 > jLeiteY && coxinhaY < jLeiteY + 126) {
-      tempoGerarComida = int(millisAvancada);
-      indexComida = 10;
-      comidaGerada = false;
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  boolean saiuDaTela() {
-    if (coxinhaY > height) {
-      return true;
-    } else {
-      return false;
-    }
+    super.display();
   }
 }
 
@@ -135,13 +107,13 @@ void coxinha() {
     if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
       c.update();
     }
-    if (c.saiuDaTela()) {
+    if (c.hasExitScreen()) {
       totalComidas = totalComidas - 1;
       coxinhas.remove(c);
     }
-    if (c.apanhado()) {
-      while (vidaJLeiteAtual < vidaJleiteMax && c.totalRecuperado < coxinhaRecuperacao) {
-        c.totalRecuperado = c.totalRecuperado + 1;
+    if (c.hasCollided()) {
+      while (vidaJLeiteAtual < vidaJleiteMax && c.amountRecovered < coxinhaRecuperacao) {
+        c.amountRecovered = c.amountRecovered + 1;
         vidaJLeiteAtual = vidaJLeiteAtual + 1;
       }
       totalComidas = totalComidas - 1;
@@ -152,63 +124,35 @@ void coxinha() {
 
 PImage brigadeiro;
 
-public class Brigadeiro {
-  private PImage spriteBrigadeiro;
+public class Brigadeiro extends Geral {
+  private int amountRecovered = 0;
 
-  private int brigadeiroX = int(random(200, 500));
-  private int brigadeiroY = int(random(-300, -1000));
+  public Brigadeiro(int x, int y) {
+    this.x = x;
+    this.y = y;
 
-  private int stepBrigadeiro;
-  private int tempoSpriteBrigadeiro;
-
-  private int totalRecuperado = 0;
-
-  public Brigadeiro(int brigadeiroX, int brigadeiroY) {
-    this.brigadeiroX = brigadeiroX;
-    this.brigadeiroY = brigadeiroY;
+    spriteImage = brigadeiro;
+    spriteInterval = 75;
+    spriteWidth = 32;
+    spriteHeight = 31;
+    movementY = 1;
   }
 
   public Brigadeiro() {
+    this.x = int(random(200, 500));
+    this.y = int(random(-300, -1000));
+
+    spriteImage = brigadeiro;
+    spriteInterval = 75;
+    spriteWidth = 32;
+    spriteHeight = 31;
+    movementY = 1;
   }
 
   void display() {
-    image (sombraComidas, brigadeiroX + 2, brigadeiroY + 21);
+    image (foodShadow, x, y + 20);
 
-    if (millis() > tempoSpriteBrigadeiro + 75) {
-      spriteBrigadeiro = brigadeiro.get(stepBrigadeiro, 0, 32, 31);
-      stepBrigadeiro = stepBrigadeiro % 192 + 32;
-      image(spriteBrigadeiro, brigadeiroX, brigadeiroY);
-      tempoSpriteBrigadeiro = millis();
-    } else {
-      image(spriteBrigadeiro, brigadeiroX, brigadeiroY);
-    }
-
-    if (stepBrigadeiro == brigadeiro.width) {
-      stepBrigadeiro = 0;
-    }
-  }
-
-  void update() {
-    brigadeiroY = brigadeiroY + 1;
-  }
-
-  boolean apanhado() {
-    if (brigadeiroX + 32 > jLeiteX && brigadeiroX < jLeiteX + 63 && brigadeiroY + 31 > jLeiteY && brigadeiroY < jLeiteY + 126) {
-      tempoGerarComida = int(millisAvancada);
-      indexComida = 10;
-      comidaGerada = false;
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  boolean saiuDaTela() {
-    if (brigadeiroY > height) {
-      return true;
-    } else {
-      return false;
-    }
+    super.display();
   }
 }
 
@@ -258,13 +202,13 @@ void brigadeiro() {
     if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
       b.update();
     }
-    if (b.saiuDaTela()) {
+    if (b.hasExitScreen()) {
       totalComidas = totalComidas - 1;
       brigadeiros.remove(b);
     }
-    if (b.apanhado()) {
-      while (vidaJLeiteAtual < vidaJleiteMax && b.totalRecuperado < coxinhaRecuperacao) {
-        b.totalRecuperado = b.totalRecuperado + 1;
+    if (b.hasCollided()) {
+      while (vidaJLeiteAtual < vidaJleiteMax && b.amountRecovered < coxinhaRecuperacao) {
+        b.amountRecovered = b.amountRecovered + 1;
         vidaJLeiteAtual = vidaJLeiteAtual + 1;
       }
       totalComidas = totalComidas - 1;
@@ -275,63 +219,35 @@ void brigadeiro() {
 
 PImage queijo;
 
-public class Queijo {
-  private PImage spriteQueijo;
+public class Queijo extends Geral {
+  private int amountRecovered = 0;
 
-  private int queijoX = int(random(200, 500));
-  private int queijoY = int(random(-300, -1000));
+  public Queijo(int x, int y) {
+    this.x = x;
+    this.y = y;
 
-  private int stepQueijo;
-  private int tempoSpriteQueijo;
-
-  private int totalRecuperado = 0;
-
-  public Queijo(int queijoX, int queijoY) {
-    this.queijoX = queijoX;
-    this.queijoY = queijoY;
+    spriteImage = coxinha;
+    spriteInterval = 75;
+    spriteWidth = 31;
+    spriteHeight = 29;
+    movementY = 1;
   }
 
   public Queijo() {
+    this.x = int(random(200, 500));
+    this.y = int(random(-300, -1000));
+
+    spriteImage = coxinha;
+    spriteInterval = 75;
+    spriteWidth = 31;
+    spriteHeight = 29;
+    movementY = 1;
   }
 
   void display() {
-    image (sombraComidas, queijoX, queijoY + 19);
+    image (foodShadow, x, y + 19);
 
-    if (millis() > tempoSpriteQueijo + 75) { 
-      spriteQueijo = queijo.get(stepQueijo, 0, 31, 29); 
-      stepQueijo = stepQueijo % 186 + 31;
-      image(spriteQueijo, queijoX, queijoY); 
-      tempoSpriteQueijo = millis();
-    } else {
-      image(spriteQueijo, queijoX, queijoY);
-    }
-
-    if (stepQueijo == queijo.width) {
-      stepQueijo = 0;
-    }
-  }
-
-  void update() {
-    queijoY = queijoY + 1;
-  }
-
-  boolean apanhado() {
-    if (queijoX + 31 > jLeiteX && queijoX < jLeiteX + 63 && queijoY + 29 > jLeiteY && queijoY < jLeiteY + 126) {
-      tempoGerarComida = int(millisAvancada);
-      indexComida = 10;
-      comidaGerada = false;
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  boolean saiuDaTela() {
-    if (queijoY > height) {
-      return true;
-    } else {
-      return false;
-    }
+    super.display();
   }
 }
 
@@ -381,13 +297,13 @@ void queijo() {
     if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
       q.update();
     }
-    if (q.saiuDaTela()) {
+    if (q.hasExitScreen()) {
       totalComidas = totalComidas - 1;
       queijos.remove(q);
     }
-    if (q.apanhado()) {
-      while (vidaJLeiteAtual < vidaJleiteMax && q.totalRecuperado < coxinhaRecuperacao) {
-        q.totalRecuperado = q.totalRecuperado + 1;
+    if (q.hasCollided()) {
+      while (vidaJLeiteAtual < vidaJleiteMax && q.amountRecovered < coxinhaRecuperacao) {
+        q.amountRecovered = q.amountRecovered + 1;
         vidaJLeiteAtual = vidaJLeiteAtual + 1;
       }
       totalComidas = totalComidas - 1;

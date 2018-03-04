@@ -4,7 +4,7 @@ PImage kickingSkeletonShadow;
 
 final int KICKINGSKELETON = 1;
 
-public class EsqueletoChute extends InimigoGeral {
+public class EsqueletoChute extends Geral {
   private PImage kickingSkeletonSprite;
 
   private int movementX;
@@ -15,14 +15,14 @@ public class EsqueletoChute extends InimigoGeral {
   private int kickingSkeletonSpriteTime;
 
   private boolean hasLostHead;
-  private boolean gatilhoEsqueletoCabeca, esqueletoCabecaSaiu;
+  private boolean gatilhoEsqueletoCabeca = false, esqueletoCabecaSaiu = false;
 
   public EsqueletoChute(int x, int y) {
     this.x = x;
     this.y = y;
 
+    spriteImage = headlessKickingSkeleton;
     spriteInterval = 200;
-    enemy = headlessKickingSkeleton;
     spriteWidth = 48;
     spriteHeight = 74;
     movementY = int(sceneryMovement);
@@ -135,7 +135,7 @@ void esqueletoChute() {
       totalInimigos = totalInimigos - 1;
       esqueletosChute.remove(e);
     }
-    if (e.hasAttacked() && !jLeiteImune) {
+    if (e.hasCollided() && !jLeiteImune) {
       vidaJLeiteAtual = vidaJLeiteAtual - 2;
       jLeiteImune = true;
       tempoImune = millis();

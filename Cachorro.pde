@@ -5,13 +5,13 @@ final int SKELETONDOG = 2;
 
 int[] valoresCachorroXMapaFazendeiro = {70, 382, 695};
 
-public class Cachorro extends InimigoGeral {
+public class Cachorro extends Geral {
   public Cachorro(int x, int y) {
     this.x = x;
     this.y = y;
     
+    spriteImage = skeletonDog;
     spriteInterval = 55;
-    enemy = skeletonDog;
     spriteWidth = 45;
     spriteHeight = 83;
     movementY = 8;
@@ -80,7 +80,7 @@ void cachorro() {
       totalInimigos = totalInimigos - 1;
       cachorros.remove(c);
     }
-    if (c.hasAttacked() && !jLeiteImune) {
+    if (c.hasCollided() && !jLeiteImune) {
       vidaJLeiteAtual = vidaJLeiteAtual - 2;
       jLeiteImune = true;
       tempoImune = millis();

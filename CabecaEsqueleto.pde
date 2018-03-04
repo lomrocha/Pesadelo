@@ -1,6 +1,6 @@
 PImage skeletonHead;
 
-public class CabecaEsqueleto extends InimigoGeral {
+public class CabecaEsqueleto extends Geral {
   private int movementX;
 
   private int skeletonHeadTarget;
@@ -63,7 +63,7 @@ void cabecaEsqueleto() {
       cabecasEsqueleto.remove(c);
     }
 
-    if (c.hasAttacked() && !jLeiteImune) {
+    if (c.hasCollided() && !jLeiteImune) {
       vidaJLeiteAtual = vidaJLeiteAtual - 3;
       jLeiteImune = true;
       tempoImune = millis();

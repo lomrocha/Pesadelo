@@ -168,7 +168,7 @@ void setup() {
   coxinha = loadImage ("coxinha.png");
   brigadeiro = loadImage ("brigadeiro.png");
   queijo = loadImage ("pdqueijo.png");
-  sombraComidas = loadImage ("sombraComidas.png");
+  foodShadow = loadImage ("sombraComidas.png");
 
   pa = loadImage ("pa.png");
   sombraPa = loadImage ("sombraPaChicote.png");

@@ -5,13 +5,13 @@ final int SKELETON = 0;
 
 int[] valoresEsqueletoXMapaCoveiro = {200, 520};
 
-public class Esqueleto extends InimigoGeral {
+public class Esqueleto extends Geral {
   public Esqueleto(int x, int y) {
     this.x = x;
     this.y = y;
 
+    spriteImage = skeleton;
     spriteInterval = 155;
-    enemy = skeleton;
     spriteWidth = 76;
     spriteHeight = 126;
     movementY = 3;
@@ -90,7 +90,7 @@ void esqueleto() {
       totalInimigos = totalInimigos - 1;
       esqueletos.remove(e);
     }
-    if (e.hasAttacked() && !jLeiteImune) {
+    if (e.hasCollided() && !jLeiteImune) {
       vidaJLeiteAtual = vidaJLeiteAtual - 2;
       jLeiteImune = true;
       tempoImune = millis();
