@@ -15,7 +15,7 @@ public class EsqueletoChute extends Geral {
   private int kickingSkeletonSpriteTime;
 
   private boolean hasLostHead;
-  private boolean gatilhoEsqueletoCabeca = false, esqueletoCabecaSaiu = false;
+  private boolean gatilhoEsqueletoCabeca, esqueletoCabecaSaiu;
 
   public EsqueletoChute(int x, int y) {
     this.x = x;
@@ -25,7 +25,6 @@ public class EsqueletoChute extends Geral {
     spriteInterval = 200;
     spriteWidth = 48;
     spriteHeight = 74;
-    movementY = int(sceneryMovement);
   }
 
   void display() {
@@ -50,7 +49,7 @@ public class EsqueletoChute extends Geral {
         gatilhoEsqueletoCabeca = true;
       }
 
-      if (kickingSkeletonStep == kickingSkeletonSprite.width) {
+      if (kickingSkeletonStep == kickingSkeleton.width) {
         hasLostHead = true;
         kickingSkeletonStep = 0;
       }

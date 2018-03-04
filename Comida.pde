@@ -226,7 +226,7 @@ public class Queijo extends Geral {
     this.x = x;
     this.y = y;
 
-    spriteImage = coxinha;
+    spriteImage = queijo;
     spriteInterval = 75;
     spriteWidth = 31;
     spriteHeight = 29;
@@ -237,7 +237,7 @@ public class Queijo extends Geral {
     this.x = int(random(200, 500));
     this.y = int(random(-300, -1000));
 
-    spriteImage = coxinha;
+    spriteImage = queijo;
     spriteInterval = 75;
     spriteWidth = 31;
     spriteHeight = 29;
