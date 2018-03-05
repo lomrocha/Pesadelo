@@ -33,9 +33,9 @@ String ultimoEstado;
 
 float millisAvancada, millisAvancadaMapa;
 
-int posicoesInimigosNoPrimeiroMapa[][];
-int posicoesInimigosNoSegundoMapa [][];
-int posicoesInimigosNoTerceiroMapa[][];
+int enemyPositionsFirstMap  [][];
+int enemyPositionsSecondMap [][];
+int enemyPositionsThirdMap  [][];
 
 int[] valoresXMapaCoveiro = {50, 720};
 int[] valoresYMapaCoveiro = {380, 380};
@@ -186,7 +186,7 @@ public void setup() {
   coxinha = loadImage ("coxinha.png");
   brigadeiro = loadImage ("brigadeiro.png");
   queijo = loadImage ("pdqueijo.png");
-  sombraComidas = loadImage ("sombraComidas.png");
+  foodShadow = loadImage ("sombraComidas.png");
 
   pa = loadImage ("pa.png");
   sombraPa = loadImage ("sombraPaChicote.png");
@@ -221,18 +221,18 @@ public void setup() {
   vidaJLeiteLayoutBackground = loadImage ("vidaJLeiteLayoutBackground.png");
   vidaJLeiteBarra = loadImage ("vidaJLeiteBarra.png");
 
-  esqueleto = loadImage ("esqueleto.png");
-  sombraEsqueleto = loadImage ("sombraEsqueleto.png");
-  esqueletoChuteAtaque = loadImage ("esqueletoChuteAtaque.png");
-  esqueletoChuteMovimento = loadImage ("esqueletoChuteMovimento.png");
-  cabecaEsqueletoChute = loadImage ("cabecaEsqueletoChute.png");
-  sombraEsqueletoChute = loadImage ("sombraEsqueletoChute.png");
-  cachorro = loadImage ("cachorro.png");
-  sombraCachorro = loadImage ("sombraCachorro.png");
-  corvo = loadImage ("corvo.png");
-  sombraCorvo = loadImage ("sombraCorvo.png");
-  esqueletoRaiva = loadImage ("esqueletoRaiva.png");
-  sombraEsqueletoRaiva = loadImage ("sombraEsqueletoRaiva.png");
+  skeleton = loadImage ("esqueleto.png");
+  skeletonShadow = loadImage ("sombraEsqueleto.png");
+  kickingSkeleton = loadImage ("esqueletoChuteAtaque.png");
+  headlessKickingSkeleton = loadImage ("esqueletoChuteMovimento.png");
+  skeletonHead = loadImage ("cabecaEsqueletoChute.png");
+  kickingSkeletonShadow = loadImage ("sombraEsqueletoChute.png");
+  skeletonDog = loadImage ("cachorro.png");
+  skeletonDogShadow = loadImage ("sombraCachorro.png");
+  skeletonCrow = loadImage ("corvo.png");
+  skeletonCrowShadow = loadImage ("sombraCorvo.png");
+  redSkeleton = loadImage ("esqueletoRaiva.png");
+  redSkeletonShadow = loadImage ("sombraEsqueletoRaiva.png");
 
   hitInimigos = loadImage ("hitInimigos.png");
 
@@ -346,9 +346,9 @@ public void setup() {
   hitBosses = loadImage ("hitBosses.png");
   hitEscudo = loadImage ("hitEscudo.png");
 
-  posicoesInimigosNoPrimeiroMapa = new int [7][4];
-  posicoesInimigosNoSegundoMapa  = new int [7][4];
-  posicoesInimigosNoTerceiroMapa = new int [7][4];
+  enemyPositionsFirstMap = new int [7][4];
+  enemyPositionsSecondMap  = new int [7][4];
+  enemyPositionsThirdMap = new int [7][4];
 
   posicoesEsqueleto();
   posicoesEsqueletoChute();
@@ -867,7 +867,7 @@ public class PaAtaque {
   }
 
   public boolean acertouEsqueleto(Esqueleto e) {
-    if (jLeiteX + 160 > e.esqueletoX && jLeiteX - 70 < e.esqueletoX + 76 && jLeiteY + 56 > e.esqueletoY && jLeiteY - 44 < e.esqueletoY + 126) {
+    if (jLeiteX + 160 > e.x && jLeiteX - 70 < e.x + 76 && jLeiteY + 56 > e.y && jLeiteY - 44 < e.y + 126) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -876,7 +876,7 @@ public class PaAtaque {
   }
 
   public boolean acertouEsqueletoChute(EsqueletoChute e) {
-    if (jLeiteX + 160 > e.esqueletoChuteX && jLeiteX - 70 < e.esqueletoChuteX + 49 && jLeiteY + 56 > e.esqueletoChuteY && jLeiteY - 44 < e.esqueletoChuteY + 74) {
+    if (jLeiteX + 160 > e.x && jLeiteX - 70 < e.x + 49 && jLeiteY + 56 > e.y && jLeiteY - 44 < e.y + 74) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -885,7 +885,7 @@ public class PaAtaque {
   }
 
   public boolean acertouCachorro(Cachorro c) {
-    if (jLeiteX + 160 > c.cachorroX && jLeiteX - 70 < c.cachorroX + 45 && jLeiteY + 56 > c.cachorroY && jLeiteY - 44 < c.cachorroY + 83) {
+    if (jLeiteX + 160 > c.x && jLeiteX - 70 < c.x + 45 && jLeiteY + 56 > c.y && jLeiteY - 44 < c.y + 83) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -894,7 +894,7 @@ public class PaAtaque {
   }
 
   public boolean acertouCorvo(Corvo c) {
-    if (jLeiteX + 160 > c.corvoX + 45 && jLeiteX - 70 < c.corvoX + 75 && jLeiteY + 56 > c.corvoY && jLeiteY - 44 < c.corvoY + 86) {
+    if (jLeiteX + 160 > c.x + 45 && jLeiteX - 70 < c.x + 75 && jLeiteY + 56 > c.y && jLeiteY - 44 < c.y + 86) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -903,7 +903,7 @@ public class PaAtaque {
   }
 
   public boolean acertouEsqueletoRaiva(EsqueletoRaiva e) {
-    if (jLeiteX + 160 > e.esqueletoRaivaX && jLeiteX - 70 < e.esqueletoRaivaX + 76 && jLeiteY + 56 > e.esqueletoRaivaY && jLeiteY - 44 < e.esqueletoRaivaY + 126) {
+    if (jLeiteX + 160 > e.x && jLeiteX - 70 < e.x + 76 && jLeiteY + 56 > e.y && jLeiteY - 44 < e.y + 126) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -1143,7 +1143,7 @@ public class PedraAtirada {
   }
 
   public boolean acertouEsqueleto(Esqueleto e) {
-    if (pedraFogoX + 16 > e.esqueletoX && pedraFogoX < e.esqueletoX + 76 && pedraFogoY + 26 > e.esqueletoY && pedraFogoY < e.esqueletoY + 126) {
+    if (pedraFogoX + 16 > e.x && pedraFogoX < e.x + 76 && pedraFogoY + 26 > e.y && pedraFogoY < e.y + 126) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -1152,7 +1152,7 @@ public class PedraAtirada {
   }
 
   public boolean acertouEsqueletoChute(EsqueletoChute e) {
-    if (pedraFogoX + 16 > e.esqueletoChuteX && pedraFogoX < e.esqueletoChuteX + 49 && pedraFogoY + 26 > e.esqueletoChuteY && pedraFogoY < e.esqueletoChuteY + 74) {
+    if (pedraFogoX + 16 > e.x && pedraFogoX < e.x + 49 && pedraFogoY + 26 > e.y && pedraFogoY < e.y + 74) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -1161,7 +1161,7 @@ public class PedraAtirada {
   }
 
   public boolean acertouCachorro(Cachorro c) {
-    if (pedraFogoX + 16 > c.cachorroX && pedraFogoX < c.cachorroX + 45 && pedraFogoY + 26 > c.cachorroY && pedraFogoY < c.cachorroY + 83) {
+    if (pedraFogoX + 16 > c.x && pedraFogoX < c.x + 45 && pedraFogoY + 26 > c.y && pedraFogoY < c.y + 83) {
       return true;
     } else { 
       return false;
@@ -1169,7 +1169,7 @@ public class PedraAtirada {
   }
 
   public boolean acertouCorvo(Corvo c) {
-    if (pedraFogoX + 16 > c.corvoX + 45 && pedraFogoX < c.corvoX + 75 && pedraFogoY + 26 > c.corvoY && pedraFogoY < c.corvoY + 86) {
+    if (pedraFogoX + 16 > c.x + 45 && pedraFogoX < c.x + 75 && pedraFogoY + 26 > c.y && pedraFogoY < c.y + 86) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -1178,7 +1178,7 @@ public class PedraAtirada {
   }
 
   public boolean acertouEsqueletoRaiva(EsqueletoRaiva e) {
-    if (pedraFogoX + 16 > e.esqueletoRaivaX && pedraFogoX < e.esqueletoRaivaX + 76 && pedraFogoY + 26 > e.esqueletoRaivaY && pedraFogoY < e.esqueletoRaivaY + 126) {
+    if (pedraFogoX + 16 > e.x && pedraFogoX < e.x + 76 && pedraFogoY + 26 > e.y && pedraFogoY < e.y + 126) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -1410,7 +1410,7 @@ public class ChicoteAtaque {
   }
 
   public boolean acertouEsqueleto(Esqueleto e) {
-    if (jLeiteX + 56 > e.esqueletoX && jLeiteX + 50 < e.esqueletoX + 76 && jLeiteY > e.esqueletoY && jLeiteY - 140 < e.esqueletoY + 126) {
+    if (jLeiteX + 56 > e.x && jLeiteX + 50 < e.x + 76 && jLeiteY > e.y && jLeiteY - 140 < e.y + 126) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -1419,7 +1419,7 @@ public class ChicoteAtaque {
   }
 
   public boolean acertouEsqueletoChute(EsqueletoChute e) {
-    if (jLeiteX + 56 > e.esqueletoChuteX && jLeiteX + 50 < e.esqueletoChuteX + 49 && jLeiteY > e.esqueletoChuteY && jLeiteY - 140 < e.esqueletoChuteY + 74) {
+    if (jLeiteX + 56 > e.x && jLeiteX + 50 < e.x + 49 && jLeiteY > e.y && jLeiteY - 140 < e.y + 74) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -1428,7 +1428,7 @@ public class ChicoteAtaque {
   }
 
   public boolean acertouCachorro(Cachorro c) {
-    if (jLeiteX + 56 > c.cachorroX && jLeiteX + 50 < c.cachorroX + 45 && jLeiteY > c.cachorroY && jLeiteY - 140 < c.cachorroY + 83) {
+    if (jLeiteX + 56 > c.x && jLeiteX + 50 < c.x + 45 && jLeiteY > c.y && jLeiteY - 140 < c.y + 83) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -1437,7 +1437,7 @@ public class ChicoteAtaque {
   }
 
   public boolean acertouCorvo(Corvo c) {
-    if (jLeiteX + 56 > c.corvoX + 45 && jLeiteX + 50 < c.corvoX + 75 && jLeiteY > c.corvoY && jLeiteY - 140 < c.corvoY + 86) {
+    if (jLeiteX + 56 > c.x + 45 && jLeiteX + 50 < c.x + 75 && jLeiteY > c.y && jLeiteY - 140 < c.y + 86) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -1446,7 +1446,7 @@ public class ChicoteAtaque {
   }
 
   public boolean acertouEsqueletoRaiva(EsqueletoRaiva e) {
-    if (jLeiteX + 56 > e.esqueletoRaivaX && jLeiteX + 50 < e.esqueletoRaivaX + 76 && jLeiteY > e.esqueletoRaivaY && jLeiteY - 140 < e.esqueletoRaivaY + 126) {
+    if (jLeiteX + 56 > e.x && jLeiteX + 50 < e.x + 76 && jLeiteY > e.y && jLeiteY - 140 < e.y + 126) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -3221,7 +3221,7 @@ public class Padre {
 
   private int tempoNovoAtaqueCruz, tempoDanoCruz;
 
-  private int tempoNovoAtaqueLevantem = PApplet.parseInt(millisAvancada), tempoDuracaoAtaqueLevantem, totalRecuperadoLevantem;
+  private int tempoNovoAtaqueLevantem = PApplet.parseInt(millisAvancada), tempoDuracaoAtaqueLevantem, amountRecoveredLevantem;
 
   private int tempoNovoAtaqueCaveira = PApplet.parseInt(millisAvancada);
 
@@ -3431,8 +3431,8 @@ public class Padre {
           }
 
           if (!padreRaivaCurou) {
-            while (vidaPadreRaivaAtual < 40 && totalRecuperadoLevantem < 3) {
-              totalRecuperadoLevantem = totalRecuperadoLevantem + 1;
+            while (vidaPadreRaivaAtual < 40 && amountRecoveredLevantem < 3) {
+              amountRecoveredLevantem = amountRecoveredLevantem + 1;
               vidaPadreRaivaAtual = vidaPadreRaivaAtual + 1;
             }
             padreRaivaCurou = true;
@@ -3656,7 +3656,7 @@ public class Padre {
         if (!gatilhoNovoAtaqueLevantem) {
           tempoNovoAtaqueLevantem = PApplet.parseInt(millisAvancada);
           gatilhoNovoAtaqueLevantem = true;
-          totalRecuperadoLevantem = 0;
+          amountRecoveredLevantem = 0;
           padreRaivaCurou = false;
         }
         if (millisAvancada > tempoNovoAtaqueLevantem + 5000 && !gatilhoNovoAtaqueLevantemAtivo) {
@@ -4065,13 +4065,218 @@ public void raio() {
     }
   }
 }
+PImage skeletonHead;
+
+public class CabecaEsqueleto extends Geral {
+  private int movementX;
+
+  private int skeletonHeadTarget;
+
+  private boolean isHeadStraight;
+
+  public CabecaEsqueleto(int x, int y, int skeletonHeadTarget) {
+    this.x = x;
+    this.y = y;
+    this.skeletonHeadTarget = skeletonHeadTarget;
+    
+    movementY = 12;
+  }
+
+  public void display() {
+    image(skeletonHead, x, y);
+  }
+
+  public void update() {
+    x = x + movementX;
+    if (!isHeadStraight) {
+      if (x > skeletonHeadTarget) {
+        movementX = -8;
+      } else {
+        movementX = 8;
+      }
+    } else {
+      movementX = 0;
+    }
+
+    y = y + movementY;
+  }
+
+  public void checaCabecaEsqueletoReta() {
+    if (x < skeletonHeadTarget) {
+      if (skeletonHeadTarget - x < 10) {  
+        isHeadStraight = true;
+      } else {
+        isHeadStraight = false;
+      }
+    } else {
+      if (x - skeletonHeadTarget < 10) {  
+        isHeadStraight = true;
+      } else {
+        isHeadStraight = false;
+      }
+    }
+  }
+}
+
+ArrayList<CabecaEsqueleto> cabecasEsqueleto;
+
+public void cabecaEsqueleto() {
+  for (int i = cabecasEsqueleto.size() - 1; i >= 0; i = i - 1) {
+    CabecaEsqueleto c = cabecasEsqueleto.get(i);
+    c.display();
+    c.update();
+    c.checaCabecaEsqueletoReta();
+    if (c.hasExitScreen()) {
+      cabecasEsqueleto.remove(c);
+    }
+
+    if (c.hasCollided() && !jLeiteImune) {
+      vidaJLeiteAtual = vidaJLeiteAtual - 3;
+      jLeiteImune = true;
+      tempoImune = millis();
+    }
+  }
+}
+PImage skeletonDog;
+PImage skeletonDogShadow;
+
+final int SKELETONDOG = 2;
+
+int[] valoresCachorroXMapaFazendeiro = {70, 382, 695};
+
+public class Cachorro extends Geral {
+  public Cachorro(int x, int y) {
+    this.x = x;
+    this.y = y;
+    
+    spriteImage = skeletonDog;
+    spriteInterval = 55;
+    spriteWidth = 45;
+    spriteHeight = 83;
+    movementY = 8;
+  }
+
+  public void display() {
+    image (skeletonDogShadow, x, y + 45);
+    
+    super.display();
+  }
+}
+
+ArrayList<Cachorro> cachorros;
+
+int cachorroC, cachorroL;
+
+int indexRandomCachorroXMapaBoss;
+
+public void cachorro() {
+  if (indexInimigos == 2) {
+    if (estadoJogo == "MapaFazendeiro") {
+      if (cachorros.size() == 0 && !fazendeiroTomouDanoPneu && !fazendeiro.fazendeiroMorreu) {
+        for (int i = 0; i < 2; i = i + 1) {
+          indexRandomCachorroXMapaBoss = PApplet.parseInt(random(0, valoresCachorroXMapaFazendeiro.length));
+          cachorros.add(new Cachorro(valoresCachorroXMapaFazendeiro[indexRandomCachorroXMapaBoss], 0));
+        }
+      }
+    }
+
+    if (estadoJogo == "MapaPadre") { 
+      if (cachorros.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
+        indexRandomCachorroXMapaBoss = PApplet.parseInt(random(0, valoresInimigosXMapaPadre.length));
+        cachorros.add(new Cachorro(valoresInimigosXMapaPadre[indexRandomCachorroXMapaBoss], 0));
+        totalInimigos = totalInimigos + 1;
+      }
+    }
+
+    if (!telaTutorialAndandoAtiva && totalCenariosCriados < totalCenariosPossiveis) {
+      if (estadoJogo == "SegundoMapa" && cachorros.size() < 2 && totalInimigos < 6) {
+        cachorroC = PApplet.parseInt(random(0, 7));
+        cachorroL = PApplet.parseInt(random(0, 4));
+
+        if (enemyPositionsSecondMap[cachorroC][cachorroL] == SKELETONDOG) {
+          cachorros.add(new Cachorro(100 + (cachorroC * (600 / 7)), -150 - (cachorroL * 150)));
+          totalInimigos = totalInimigos + 1;
+        }
+      }
+
+      if (estadoJogo == "TerceiroMapa" && cachorros.size() < 2 && totalInimigos < 6) {
+        cachorroC = PApplet.parseInt(random(0, 7));
+        cachorroL = PApplet.parseInt(random(0, 4));
+
+        if (enemyPositionsThirdMap[cachorroC][cachorroL] == SKELETONDOG) {
+          cachorros.add(new Cachorro(100 + (cachorroC * (600 / 7)), -150 - (cachorroL * 150)));
+          totalInimigos = totalInimigos + 1;
+        }
+      }
+    }
+  }
+
+  for (int i = cachorros.size() - 1; i >= 0; i = i - 1) {
+    Cachorro c = cachorros.get(i);
+    c.display();
+    c.update();
+    if (c.hasExitScreen()) {
+      totalInimigos = totalInimigos - 1;
+      cachorros.remove(c);
+    }
+    if (c.hasCollided() && !jLeiteImune) {
+      vidaJLeiteAtual = vidaJLeiteAtual - 2;
+      jLeiteImune = true;
+      tempoImune = millis();
+    }
+  }
+
+  for (int i = cachorros.size() - 1; i >= 0; i = i - 1) {
+    Cachorro c = cachorros.get(i);
+    for (int j = pasAtaque.size() - 1; j >= 0; j = j - 1) {
+      PaAtaque p = pasAtaque.get(j);
+      if (p.acertouCachorro(c)) {
+        totalInimigos = totalInimigos - 1;
+        hitInimigos(c.x, c.y);
+        cachorros.remove(c);
+      }
+    }
+    for (int j = pedrasAtiradas.size() - 1; j >= 0; j = j - 1) {
+      PedraAtirada p = pedrasAtiradas.get(j);
+      if (p.acertouCachorro(c)) {
+        totalInimigos = totalInimigos - 1;
+        hitInimigos(c.x, c.y);
+        pedrasAtiradas.remove(p);
+        cachorros.remove(c);
+      }
+    }
+    for (int j = chicotes.size() - 1; j >= 0; j = j - 1) {
+      ChicoteAtaque ch = chicotesAtaque.get(j);
+      if (ch.acertouCachorro(c)) {
+        totalInimigos = totalInimigos - 1;
+        hitInimigos(c.x, c.y);
+        cachorros.remove(c);
+      }
+    }
+  }
+}
+
+public void posicoesCachorro() {
+  enemyPositionsSecondMap [0][0] = SKELETONDOG;
+  enemyPositionsSecondMap [1][1] = SKELETONDOG;
+  enemyPositionsSecondMap [2][2] = SKELETONDOG;
+  enemyPositionsSecondMap [3][0] = SKELETONDOG;
+  enemyPositionsSecondMap [4][3] = SKELETONDOG;
+  enemyPositionsSecondMap [5][2] = SKELETONDOG;
+  enemyPositionsSecondMap [6][2] = SKELETONDOG;
+
+  enemyPositionsThirdMap  [1][0] = SKELETONDOG;
+  enemyPositionsThirdMap  [3][0] = SKELETONDOG;
+  enemyPositionsThirdMap  [5][2] = SKELETONDOG;
+  enemyPositionsThirdMap  [6][1] = SKELETONDOG;
+}
 PImage[] imagensCenarios = new PImage [6];
 PImage[] imagensCenariosBoss =  new PImage [3];
 
 PImage porta;
 PImage cerca;
 
-float movimentoCenario = 42;
+float sceneryMovement = 42;
 
 int indexCenario;
 
@@ -4159,10 +4364,10 @@ public class Cenario {
 
   public void update() {
     if (indexCenarioCriado != totalCenariosPossiveis) {
-      cenarioY = cenarioY + movimentoCenario;
+      cenarioY = cenarioY + sceneryMovement;
     } else {
       if (cenarioY <= 0) {
-        cenarioY = cenarioY + movimentoCenario;
+        cenarioY = cenarioY + sceneryMovement;
       }
     }
   }
@@ -4183,9 +4388,9 @@ double tempoCenario;
 
 public void cenario() {
   if (!jLeiteMorreu) {
-    movimentoCenario = 2;
+    sceneryMovement = 2;
   } else {
-    movimentoCenario = 0;
+    sceneryMovement = 0;
   }
 
   cenario.display();
@@ -4205,7 +4410,7 @@ public void cenario() {
       tempoCenario = millisAvancadaMapa;
     }
 
-    if (cenarios.size() < 2 && millisAvancadaMapa + 200 > tempoCenario + ((imagensCenarios[2].height / (60 * movimentoCenario)) * 1000)) {
+    if (cenarios.size() < 2 && millisAvancadaMapa + 200 > tempoCenario + ((imagensCenarios[2].height / (60 * sceneryMovement)) * 1000)) {
       totalCenariosCriados = totalCenariosCriados + 1;
       if (estadoJogo == "PrimeiroMapa") {
         if (totalCenariosCriados != totalCenariosPossiveis) {
@@ -4241,12 +4446,12 @@ public void cenario() {
     }
   }
 }
-PImage sombraComidas;
+PImage foodShadow;
 
 int tempoGerarComida;
 int indexComida;
 
-int totalRecuperado;
+int amountRecovered;
 
 int totalComidas;
 
@@ -4272,63 +4477,35 @@ public void comidaTodos() {
 
 PImage coxinha;
 
-public class Coxinha {
-  private PImage spriteCoxinha;
+public class Coxinha extends Geral {
+  private int amountRecovered = 0;
 
-  private int coxinhaX = PApplet.parseInt(random(200, 500));
-  private int coxinhaY = PApplet.parseInt(random(-300, -1000));
+  public Coxinha(int x, int y) {
+    this.x = x;
+    this.y = y;
 
-  private int stepCoxinha;
-  private int tempoSpriteCoxinha;
-
-  private int totalRecuperado = 0;
-
-  public Coxinha(int coxinhaX, int coxinhaY) {
-    this.coxinhaX = coxinhaX;
-    this.coxinhaY = coxinhaY;
+    spriteImage = coxinha;
+    spriteInterval = 75;
+    spriteWidth = 28;
+    spriteHeight = 30;
+    movementY = 1;
   }
 
   public Coxinha() {
+    this.x = PApplet.parseInt(random(200, 500));
+    this.y = PApplet.parseInt(random(-300, -1000));
+
+    spriteImage = coxinha;
+    spriteInterval = 75;
+    spriteWidth = 28;
+    spriteHeight = 30;
+    movementY = 1;
   }
 
   public void display() {
-    image (sombraComidas, coxinhaX, coxinhaY + 20);
+    image (foodShadow, x, y + 20);
 
-    if (millis() > tempoSpriteCoxinha + 75) {
-      spriteCoxinha = coxinha.get(stepCoxinha, 0, 28, 30);
-      stepCoxinha = stepCoxinha % 168 + 28;
-      image(spriteCoxinha, coxinhaX, coxinhaY);
-      tempoSpriteCoxinha = millis();
-    } else {
-      image(spriteCoxinha, coxinhaX, coxinhaY);
-    }
-
-    if (stepCoxinha == coxinha.width) {
-      stepCoxinha = 0;
-    }
-  }
-
-  public void update() {
-    coxinhaY = coxinhaY + 1;
-  }
-
-  public boolean apanhado() {
-    if (coxinhaX + 27 > jLeiteX && coxinhaX < jLeiteX + 63 && coxinhaY + 30 > jLeiteY && coxinhaY < jLeiteY + 126) {
-      tempoGerarComida = PApplet.parseInt(millisAvancada);
-      indexComida = 10;
-      comidaGerada = false;
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  public boolean saiuDaTela() {
-    if (coxinhaY > height) {
-      return true;
-    } else {
-      return false;
-    }
+    super.display();
   }
 }
 
@@ -4378,13 +4555,13 @@ public void coxinha() {
     if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
       c.update();
     }
-    if (c.saiuDaTela()) {
+    if (c.hasExitScreen()) {
       totalComidas = totalComidas - 1;
       coxinhas.remove(c);
     }
-    if (c.apanhado()) {
-      while (vidaJLeiteAtual < vidaJleiteMax && c.totalRecuperado < coxinhaRecuperacao) {
-        c.totalRecuperado = c.totalRecuperado + 1;
+    if (c.hasCollided()) {
+      while (vidaJLeiteAtual < vidaJleiteMax && c.amountRecovered < coxinhaRecuperacao) {
+        c.amountRecovered = c.amountRecovered + 1;
         vidaJLeiteAtual = vidaJLeiteAtual + 1;
       }
       totalComidas = totalComidas - 1;
@@ -4395,63 +4572,35 @@ public void coxinha() {
 
 PImage brigadeiro;
 
-public class Brigadeiro {
-  private PImage spriteBrigadeiro;
+public class Brigadeiro extends Geral {
+  private int amountRecovered = 0;
 
-  private int brigadeiroX = PApplet.parseInt(random(200, 500));
-  private int brigadeiroY = PApplet.parseInt(random(-300, -1000));
+  public Brigadeiro(int x, int y) {
+    this.x = x;
+    this.y = y;
 
-  private int stepBrigadeiro;
-  private int tempoSpriteBrigadeiro;
-
-  private int totalRecuperado = 0;
-
-  public Brigadeiro(int brigadeiroX, int brigadeiroY) {
-    this.brigadeiroX = brigadeiroX;
-    this.brigadeiroY = brigadeiroY;
+    spriteImage = brigadeiro;
+    spriteInterval = 75;
+    spriteWidth = 32;
+    spriteHeight = 31;
+    movementY = 1;
   }
 
   public Brigadeiro() {
+    this.x = PApplet.parseInt(random(200, 500));
+    this.y = PApplet.parseInt(random(-300, -1000));
+
+    spriteImage = brigadeiro;
+    spriteInterval = 75;
+    spriteWidth = 32;
+    spriteHeight = 31;
+    movementY = 1;
   }
 
   public void display() {
-    image (sombraComidas, brigadeiroX + 2, brigadeiroY + 21);
+    image (foodShadow, x, y + 20);
 
-    if (millis() > tempoSpriteBrigadeiro + 75) {
-      spriteBrigadeiro = brigadeiro.get(stepBrigadeiro, 0, 32, 31);
-      stepBrigadeiro = stepBrigadeiro % 192 + 32;
-      image(spriteBrigadeiro, brigadeiroX, brigadeiroY);
-      tempoSpriteBrigadeiro = millis();
-    } else {
-      image(spriteBrigadeiro, brigadeiroX, brigadeiroY);
-    }
-
-    if (stepBrigadeiro == brigadeiro.width) {
-      stepBrigadeiro = 0;
-    }
-  }
-
-  public void update() {
-    brigadeiroY = brigadeiroY + 1;
-  }
-
-  public boolean apanhado() {
-    if (brigadeiroX + 32 > jLeiteX && brigadeiroX < jLeiteX + 63 && brigadeiroY + 31 > jLeiteY && brigadeiroY < jLeiteY + 126) {
-      tempoGerarComida = PApplet.parseInt(millisAvancada);
-      indexComida = 10;
-      comidaGerada = false;
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  public boolean saiuDaTela() {
-    if (brigadeiroY > height) {
-      return true;
-    } else {
-      return false;
-    }
+    super.display();
   }
 }
 
@@ -4501,13 +4650,13 @@ public void brigadeiro() {
     if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
       b.update();
     }
-    if (b.saiuDaTela()) {
+    if (b.hasExitScreen()) {
       totalComidas = totalComidas - 1;
       brigadeiros.remove(b);
     }
-    if (b.apanhado()) {
-      while (vidaJLeiteAtual < vidaJleiteMax && b.totalRecuperado < coxinhaRecuperacao) {
-        b.totalRecuperado = b.totalRecuperado + 1;
+    if (b.hasCollided()) {
+      while (vidaJLeiteAtual < vidaJleiteMax && b.amountRecovered < coxinhaRecuperacao) {
+        b.amountRecovered = b.amountRecovered + 1;
         vidaJLeiteAtual = vidaJLeiteAtual + 1;
       }
       totalComidas = totalComidas - 1;
@@ -4518,63 +4667,35 @@ public void brigadeiro() {
 
 PImage queijo;
 
-public class Queijo {
-  private PImage spriteQueijo;
+public class Queijo extends Geral {
+  private int amountRecovered = 0;
 
-  private int queijoX = PApplet.parseInt(random(200, 500));
-  private int queijoY = PApplet.parseInt(random(-300, -1000));
+  public Queijo(int x, int y) {
+    this.x = x;
+    this.y = y;
 
-  private int stepQueijo;
-  private int tempoSpriteQueijo;
-
-  private int totalRecuperado = 0;
-
-  public Queijo(int queijoX, int queijoY) {
-    this.queijoX = queijoX;
-    this.queijoY = queijoY;
+    spriteImage = queijo;
+    spriteInterval = 75;
+    spriteWidth = 31;
+    spriteHeight = 29;
+    movementY = 1;
   }
 
   public Queijo() {
+    this.x = PApplet.parseInt(random(200, 500));
+    this.y = PApplet.parseInt(random(-300, -1000));
+
+    spriteImage = queijo;
+    spriteInterval = 75;
+    spriteWidth = 31;
+    spriteHeight = 29;
+    movementY = 1;
   }
 
   public void display() {
-    image (sombraComidas, queijoX, queijoY + 19);
+    image (foodShadow, x, y + 19);
 
-    if (millis() > tempoSpriteQueijo + 75) { 
-      spriteQueijo = queijo.get(stepQueijo, 0, 31, 29); 
-      stepQueijo = stepQueijo % 186 + 31;
-      image(spriteQueijo, queijoX, queijoY); 
-      tempoSpriteQueijo = millis();
-    } else {
-      image(spriteQueijo, queijoX, queijoY);
-    }
-
-    if (stepQueijo == queijo.width) {
-      stepQueijo = 0;
-    }
-  }
-
-  public void update() {
-    queijoY = queijoY + 1;
-  }
-
-  public boolean apanhado() {
-    if (queijoX + 31 > jLeiteX && queijoX < jLeiteX + 63 && queijoY + 29 > jLeiteY && queijoY < jLeiteY + 126) {
-      tempoGerarComida = PApplet.parseInt(millisAvancada);
-      indexComida = 10;
-      comidaGerada = false;
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  public boolean saiuDaTela() {
-    if (queijoY > height) {
-      return true;
-    } else {
-      return false;
-    }
+    super.display();
   }
 }
 
@@ -4624,18 +4745,758 @@ public void queijo() {
     if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
       q.update();
     }
-    if (q.saiuDaTela()) {
+    if (q.hasExitScreen()) {
       totalComidas = totalComidas - 1;
       queijos.remove(q);
     }
-    if (q.apanhado()) {
-      while (vidaJLeiteAtual < vidaJleiteMax && q.totalRecuperado < coxinhaRecuperacao) {
-        q.totalRecuperado = q.totalRecuperado + 1;
+    if (q.hasCollided()) {
+      while (vidaJLeiteAtual < vidaJleiteMax && q.amountRecovered < coxinhaRecuperacao) {
+        q.amountRecovered = q.amountRecovered + 1;
         vidaJLeiteAtual = vidaJLeiteAtual + 1;
       }
       totalComidas = totalComidas - 1;
       queijos.remove(q);
     }
+  }
+}
+PImage skeletonCrow;
+PImage skeletonCrowShadow;
+
+public class Corvo extends Geral {
+  private int targetX = jLeiteX;
+
+  private int newTargetInterval;
+  private int randomTime = PApplet.parseInt(random(500, 1201));
+
+  private boolean hasNewTarget;
+
+  public Corvo() {
+    x = PApplet.parseInt(random(100, width - 163));
+    y = PApplet.parseInt(random(-300, -1000));
+    
+    spriteImage = skeletonCrow;
+    spriteInterval = 75;
+    spriteWidth = 121;
+    spriteHeight = 86;
+    movementY = 4;
+  }
+
+  public Corvo(int x, int y) {
+    this.x = x;
+    this.y = y;
+
+    spriteImage = skeletonCrow;
+    spriteInterval = 75;
+    spriteWidth = 121;
+    spriteHeight = 86;
+    movementY = 4;
+  }
+
+  public void display() {
+    super.display();
+
+    image(skeletonCrowShadow, x + 24, y + 86);
+  }  
+
+  public void atualizaAlvo() {
+    if (y > 0) {
+      if (targetX != jLeiteX && !hasNewTarget) {
+        newTargetInterval = millis();
+        hasNewTarget = true;
+      }
+      
+      if (millis() > newTargetInterval + randomTime) {
+        targetX = jLeiteX;
+        newTargetInterval = millis();
+        hasNewTarget = false;
+      }
+    }
+  }
+
+  public void update() {
+    if (x < targetX) {
+      x = x + 3;
+    }
+    if (x > targetX) {
+      x = x - 3;
+    }
+
+    super.update();
+  }
+
+  public boolean hasAttacked() {
+    if (x + 95 > jLeiteX && x + 25 < jLeiteX + 63 && y + 86 > jLeiteY && y < jLeiteY + 126) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
+
+ArrayList<Corvo> corvos;
+
+int indexRandomCorvoXMapaBoss;
+
+public void corvo() {
+  if (indexInimigos == 3) {
+    if (estadoJogo == "MapaPadre") {
+      if (corvos.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
+        indexRandomCorvoXMapaBoss = PApplet.parseInt(random(0, valoresInimigosXMapaPadre.length));
+        corvos.add(new Corvo(valoresInimigosXMapaPadre[indexRandomCorvoXMapaBoss], 0));
+      }
+    }
+
+    if (!telaTutorialAndandoAtiva && totalCenariosCriados < totalCenariosPossiveis) {
+      if (estadoJogo == "SegundoMapa" && corvos.size() < 2) {
+        corvos.add(new Corvo());
+      }
+
+      if (estadoJogo == "TerceiroMapa" && corvos.size() < 2) {
+        corvos.add(new Corvo());
+      }
+    }
+  }
+
+  for (int i = corvos.size() - 1; i >= 0; i = i - 1) {
+    Corvo c = corvos.get(i);
+    c.display();
+    c.atualizaAlvo();
+    c.update();
+    if (c.hasExitScreen()) {
+      corvos.remove(c);
+    }
+    if (c.hasAttacked() && !jLeiteImune) {
+      vidaJLeiteAtual = vidaJLeiteAtual - 3;
+      jLeiteImune = true;
+      tempoImune = millis();
+    }
+  }
+
+  for (int i = corvos.size() - 1; i >= 0; i = i - 1) {
+    Corvo c = corvos.get(i);
+    for (int j = pasAtaque.size() - 1; j >= 0; j = j - 1) {
+      PaAtaque p = pasAtaque.get(j);
+      if (p.acertouCorvo(c)) {
+        hitInimigos(c.x, c.y);
+        corvos.remove(c);
+      }
+    }
+    for (int j = pedrasAtiradas.size() - 1; j >= 0; j = j - 1) {
+      PedraAtirada p = pedrasAtiradas.get(j);
+      if (p.acertouCorvo(c)) {
+        hitInimigos(c.x, c.y);
+        pedrasAtiradas.remove(p);
+        corvos.remove(c);
+      }
+    }
+    for (int j = chicotes.size() - 1; j >= 0; j = j - 1) {
+      ChicoteAtaque ch = chicotesAtaque.get(j);
+      if (ch.acertouCorvo(c)) {
+        totalInimigos = totalInimigos - 1;
+        hitInimigos(c.x, c.y);
+        corvos.remove(c);
+      }
+    }
+  }
+}
+PImage skeleton;
+PImage skeletonShadow;
+
+final int SKELETON = 0;
+
+int[] valoresEsqueletoXMapaCoveiro = {200, 520};
+
+public class Esqueleto extends Geral {
+  public Esqueleto(int x, int y) {
+    this.x = x;
+    this.y = y;
+
+    spriteImage = skeleton;
+    spriteInterval = 155;
+    spriteWidth = 76;
+    spriteHeight = 126;
+    movementY = 3;
+  }
+
+  public void display() {
+    image (skeletonShadow, x + 16, y + 114);
+
+    super.display();
+  }
+}
+
+ArrayList<Esqueleto> esqueletos;
+
+int esqueletoC, esqueletoL;
+
+int indexRandomEsqueletoXMapaBoss;
+
+public void esqueleto() {
+  if (indexInimigos == 0) {
+    if (estadoJogo == "MapaCoveiro") {
+      if (esqueletos.size() == 0 && !coveiro.coveiroMorreu && !coveiroTomouDanoAgua) {
+        for (int i = 0; i < 2; i = i + 1) {
+          indexRandomEsqueletoXMapaBoss = PApplet.parseInt(random(0, 2));
+          esqueletos.add(new Esqueleto(valoresEsqueletoXMapaCoveiro[indexRandomEsqueletoXMapaBoss], 0));
+        }
+      }
+    }
+
+    if (estadoJogo == "MapaPadre") { 
+      if (esqueletos.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
+        indexRandomEsqueletoXMapaBoss = PApplet.parseInt(random(0, valoresInimigosXMapaPadre.length));
+        esqueletos.add(new Esqueleto(valoresInimigosXMapaPadre[indexRandomEsqueletoXMapaBoss], 0));
+        totalInimigos = totalInimigos + 1;
+      }
+    }
+
+    if (!telaTutorialAndandoAtiva && totalCenariosCriados < totalCenariosPossiveis) {
+      if (estadoJogo == "PrimeiroMapa" && esqueletos.size() < 2 && totalInimigos < 6) {
+        esqueletoC = PApplet.parseInt(random(0, 7));
+        esqueletoL = PApplet.parseInt(random(0, 4));
+
+        if (enemyPositionsFirstMap[esqueletoC][esqueletoL] == SKELETON) {
+          esqueletos.add(new Esqueleto(100 + (esqueletoC * (600 / 7)), -150 - (esqueletoL * 150)));
+          totalInimigos = totalInimigos + 1;
+        }
+      }
+
+      if (estadoJogo == "SegundoMapa" && esqueletos.size() < 2 && totalInimigos < 6) {
+        esqueletoC = PApplet.parseInt(random(0, 7));
+        esqueletoL = PApplet.parseInt(random(0, 4));
+
+        if (enemyPositionsSecondMap[esqueletoC][esqueletoL] == SKELETON) {
+          esqueletos.add(new Esqueleto(100 + (esqueletoC * (600 / 7)), -150 - (esqueletoL * 150)));
+          totalInimigos = totalInimigos + 1;
+        }
+      }
+
+      if (estadoJogo == "TerceiroMapa" && esqueletos.size() < 2 && totalInimigos < 6) {
+        esqueletoC = PApplet.parseInt(random(0, 7));
+        esqueletoL = PApplet.parseInt(random(0, 4));
+
+        if (enemyPositionsThirdMap[esqueletoC][esqueletoL] == SKELETON) {
+          esqueletos.add(new Esqueleto(100 + (esqueletoC * (600 / 7)), -150 - (esqueletoL * 150)));
+          totalInimigos = totalInimigos + 1;
+        }
+      }
+    }
+  }
+
+  for (int i = esqueletos.size() - 1; i >= 0; i = i - 1) {
+    Esqueleto e = esqueletos.get(i);
+    e.display();
+    e.update();
+    if (e.hasExitScreen()) {
+      totalInimigos = totalInimigos - 1;
+      esqueletos.remove(e);
+    }
+    if (e.hasCollided() && !jLeiteImune) {
+      vidaJLeiteAtual = vidaJLeiteAtual - 2;
+      jLeiteImune = true;
+      tempoImune = millis();
+    }
+  }
+
+  for (int i = esqueletos.size() - 1; i >= 0; i = i - 1) {
+    Esqueleto e = esqueletos.get(i);
+    for (int j = pasAtaque.size() - 1; j >= 0; j = j - 1) {
+      PaAtaque p = pasAtaque.get(j);
+      if (p.acertouEsqueleto(e)) {
+        totalInimigos = totalInimigos - 1;
+        hitInimigos(e.x, e.y);
+        esqueletos.remove(e);
+      }
+    }
+    for (int j = pedrasAtiradas.size() - 1; j >= 0; j = j - 1) {
+      PedraAtirada p = pedrasAtiradas.get(j);
+      if (p.acertouEsqueleto(e)) {
+        totalInimigos = totalInimigos - 1;
+        hitInimigos(e.x, e.y);
+        pedrasAtiradas.remove(p);
+        esqueletos.remove(e);
+      }
+    }
+    for (int j = chicotes.size() - 1; j >= 0; j = j - 1) {
+      ChicoteAtaque c = chicotesAtaque.get(j);
+      if (c.acertouEsqueleto(e)) {
+        totalInimigos = totalInimigos - 1;
+        hitInimigos(e.x, e.y);
+        esqueletos.remove(e);
+      }
+    }
+  }
+}
+
+public void posicoesEsqueleto() {
+  enemyPositionsFirstMap  [0][0] = SKELETON;
+  enemyPositionsFirstMap  [1][2] = SKELETON;
+  enemyPositionsFirstMap  [2][0] = SKELETON;
+  enemyPositionsFirstMap  [3][2] = SKELETON;
+  enemyPositionsFirstMap  [4][0] = SKELETON;
+  enemyPositionsFirstMap  [5][2] = SKELETON;
+  enemyPositionsFirstMap  [6][0] = SKELETON;
+
+  enemyPositionsSecondMap [0][1] = SKELETON;
+  enemyPositionsSecondMap [1][3] = SKELETON;
+  enemyPositionsSecondMap [2][0] = SKELETON;
+  enemyPositionsSecondMap [3][2] = SKELETON;
+  enemyPositionsSecondMap [4][0] = SKELETON;
+  enemyPositionsSecondMap [5][0] = SKELETON;
+  enemyPositionsSecondMap [6][0] = SKELETON;
+
+  enemyPositionsThirdMap  [0][3] = SKELETON;
+  enemyPositionsThirdMap  [2][0] = SKELETON;
+  enemyPositionsThirdMap  [4][2] = SKELETON;
+  enemyPositionsThirdMap  [6][3] = SKELETON;
+}
+PImage kickingSkeleton;
+PImage headlessKickingSkeleton;
+PImage kickingSkeletonShadow;
+
+final int KICKINGSKELETON = 1;
+
+public class EsqueletoChute extends Geral {
+  private PImage kickingSkeletonSprite;
+
+  private int movementX;
+
+  private int changeDirectionDelay;
+
+  private int kickingSkeletonStep;
+  private int kickingSkeletonSpriteTime;
+
+  private boolean hasLostHead;
+  private boolean gatilhoEsqueletoCabeca, esqueletoCabecaSaiu;
+
+  public EsqueletoChute(int x, int y) {
+    this.x = x;
+    this.y = y;
+
+    spriteImage = headlessKickingSkeleton;
+    spriteInterval = 200;
+    spriteWidth = 48;
+    spriteHeight = 74;
+  }
+
+  public void display() {
+    image (kickingSkeletonShadow, x + 1, y + 50);
+
+    if (!hasLostHead) {
+      if (millis() > kickingSkeletonSpriteTime + 200) { 
+        if (y < 0) {
+          kickingSkeletonSprite = kickingSkeleton.get(0, 0, 49, 74);
+        } else {
+          kickingSkeletonSprite = kickingSkeleton.get(kickingSkeletonStep, 0, 49, 74); 
+          kickingSkeletonStep = kickingSkeletonStep % 245 + 49;
+        }
+        image(kickingSkeletonSprite, x, y); 
+        kickingSkeletonSpriteTime = millis();
+      } else {
+        image(kickingSkeletonSprite, x, y);
+      }
+
+      if (kickingSkeletonStep == 196 && !gatilhoEsqueletoCabeca) {
+        esqueletoCabecaSaiu = true;
+        gatilhoEsqueletoCabeca = true;
+      }
+
+      if (kickingSkeletonStep == kickingSkeleton.width) {
+        hasLostHead = true;
+        kickingSkeletonStep = 0;
+      }
+    } else {
+      super.display();
+    }
+  }
+
+  public void update() {
+    x = x + movementX;
+    y = y + movementY;
+
+    if (!hasLostHead) {
+      movementY = PApplet.parseInt(sceneryMovement);
+      movementX = 0;
+    } else {
+      movementY = PApplet.parseInt(sceneryMovement) + 1;
+      if (millis() > changeDirectionDelay + 350) {
+        movementX = PApplet.parseInt(random(-5, 5));
+        changeDirectionDelay = millis();
+      }
+    }
+  }
+}
+
+ArrayList<EsqueletoChute> esqueletosChute;
+
+int esqueletoChuteC, esqueletoChuteL;
+
+int indexRandomEsqueletoChuteXMapaBoss;
+
+public void esqueletoChute() {
+  if (indexInimigos == 1) {
+    if (estadoJogo == "MapaPadre") { 
+      if (esqueletosChute.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
+        indexRandomEsqueletoChuteXMapaBoss = PApplet.parseInt(random(0, valoresInimigosXMapaPadre.length));
+        esqueletosChute.add(new EsqueletoChute(valoresInimigosXMapaPadre[indexRandomEsqueletoChuteXMapaBoss], 0));
+        totalInimigos = totalInimigos + 1;
+      }
+    }
+
+    if (!telaTutorialAndandoAtiva && totalCenariosCriados < totalCenariosPossiveis) {
+      if (estadoJogo == "PrimeiroMapa" && esqueletosChute.size() < 2 && totalInimigos < 6) {
+        esqueletoChuteC = PApplet.parseInt(random(0, 7));
+        esqueletoChuteL = PApplet.parseInt(random(0, 4));
+
+        if (enemyPositionsFirstMap[esqueletoChuteC][esqueletoChuteL] == KICKINGSKELETON) {
+          esqueletosChute.add(new EsqueletoChute(100 + (esqueletoChuteC * (600 / 7)), -150 - (esqueletoChuteL * 150)));
+          totalInimigos = totalInimigos + 1;
+        }
+      }
+      if (estadoJogo == "SegundoMapa" && esqueletosChute.size() < 2 && totalInimigos < 6) {
+        esqueletoChuteC = PApplet.parseInt(random(0, 7));
+        esqueletoChuteL = PApplet.parseInt(random(0, 4));
+
+        if (enemyPositionsSecondMap[esqueletoChuteC][esqueletoChuteL] == KICKINGSKELETON) {
+          esqueletosChute.add(new EsqueletoChute(100 + (esqueletoChuteC * (600 / 7)), -150 - (esqueletoChuteL * 150)));
+          totalInimigos = totalInimigos + 1;
+        }
+      }
+      if (estadoJogo == "TerceiroMapa" && esqueletosChute.size() < 2 && totalInimigos < 6) {
+        esqueletoChuteC = PApplet.parseInt(random(0, 7));
+        esqueletoChuteL = PApplet.parseInt(random(0, 4));
+
+        if (enemyPositionsThirdMap[esqueletoChuteC][esqueletoChuteL] == KICKINGSKELETON) {
+          esqueletosChute.add(new EsqueletoChute(100 + (esqueletoChuteC * (600 / 7)), -150 - (esqueletoChuteL * 150)));
+          totalInimigos = totalInimigos + 1;
+        }
+      }
+    }
+  }
+
+  for (int i = esqueletosChute.size() - 1; i >= 0; i = i - 1) {
+    EsqueletoChute e = esqueletosChute.get(i);
+    e.display();
+    if (e.esqueletoCabecaSaiu) {
+      cabecasEsqueleto.add(new CabecaEsqueleto(e.x, e.y, jLeiteX));
+      e.esqueletoCabecaSaiu = false;
+    }
+    e.update();
+    if (e.hasExitScreen()) {
+      totalInimigos = totalInimigos - 1;
+      esqueletosChute.remove(e);
+    }
+    if (e.hasCollided() && !jLeiteImune) {
+      vidaJLeiteAtual = vidaJLeiteAtual - 2;
+      jLeiteImune = true;
+      tempoImune = millis();
+    }
+  }
+
+  for (int i = esqueletosChute.size() - 1; i >= 0; i = i - 1) {
+    EsqueletoChute e = esqueletosChute.get(i);
+    for (int j = pasAtaque.size() - 1; j >= 0; j = j - 1) {
+      PaAtaque p = pasAtaque.get(j);
+      if (p.acertouEsqueletoChute(e)) {
+        totalInimigos = totalInimigos - 1;
+        hitInimigos(e.x - 40, e.y - 20);
+        esqueletosChute.remove(e);
+      }
+    }
+    for (int j = pedrasAtiradas.size() - 1; j >= 0; j = j - 1) {
+      PedraAtirada p = pedrasAtiradas.get(j);
+      if (p.acertouEsqueletoChute(e)) {
+        totalInimigos = totalInimigos - 1;
+        hitInimigos(e.x - 40, e.y - 20);
+        pedrasAtiradas.remove(p);
+        esqueletosChute.remove(e);
+      }
+    }
+    for (int j = chicotes.size() - 1; j >= 0; j = j - 1) {
+      ChicoteAtaque c = chicotesAtaque.get(j);
+      if (c.acertouEsqueletoChute(e)) {
+        totalInimigos = totalInimigos - 1;
+        hitInimigos(e.x - 40, e.y - 20);
+        esqueletosChute.remove(e);
+      }
+    }
+  }
+}
+
+public void posicoesEsqueletoChute() {
+  enemyPositionsFirstMap  [0][2] = KICKINGSKELETON;
+  enemyPositionsFirstMap  [1][0] = KICKINGSKELETON;
+  enemyPositionsFirstMap  [2][2] = KICKINGSKELETON;
+  enemyPositionsFirstMap  [3][0] = KICKINGSKELETON;
+  enemyPositionsFirstMap  [4][2] = KICKINGSKELETON;
+  enemyPositionsFirstMap  [5][0] = KICKINGSKELETON;
+  enemyPositionsFirstMap  [6][2] = KICKINGSKELETON;
+
+  enemyPositionsSecondMap [0][2] = KICKINGSKELETON;
+  enemyPositionsSecondMap [1][0] = KICKINGSKELETON;
+  enemyPositionsSecondMap [2][3] = KICKINGSKELETON;
+  enemyPositionsSecondMap [3][3] = KICKINGSKELETON;
+  enemyPositionsSecondMap [4][2] = KICKINGSKELETON;
+  enemyPositionsSecondMap [5][3] = KICKINGSKELETON;
+  enemyPositionsSecondMap [6][3] = KICKINGSKELETON;
+
+  enemyPositionsThirdMap  [0][2] = KICKINGSKELETON;
+  enemyPositionsThirdMap  [1][3] = KICKINGSKELETON;
+  enemyPositionsThirdMap  [2][1] = KICKINGSKELETON;
+  enemyPositionsThirdMap  [4][3] = KICKINGSKELETON;
+  enemyPositionsThirdMap  [5][1] = KICKINGSKELETON;
+}
+PImage redSkeleton;
+PImage redSkeletonShadow;
+
+final int REDSKELETON = 3;
+
+public class EsqueletoRaiva extends Geral {
+  private int movementX = 3;
+
+  public EsqueletoRaiva(int x, int y) {
+    this.x = x;
+    this.y = y;
+    
+    spriteImage = redSkeleton;
+    spriteInterval = 75;
+    spriteWidth = 76;
+    spriteHeight = 126;
+    movementY = 3;
+  }
+
+  public void display() {
+    image(redSkeletonShadow, x + 16, y + 114);
+    
+    super.display();
+  }
+
+  public void update() {
+    x = x + movementX;
+
+    if (x < 100) {
+      movementX = 3;
+    }
+    if (x + 30 > 700) {
+      movementX = -3;
+    } 
+
+    super.update();
+  }
+}
+
+ArrayList<EsqueletoRaiva> esqueletosRaiva;
+
+int esqueletoRaivaC, esqueletoRaivaL;
+
+int indexRandomEsqueletoRaivaXMapaBoss;
+
+public void esqueletoRaiva() {
+  if (indexInimigos == 4) {
+    if (estadoJogo == "MapaPadre") { 
+      if (esqueletosRaiva.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
+        indexRandomEsqueletoRaivaXMapaBoss = PApplet.parseInt(random(0, valoresInimigosXMapaPadre.length));
+        esqueletosRaiva.add(new EsqueletoRaiva(valoresInimigosXMapaPadre[indexRandomEsqueletoRaivaXMapaBoss], 0));
+        totalInimigos = totalInimigos + 1;
+      }
+    }
+
+    if (!telaTutorialAndandoAtiva && totalCenariosCriados < totalCenariosPossiveis) {
+      if (estadoJogo == "TerceiroMapa" && esqueletosRaiva.size() < 2 && totalInimigos < 6) {
+        esqueletoRaivaC = PApplet.parseInt(random(0, 7));
+        esqueletoRaivaL = PApplet.parseInt(random(0, 4));
+
+        if (enemyPositionsThirdMap[esqueletoRaivaC][esqueletoRaivaL] == REDSKELETON) {
+          esqueletosRaiva.add(new EsqueletoRaiva(100 + (esqueletoRaivaC * (600 / 7)), -150 - (esqueletoRaivaL * 150)));
+          totalInimigos = totalInimigos + 1;
+        }
+      }
+    }
+  }
+
+
+  for (int i = esqueletosRaiva.size() - 1; i >= 0; i = i - 1) {
+    EsqueletoRaiva e = esqueletosRaiva.get(i);
+    e.display();
+    e.update();
+    if (e.hasExitScreen()) {
+      totalInimigos = totalInimigos - 1;
+      esqueletosRaiva.remove(e);
+    }
+    if (e.hasCollided() && !jLeiteImune) {
+      vidaJLeiteAtual = vidaJLeiteAtual - 3;
+      jLeiteImune = true;
+      tempoImune = millis();
+    }
+  }
+
+  for (int i = esqueletosRaiva.size() - 1; i >= 0; i = i - 1) {
+    EsqueletoRaiva e = esqueletosRaiva.get(i);
+    for (int j = pasAtaque.size() - 1; j >= 0; j = j - 1) {
+      PaAtaque p = pasAtaque.get(j);
+      if (p.acertouEsqueletoRaiva(e)) {
+        totalInimigos = totalInimigos - 1;
+        hitInimigos(e.x, e.y);
+        esqueletosRaiva.remove(e);
+      }
+    }
+    for (int j = pedrasAtiradas.size() - 1; j >= 0; j = j - 1) {
+      PedraAtirada p = pedrasAtiradas.get(j);
+      if (p.acertouEsqueletoRaiva(e)) {
+        totalInimigos = totalInimigos - 1;
+        hitInimigos(e.x, e.y);
+        pedrasAtiradas.remove(p);
+        esqueletosRaiva.remove(e);
+      }
+    }
+    for (int j = chicotes.size() - 1; j >= 0; j = j - 1) {
+      ChicoteAtaque ch = chicotesAtaque.get(j);
+      if (ch.acertouEsqueletoRaiva(e)) {
+        totalInimigos = totalInimigos - 1;
+        hitInimigos(e.x, e.y);
+        esqueletosRaiva.remove(e);
+      }
+    }
+  }
+}
+
+public void posicoesEsqueletoRaiva() {
+  enemyPositionsThirdMap[0][0] = REDSKELETON;
+  enemyPositionsThirdMap[1][2] = REDSKELETON;
+  enemyPositionsThirdMap[2][3] = REDSKELETON;
+  enemyPositionsThirdMap[3][2] = REDSKELETON;
+  enemyPositionsThirdMap[4][1] = REDSKELETON;
+  enemyPositionsThirdMap[5][0] = REDSKELETON;
+  enemyPositionsThirdMap[6][2] = REDSKELETON;
+}
+public class Geral {
+  protected PImage sprite;
+  protected PImage spriteImage;
+
+  protected int x;
+  protected int y;
+  protected int movementY;
+
+  protected int step;
+  protected int spriteTime;
+  protected int spriteInterval;
+
+  protected int spriteWidth;
+  protected int spriteHeight;
+
+  public PImage getSprite() {
+    return sprite;
+  }
+
+  public void setSprite(PImage sprite) {
+    this.sprite = sprite;
+  }
+
+  public PImage getEnemy() {
+    return spriteImage;
+  }
+
+  public void setEnemy(PImage enemy) {
+    this.spriteImage = enemy;
+  }
+
+  public int getX() {
+    return x;
+  }
+
+  public void setX(int x) {
+    this.x = x;
+  }
+
+  public int getY() {
+    return y;
+  }
+
+  public void setY(int y) {
+    this.y = y;
+  }
+
+  public int getmovementY() {
+    return movementY;
+  }
+
+  public void setmovementY(int movementY) {
+    this.movementY = movementY;
+  }
+
+  public int getStep() {
+    return step;
+  }
+
+  public void setStep(int step) {
+    this.step = step;
+  }
+
+  public int getSpriteTime() {
+    return spriteTime;
+  }
+
+  public void setSpriteTime(int spriteTime) {
+    this.spriteTime = spriteTime;
+  }
+
+  public int getSpriteInterval() {
+    return spriteInterval;
+  }
+
+  public void setSpriteInterval(int spriteInterval) {
+    this.spriteInterval = spriteInterval;
+  }
+
+  public int getSpriteWidth() {
+    return spriteWidth;
+  }
+
+  public void setSpriteWidth(int spriteWidth) {
+    this.spriteWidth = spriteWidth;
+  }
+
+  public int getSpriteHeight() {
+    return spriteHeight;
+  }
+
+  public void setSpriteHeight(int spriteHeight) {
+    this.spriteHeight = spriteHeight;
+  }
+
+  public void display() {
+    if (millis() > spriteTime + spriteInterval) {
+      sprite = spriteImage.get(step, 0, spriteWidth, spriteHeight);
+      step = step % spriteImage.width + spriteWidth;
+      image(sprite, x, y);
+      spriteTime = millis();
+    } else {
+      image(sprite, x, y);
+    }
+
+    if (step == spriteImage.width) {
+      step = 0;
+    }
+  }
+
+  public void update() {
+    y = y + movementY;
+  }
+
+  public boolean hasCollided() {
+    if (x + spriteWidth > jLeiteX && x < jLeiteX + 63 && y + spriteHeight > jLeiteY && y < jLeiteY + 126) {
+      return true;
+    }
+
+    return false;
+  }
+
+  public boolean hasExitScreen() {
+    if (y > height) {
+      return true;
+    }
+
+    return false;
   }
 }
 PImage hitInimigos, spriteHitInimigos;
@@ -4786,980 +5647,6 @@ public void inimigosTodos() {
   cachorro();
   corvo();
   esqueletoRaiva();
-}
-
-PImage esqueleto;
-PImage sombraEsqueleto;
-
-final int ESQUELETO = 0;
-
-int[] valoresEsqueletoXMapaCoveiro = {200, 520};
-
-public class Esqueleto {
-  private PImage spriteEsqueleto;
-
-  private int esqueletoX;
-  private int esqueletoY;
-
-  private int stepEsqueleto;
-  private int tempoSpriteEsqueleto;
-
-  public Esqueleto(int esqueletoX, int esqueletoY) {
-    this.esqueletoX = esqueletoX;
-    this.esqueletoY = esqueletoY;
-  }
-
-  public void display() {
-    image (sombraEsqueleto, esqueletoX + 16, esqueletoY + 114);
-
-    if (millis() > tempoSpriteEsqueleto + 155) { 
-      spriteEsqueleto = esqueleto.get(stepEsqueleto, 0, 76, 126); 
-      stepEsqueleto = stepEsqueleto % 228 + 76;
-      image(spriteEsqueleto, esqueletoX, esqueletoY); 
-      tempoSpriteEsqueleto = millis();
-    } else {
-      image(spriteEsqueleto, esqueletoX, esqueletoY);
-    }
-
-    if (stepEsqueleto == esqueleto.width) {
-      stepEsqueleto = 0;
-    }
-  }
-
-  public void update() {
-    esqueletoY = esqueletoY + 3;
-  }
-
-  public boolean ataque() {
-    if (esqueletoX + 76 > jLeiteX && esqueletoX < jLeiteX + 63 && esqueletoY + 126 > jLeiteY && esqueletoY < jLeiteY + 126) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  public boolean saiuDaTela() {
-    if (esqueletoY > height) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
-
-ArrayList<Esqueleto> esqueletos;
-
-int esqueletoC, esqueletoL;
-
-int indexRandomEsqueletoXMapaBoss;
-
-public void esqueleto() {
-  if (indexInimigos == 0) {
-    if (estadoJogo == "MapaCoveiro") {
-      if (esqueletos.size() == 0 && !coveiro.coveiroMorreu && !coveiroTomouDanoAgua) {
-        for (int i = 0; i < 2; i = i + 1) {
-          indexRandomEsqueletoXMapaBoss = PApplet.parseInt(random(0, 2));
-          esqueletos.add(new Esqueleto(valoresEsqueletoXMapaCoveiro[indexRandomEsqueletoXMapaBoss], 0));
-        }
-      }
-    }
-
-    if (estadoJogo == "MapaPadre") { 
-      if (esqueletos.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
-        indexRandomEsqueletoXMapaBoss = PApplet.parseInt(random(0, valoresInimigosXMapaPadre.length));
-        esqueletos.add(new Esqueleto(valoresInimigosXMapaPadre[indexRandomEsqueletoXMapaBoss], 0));
-        totalInimigos = totalInimigos + 1;
-      }
-    }
-
-    if (!telaTutorialAndandoAtiva && totalCenariosCriados < totalCenariosPossiveis) {
-      if (estadoJogo == "PrimeiroMapa" && esqueletos.size() < 2 && totalInimigos < 6) {
-        esqueletoC = PApplet.parseInt(random(0, 7));
-        esqueletoL = PApplet.parseInt(random(0, 4));
-
-        if (posicoesInimigosNoPrimeiroMapa[esqueletoC][esqueletoL] == ESQUELETO) {
-          esqueletos.add(new Esqueleto(100 + (esqueletoC * (600 / 7)), -150 - (esqueletoL * 150)));
-          totalInimigos = totalInimigos + 1;
-        }
-      }
-
-      if (estadoJogo == "SegundoMapa" && esqueletos.size() < 2 && totalInimigos < 6) {
-        esqueletoC = PApplet.parseInt(random(0, 7));
-        esqueletoL = PApplet.parseInt(random(0, 4));
-
-        if (posicoesInimigosNoSegundoMapa[esqueletoC][esqueletoL] == ESQUELETO) {
-          esqueletos.add(new Esqueleto(100 + (esqueletoC * (600 / 7)), -150 - (esqueletoL * 150)));
-          totalInimigos = totalInimigos + 1;
-        }
-      }
-
-      if (estadoJogo == "TerceiroMapa" && esqueletos.size() < 2 && totalInimigos < 6) {
-        esqueletoC = PApplet.parseInt(random(0, 7));
-        esqueletoL = PApplet.parseInt(random(0, 4));
-
-        if (posicoesInimigosNoTerceiroMapa[esqueletoC][esqueletoL] == ESQUELETO) {
-          esqueletos.add(new Esqueleto(100 + (esqueletoC * (600 / 7)), -150 - (esqueletoL * 150)));
-          totalInimigos = totalInimigos + 1;
-        }
-      }
-    }
-  }
-
-  for (int i = esqueletos.size() - 1; i >= 0; i = i - 1) {
-    Esqueleto e = esqueletos.get(i);
-    e.display();
-    e.update();
-    if (e.saiuDaTela()) {
-      totalInimigos = totalInimigos - 1;
-      esqueletos.remove(e);
-    }
-    if (e.ataque() && !jLeiteImune) {
-      vidaJLeiteAtual = vidaJLeiteAtual - 2;
-      jLeiteImune = true;
-      tempoImune = millis();
-    }
-  }
-
-  for (int i = esqueletos.size() - 1; i >= 0; i = i - 1) {
-    Esqueleto e = esqueletos.get(i);
-    for (int j = pasAtaque.size() - 1; j >= 0; j = j - 1) {
-      PaAtaque p = pasAtaque.get(j);
-      if (p.acertouEsqueleto(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.esqueletoX, e.esqueletoY);
-        esqueletos.remove(e);
-      }
-    }
-    for (int j = pedrasAtiradas.size() - 1; j >= 0; j = j - 1) {
-      PedraAtirada p = pedrasAtiradas.get(j);
-      if (p.acertouEsqueleto(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.esqueletoX, e.esqueletoY);
-        pedrasAtiradas.remove(p);
-        esqueletos.remove(e);
-      }
-    }
-    for (int j = chicotes.size() - 1; j >= 0; j = j - 1) {
-      ChicoteAtaque c = chicotesAtaque.get(j);
-      if (c.acertouEsqueleto(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.esqueletoX, e.esqueletoY);
-        esqueletos.remove(e);
-      }
-    }
-  }
-}
-
-public void posicoesEsqueleto() {
-  posicoesInimigosNoPrimeiroMapa[0][0] = ESQUELETO;
-  posicoesInimigosNoPrimeiroMapa[1][2] = ESQUELETO;
-  posicoesInimigosNoPrimeiroMapa[2][0] = ESQUELETO;
-  posicoesInimigosNoPrimeiroMapa[3][2] = ESQUELETO;
-  posicoesInimigosNoPrimeiroMapa[4][0] = ESQUELETO;
-  posicoesInimigosNoPrimeiroMapa[5][2] = ESQUELETO;
-  posicoesInimigosNoPrimeiroMapa[6][0] = ESQUELETO;
-
-  posicoesInimigosNoSegundoMapa [0][1] = ESQUELETO;
-  posicoesInimigosNoSegundoMapa [1][3] = ESQUELETO;
-  posicoesInimigosNoSegundoMapa [2][0] = ESQUELETO;
-  posicoesInimigosNoSegundoMapa [3][2] = ESQUELETO;
-  posicoesInimigosNoSegundoMapa [4][0] = ESQUELETO;
-  posicoesInimigosNoSegundoMapa [5][0] = ESQUELETO;
-  posicoesInimigosNoSegundoMapa [6][0] = ESQUELETO;
-
-  posicoesInimigosNoTerceiroMapa[0][3] = ESQUELETO;
-  posicoesInimigosNoTerceiroMapa[2][0] = ESQUELETO;
-  posicoesInimigosNoTerceiroMapa[4][2] = ESQUELETO;
-  posicoesInimigosNoTerceiroMapa[6][3] = ESQUELETO;
-}
-
-PImage esqueletoChuteAtaque;
-PImage esqueletoChuteMovimento;
-PImage sombraEsqueletoChute;
-
-final int ESQUELETOCHUTE = 1;
-
-public class EsqueletoChute {
-  private PImage spriteEsqueletoChuteAtaque;
-  private PImage spriteEsqueletoChuteMovimento;
-
-  private int esqueletoChuteX;
-  private int esqueletoChuteY;
-
-  private int movimentoEsqueletoChuteX;
-  private int movimentoEsqueletoChuteY;
-
-  private int tempoTrocaDirecaoEsqueletoChuteX;
-
-  private int stepEsqueletoChuteAtaque;
-  private int tempoSpriteEsqueletoChuteAtaque;
-
-  private int stepEsqueletoChuteMovimento;
-  private int tempoSpriteEsqueletoChuteMovimento;
-
-  private boolean perdeuCabeca;
-  private boolean gatilhoEsqueletoCabeca, esqueletoCabecaSaiu;
-
-  public EsqueletoChute(int esqueletoChuteX, int esqueletoChuteY) {
-    this.esqueletoChuteX = esqueletoChuteX;
-    this.esqueletoChuteY = esqueletoChuteY;
-  }
-
-  public void display() {
-    image (sombraEsqueletoChute, esqueletoChuteX + 1, esqueletoChuteY + 50);
-
-    if (!perdeuCabeca) {
-      if (millis() > tempoSpriteEsqueletoChuteAtaque + 200) { 
-        if (esqueletoChuteY < 0) {
-          spriteEsqueletoChuteAtaque = esqueletoChuteAtaque.get(0, 0, 49, 74);
-        } else {
-          spriteEsqueletoChuteAtaque = esqueletoChuteAtaque.get(stepEsqueletoChuteAtaque, 0, 49, 74); 
-          stepEsqueletoChuteAtaque = stepEsqueletoChuteAtaque % 245 + 49;
-        }
-        image(spriteEsqueletoChuteAtaque, esqueletoChuteX, esqueletoChuteY); 
-        tempoSpriteEsqueletoChuteAtaque = millis();
-      } else {
-        image(spriteEsqueletoChuteAtaque, esqueletoChuteX, esqueletoChuteY);
-      }
-
-      if (stepEsqueletoChuteAtaque == 196 && !gatilhoEsqueletoCabeca) {
-        esqueletoCabecaSaiu = true;
-        gatilhoEsqueletoCabeca = true;
-      }
-
-      if (stepEsqueletoChuteAtaque == esqueletoChuteAtaque.width) {
-        perdeuCabeca = true;
-        stepEsqueletoChuteAtaque = 0;
-      }
-    } else {
-      if (millis() > tempoSpriteEsqueletoChuteMovimento + 200) { 
-        spriteEsqueletoChuteMovimento = esqueletoChuteMovimento.get(stepEsqueletoChuteMovimento, 0, 48, 74); 
-        stepEsqueletoChuteMovimento = stepEsqueletoChuteMovimento % 192 + 48;
-        image(spriteEsqueletoChuteMovimento, esqueletoChuteX, esqueletoChuteY); 
-        tempoSpriteEsqueletoChuteMovimento = millis();
-      } else {
-        image(spriteEsqueletoChuteMovimento, esqueletoChuteX, esqueletoChuteY);
-      }
-
-      if (stepEsqueletoChuteMovimento == esqueletoChuteMovimento.width) {
-        stepEsqueletoChuteMovimento = 0;
-      }
-    }
-  }
-
-  public void update() {
-    esqueletoChuteX = esqueletoChuteX + movimentoEsqueletoChuteX;
-    esqueletoChuteY = esqueletoChuteY + movimentoEsqueletoChuteY;
-
-    if (!perdeuCabeca) {
-      movimentoEsqueletoChuteY = PApplet.parseInt(movimentoCenario);
-      movimentoEsqueletoChuteX = 0;
-    } else {
-      movimentoEsqueletoChuteY = PApplet.parseInt(movimentoCenario) + 1;
-      if (millis() > tempoTrocaDirecaoEsqueletoChuteX + 350) {
-        movimentoEsqueletoChuteX = PApplet.parseInt(random(-5, 5));
-        tempoTrocaDirecaoEsqueletoChuteX = millis();
-      }
-    }
-  }
-
-  public boolean ataque() {
-    if (esqueletoChuteX + 48 > jLeiteX && esqueletoChuteX < jLeiteX + 63 && esqueletoChuteY + 74 > jLeiteY && esqueletoChuteY < jLeiteY + 126) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  public boolean saiuDaTela() {
-    if (esqueletoChuteY > height) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
-
-ArrayList<EsqueletoChute> esqueletosChute;
-
-int esqueletoChuteC, esqueletoChuteL;
-
-int indexRandomEsqueletoChuteXMapaBoss;
-
-public void esqueletoChute() {
-  if (indexInimigos == 1) {
-    if (estadoJogo == "MapaPadre") { 
-      if (esqueletosChute.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
-        indexRandomEsqueletoChuteXMapaBoss = PApplet.parseInt(random(0, valoresInimigosXMapaPadre.length));
-        esqueletosChute.add(new EsqueletoChute(valoresInimigosXMapaPadre[indexRandomEsqueletoChuteXMapaBoss], 0));
-        totalInimigos = totalInimigos + 1;
-      }
-    }
-
-    if (!telaTutorialAndandoAtiva && totalCenariosCriados < totalCenariosPossiveis) {
-      if (estadoJogo == "PrimeiroMapa" && esqueletosChute.size() < 2 && totalInimigos < 6) {
-        esqueletoChuteC = PApplet.parseInt(random(0, 7));
-        esqueletoChuteL = PApplet.parseInt(random(0, 4));
-
-        if (posicoesInimigosNoPrimeiroMapa[esqueletoChuteC][esqueletoChuteL] == ESQUELETOCHUTE) {
-          esqueletosChute.add(new EsqueletoChute(100 + (esqueletoChuteC * (600 / 7)), -150 - (esqueletoChuteL * 150)));
-          totalInimigos = totalInimigos + 1;
-        }
-      }
-      if (estadoJogo == "SegundoMapa" && esqueletosChute.size() < 2 && totalInimigos < 6) {
-        esqueletoChuteC = PApplet.parseInt(random(0, 7));
-        esqueletoChuteL = PApplet.parseInt(random(0, 4));
-
-        if (posicoesInimigosNoSegundoMapa[esqueletoChuteC][esqueletoChuteL] == ESQUELETOCHUTE) {
-          esqueletosChute.add(new EsqueletoChute(100 + (esqueletoChuteC * (600 / 7)), -150 - (esqueletoChuteL * 150)));
-          totalInimigos = totalInimigos + 1;
-        }
-      }
-      if (estadoJogo == "TerceiroMapa" && esqueletosChute.size() < 2 && totalInimigos < 6) {
-        esqueletoChuteC = PApplet.parseInt(random(0, 7));
-        esqueletoChuteL = PApplet.parseInt(random(0, 4));
-
-        if (posicoesInimigosNoTerceiroMapa[esqueletoChuteC][esqueletoChuteL] == ESQUELETOCHUTE) {
-          esqueletosChute.add(new EsqueletoChute(100 + (esqueletoChuteC * (600 / 7)), -150 - (esqueletoChuteL * 150)));
-          totalInimigos = totalInimigos + 1;
-        }
-      }
-    }
-  }
-
-  for (int i = esqueletosChute.size() - 1; i >= 0; i = i - 1) {
-    EsqueletoChute e = esqueletosChute.get(i);
-    e.display();
-    if (e.esqueletoCabecaSaiu) {
-      cabecasEsqueleto.add(new CabecaEsqueleto(e.esqueletoChuteX, e.esqueletoChuteY, jLeiteX));
-      e.esqueletoCabecaSaiu = false;
-    }
-    e.update();
-    if (e.saiuDaTela()) {
-      totalInimigos = totalInimigos - 1;
-      esqueletosChute.remove(e);
-    }
-    if (e.ataque() && !jLeiteImune) {
-      vidaJLeiteAtual = vidaJLeiteAtual - 2;
-      jLeiteImune = true;
-      tempoImune = millis();
-    }
-  }
-
-  for (int i = esqueletosChute.size() - 1; i >= 0; i = i - 1) {
-    EsqueletoChute e = esqueletosChute.get(i);
-    for (int j = pasAtaque.size() - 1; j >= 0; j = j - 1) {
-      PaAtaque p = pasAtaque.get(j);
-      if (p.acertouEsqueletoChute(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.esqueletoChuteX - 40, e.esqueletoChuteY - 20);
-        esqueletosChute.remove(e);
-      }
-    }
-    for (int j = pedrasAtiradas.size() - 1; j >= 0; j = j - 1) {
-      PedraAtirada p = pedrasAtiradas.get(j);
-      if (p.acertouEsqueletoChute(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.esqueletoChuteX - 40, e.esqueletoChuteY - 20);
-        pedrasAtiradas.remove(p);
-        esqueletosChute.remove(e);
-      }
-    }
-    for (int j = chicotes.size() - 1; j >= 0; j = j - 1) {
-      ChicoteAtaque c = chicotesAtaque.get(j);
-      if (c.acertouEsqueletoChute(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.esqueletoChuteX - 40, e.esqueletoChuteY - 20);
-        esqueletosChute.remove(e);
-      }
-    }
-  }
-}
-
-public void posicoesEsqueletoChute() {
-  posicoesInimigosNoPrimeiroMapa[0][2] = ESQUELETOCHUTE;
-  posicoesInimigosNoPrimeiroMapa[1][0] = ESQUELETOCHUTE;
-  posicoesInimigosNoPrimeiroMapa[2][2] = ESQUELETOCHUTE;
-  posicoesInimigosNoPrimeiroMapa[3][0] = ESQUELETOCHUTE;
-  posicoesInimigosNoPrimeiroMapa[4][2] = ESQUELETOCHUTE;
-  posicoesInimigosNoPrimeiroMapa[5][0] = ESQUELETOCHUTE;
-  posicoesInimigosNoPrimeiroMapa[6][2] = ESQUELETOCHUTE;
-
-  posicoesInimigosNoSegundoMapa [0][2] = ESQUELETOCHUTE;
-  posicoesInimigosNoSegundoMapa [1][0] = ESQUELETOCHUTE;
-  posicoesInimigosNoSegundoMapa [2][3] = ESQUELETOCHUTE;
-  posicoesInimigosNoSegundoMapa [3][3] = ESQUELETOCHUTE;
-  posicoesInimigosNoSegundoMapa [4][2] = ESQUELETOCHUTE;
-  posicoesInimigosNoSegundoMapa [5][3] = ESQUELETOCHUTE;
-  posicoesInimigosNoSegundoMapa [6][3] = ESQUELETOCHUTE;
-
-  posicoesInimigosNoTerceiroMapa[0][2] = ESQUELETOCHUTE;
-  posicoesInimigosNoTerceiroMapa[1][3] = ESQUELETOCHUTE;
-  posicoesInimigosNoTerceiroMapa[2][1] = ESQUELETOCHUTE;
-  posicoesInimigosNoTerceiroMapa[4][3] = ESQUELETOCHUTE;
-  posicoesInimigosNoTerceiroMapa[5][1] = ESQUELETOCHUTE;
-}
-
-PImage cabecaEsqueletoChute;
-
-public class CabecaEsqueleto {
-  private float cabecaEsqueletoX;
-  private float cabecaEsqueletoY;
-
-  private float movimentoCabecaEsqueletoX;
-
-  private float destinoCabecaEsqueletoX;
-
-  private boolean cabecaEsqueletoReta;
-
-  public CabecaEsqueleto(float cabecaEsqueletoX, float cabecaEsqueletoY, float destinoCabecaEsqueletoX) {
-    this.cabecaEsqueletoX = cabecaEsqueletoX;
-    this.cabecaEsqueletoY = cabecaEsqueletoY;
-    this.destinoCabecaEsqueletoX = destinoCabecaEsqueletoX;
-  }
-
-  public void display() {
-    image(cabecaEsqueletoChute, cabecaEsqueletoX, cabecaEsqueletoY);
-  }
-
-  public void update() {
-    cabecaEsqueletoX = cabecaEsqueletoX + movimentoCabecaEsqueletoX;
-    if (!cabecaEsqueletoReta) {
-      if (cabecaEsqueletoX > destinoCabecaEsqueletoX) {
-        movimentoCabecaEsqueletoX = -8;
-      } else {
-        movimentoCabecaEsqueletoX = 8;
-      }
-    } else {
-      movimentoCabecaEsqueletoX = 0;
-    }
-
-    cabecaEsqueletoY = cabecaEsqueletoY + 12;
-  }
-
-  public void checaCabecaEsqueletoReta() {
-    if (cabecaEsqueletoX < destinoCabecaEsqueletoX) {
-      if (destinoCabecaEsqueletoX - cabecaEsqueletoX < 10) {  
-        cabecaEsqueletoReta = true;
-      } else {
-        cabecaEsqueletoReta = false;
-      }
-    } else {
-      if (cabecaEsqueletoX - destinoCabecaEsqueletoX < 10) {  
-        cabecaEsqueletoReta = true;
-      } else {
-        cabecaEsqueletoReta = false;
-      }
-    }
-  }
-
-  public boolean acertouJLeite() {
-    if (cabecaEsqueletoX + 36 > jLeiteX && cabecaEsqueletoX < jLeiteX + 63 && cabecaEsqueletoY + 89 > jLeiteY && cabecaEsqueletoY + 50 < jLeiteY + 126) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  public boolean saiuDaTela() {
-    if (cabecaEsqueletoY > height) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
-
-ArrayList<CabecaEsqueleto> cabecasEsqueleto;
-
-public void cabecaEsqueleto() {
-  for (int i = cabecasEsqueleto.size() - 1; i >= 0; i = i - 1) {
-    CabecaEsqueleto c = cabecasEsqueleto.get(i);
-    c.display();
-    c.update();
-    c.checaCabecaEsqueletoReta();
-    if (c.saiuDaTela()) {
-      cabecasEsqueleto.remove(c);
-    }
-
-    if (c.acertouJLeite() && !jLeiteImune) {
-      vidaJLeiteAtual = vidaJLeiteAtual - 3;
-      jLeiteImune = true;
-      tempoImune = millis();
-    }
-  }
-}
-
-PImage cachorro;
-PImage sombraCachorro;
-
-final int CACHORRO = 2;
-
-int[] valoresCachorroXMapaFazendeiro = {70, 382, 695};
-
-public class Cachorro {
-  private PImage spriteCachorro;
-
-  private int cachorroX;
-  private int cachorroY;
-
-  private int stepCachorro;
-  private int tempoSpriteCachorro;
-
-  public Cachorro(int cachorroX, int cachorroY) {
-    this.cachorroX = cachorroX;
-    this.cachorroY = cachorroY;
-  }
-
-  public void display() {
-    image (sombraCachorro, cachorroX, cachorroY + 45);
-
-    if (millis() > tempoSpriteCachorro + 55) { 
-      spriteCachorro = cachorro.get(stepCachorro, 0, 45, 83); 
-      stepCachorro = stepCachorro % 270 + 45;
-      image(spriteCachorro, cachorroX, cachorroY); 
-      tempoSpriteCachorro = millis();
-    } else {
-      image(spriteCachorro, cachorroX, cachorroY);
-    }
-
-    if (stepCachorro == cachorro.width) {
-      stepCachorro = 0;
-    }
-  }
-
-  public void update() {
-    cachorroY = cachorroY + 8;
-  }
-
-  public boolean ataque() {
-    if (cachorroX + 45 > jLeiteX && cachorroX < jLeiteX + 63 && cachorroY + 83 > jLeiteY && cachorroY < jLeiteY) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  public boolean saiuDaTela() {
-    if (cachorroY > height) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
-
-ArrayList<Cachorro> cachorros;
-
-int cachorroC, cachorroL;
-
-int indexRandomCachorroXMapaBoss;
-
-public void cachorro() {
-  if (indexInimigos == 2) {
-    if (estadoJogo == "MapaFazendeiro") {
-      if (cachorros.size() == 0 && !fazendeiroTomouDanoPneu && !fazendeiro.fazendeiroMorreu) {
-        for (int i = 0; i < 2; i = i + 1) {
-          indexRandomCachorroXMapaBoss = PApplet.parseInt(random(0, valoresCachorroXMapaFazendeiro.length));
-          cachorros.add(new Cachorro(valoresCachorroXMapaFazendeiro[indexRandomCachorroXMapaBoss], 0));
-        }
-      }
-    }
-
-    if (estadoJogo == "MapaPadre") { 
-      if (cachorros.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
-        indexRandomCachorroXMapaBoss = PApplet.parseInt(random(0, valoresInimigosXMapaPadre.length));
-        cachorros.add(new Cachorro(valoresInimigosXMapaPadre[indexRandomCachorroXMapaBoss], 0));
-        totalInimigos = totalInimigos + 1;
-      }
-    }
-
-    if (!telaTutorialAndandoAtiva && totalCenariosCriados < totalCenariosPossiveis) {
-      if (estadoJogo == "SegundoMapa" && cachorros.size() < 2 && totalInimigos < 6) {
-        cachorroC = PApplet.parseInt(random(0, 7));
-        cachorroL = PApplet.parseInt(random(0, 4));
-
-        if (posicoesInimigosNoSegundoMapa[cachorroC][cachorroL] == CACHORRO) {
-          cachorros.add(new Cachorro(100 + (cachorroC * (600 / 7)), -150 - (cachorroL * 150)));
-          totalInimigos = totalInimigos + 1;
-        }
-      }
-
-      if (estadoJogo == "TerceiroMapa" && cachorros.size() < 2 && totalInimigos < 6) {
-        cachorroC = PApplet.parseInt(random(0, 7));
-        cachorroL = PApplet.parseInt(random(0, 4));
-
-        if (posicoesInimigosNoTerceiroMapa[cachorroC][cachorroL] == CACHORRO) {
-          cachorros.add(new Cachorro(100 + (cachorroC * (600 / 7)), -150 - (cachorroL * 150)));
-          totalInimigos = totalInimigos + 1;
-        }
-      }
-    }
-  }
-
-  for (int i = cachorros.size() - 1; i >= 0; i = i - 1) {
-    Cachorro c = cachorros.get(i);
-    c.display();
-    c.update();
-    if (c.saiuDaTela()) {
-      totalInimigos = totalInimigos - 1;
-      cachorros.remove(c);
-    }
-    if (c.ataque() && !jLeiteImune) {
-      vidaJLeiteAtual = vidaJLeiteAtual - 2;
-      jLeiteImune = true;
-      tempoImune = millis();
-    }
-  }
-
-  for (int i = cachorros.size() - 1; i >= 0; i = i - 1) {
-    Cachorro c = cachorros.get(i);
-    for (int j = pasAtaque.size() - 1; j >= 0; j = j - 1) {
-      PaAtaque p = pasAtaque.get(j);
-      if (p.acertouCachorro(c)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(c.cachorroX, c.cachorroY);
-        cachorros.remove(c);
-      }
-    }
-    for (int j = pedrasAtiradas.size() - 1; j >= 0; j = j - 1) {
-      PedraAtirada p = pedrasAtiradas.get(j);
-      if (p.acertouCachorro(c)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(c.cachorroX, c.cachorroY);
-        pedrasAtiradas.remove(p);
-        cachorros.remove(c);
-      }
-    }
-    for (int j = chicotes.size() - 1; j >= 0; j = j - 1) {
-      ChicoteAtaque ch = chicotesAtaque.get(j);
-      if (ch.acertouCachorro(c)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(c.cachorroX, c.cachorroY);
-        cachorros.remove(c);
-      }
-    }
-  }
-}
-
-public void posicoesCachorro() {
-  posicoesInimigosNoSegundoMapa [0][0] = CACHORRO;
-  posicoesInimigosNoSegundoMapa [1][1] = CACHORRO;
-  posicoesInimigosNoSegundoMapa [2][2] = CACHORRO;
-  posicoesInimigosNoSegundoMapa [3][0] = CACHORRO;
-  posicoesInimigosNoSegundoMapa [4][3] = CACHORRO;
-  posicoesInimigosNoSegundoMapa [5][2] = CACHORRO;
-  posicoesInimigosNoSegundoMapa [6][2] = CACHORRO;
-
-  posicoesInimigosNoTerceiroMapa[1][0] = CACHORRO;
-  posicoesInimigosNoTerceiroMapa[3][0] = CACHORRO;
-  posicoesInimigosNoTerceiroMapa[5][2] = CACHORRO;
-  posicoesInimigosNoTerceiroMapa[6][1] = CACHORRO;
-}
-
-PImage corvo;
-PImage sombraCorvo;
-
-public class Corvo {
-  private PImage spriteCorvo;
-
-  private float corvoX = random(100, width - 163);
-  private float corvoY = random(-300, -1000);
-
-  private int destinoCorvoX = jLeiteX;
-
-  private int tempoNovoDestino;
-  private int tempoRandom = PApplet.parseInt(random(500, 1201));
-
-  private int stepCorvo;
-  private int tempoSpriteCorvo;
-
-  private boolean novoDestino;
-
-  public Corvo() {
-  }
-
-  public Corvo(float corvoX, float corvoY) {
-    this.corvoX = corvoX;
-    this.corvoY = corvoY;
-  }
-
-  public void display() {
-    if (millis() > tempoSpriteCorvo + 75) { 
-      spriteCorvo = corvo.get(stepCorvo, 0, 121, 86); 
-      stepCorvo = stepCorvo % 363 + 121;
-      image(spriteCorvo, corvoX, corvoY); 
-      tempoSpriteCorvo = millis();
-    } else {
-      image(spriteCorvo, corvoX, corvoY);
-    }
-
-    if (stepCorvo == corvo.width) {
-      stepCorvo = 0;
-    }
-
-    image(sombraCorvo, corvoX + 24, corvoY + 86);
-  }  
-
-  public void atualizaAlvo() {
-    if (corvoY > 0) {
-      if (destinoCorvoX != jLeiteX && !novoDestino) {
-        tempoNovoDestino = millis();
-        novoDestino = true;
-      }
-      if (millis() > tempoNovoDestino + tempoRandom) {
-        destinoCorvoX = jLeiteX;
-        tempoNovoDestino = millis();
-        novoDestino = false;
-      }
-    }
-  }
-
-  public void update() {
-    if (corvoX < destinoCorvoX) {
-      corvoX = corvoX + 2.5f;
-    }
-    if (corvoX > destinoCorvoX) {
-      corvoX = corvoX  - 2.5f;
-    }
-    corvoY = corvoY + 3.5f;
-  }
-
-  public boolean ataque() {
-    if (corvoX + 95 > jLeiteX && corvoX + 25 < jLeiteX + 63 && corvoY + 86 > jLeiteY && corvoY < jLeiteY + 126) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  public boolean saiuDaTela() {
-    if (corvoY > height) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
-
-ArrayList<Corvo> corvos;
-
-int indexRandomCorvoXMapaBoss;
-
-public void corvo() {
-  if (indexInimigos == 3) {
-    if (estadoJogo == "MapaPadre") {
-      if (corvos.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
-        indexRandomCorvoXMapaBoss = PApplet.parseInt(random(0, valoresInimigosXMapaPadre.length));
-        corvos.add(new Corvo(valoresInimigosXMapaPadre[indexRandomCorvoXMapaBoss], 0));
-      }
-    }
-
-    if (!telaTutorialAndandoAtiva && totalCenariosCriados < totalCenariosPossiveis) {
-      if (estadoJogo == "SegundoMapa" && corvos.size() < 2) {
-        corvos.add(new Corvo());
-      }
-
-      if (estadoJogo == "TerceiroMapa" && corvos.size() < 2) {
-        corvos.add(new Corvo());
-      }
-    }
-  }
-
-  for (int i = corvos.size() - 1; i >= 0; i = i - 1) {
-    Corvo c = corvos.get(i);
-    c.display();
-    c.atualizaAlvo();
-    c.update();
-    if (c.saiuDaTela()) {
-      corvos.remove(c);
-    }
-    if (c.ataque() && !jLeiteImune) {
-      vidaJLeiteAtual = vidaJLeiteAtual - 3;
-      jLeiteImune = true;
-      tempoImune = millis();
-    }
-  }
-
-  for (int i = corvos.size() - 1; i >= 0; i = i - 1) {
-    Corvo c = corvos.get(i);
-    for (int j = pasAtaque.size() - 1; j >= 0; j = j - 1) {
-      PaAtaque p = pasAtaque.get(j);
-      if (p.acertouCorvo(c)) {
-        hitInimigos(c.corvoX, c.corvoY);
-        corvos.remove(c);
-      }
-    }
-    for (int j = pedrasAtiradas.size() - 1; j >= 0; j = j - 1) {
-      PedraAtirada p = pedrasAtiradas.get(j);
-      if (p.acertouCorvo(c)) {
-        hitInimigos(c.corvoX, c.corvoY);
-        pedrasAtiradas.remove(p);
-        corvos.remove(c);
-      }
-    }
-    for (int j = chicotes.size() - 1; j >= 0; j = j - 1) {
-      ChicoteAtaque ch = chicotesAtaque.get(j);
-      if (ch.acertouCorvo(c)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(c.corvoX, c.corvoY);
-        corvos.remove(c);
-      }
-    }
-  }
-}
-
-PImage esqueletoRaiva;
-PImage sombraEsqueletoRaiva;
-
-final int ESQUELETORAIVA = 3;
-
-public class EsqueletoRaiva {
-  private PImage spriteEsqueletoRaiva;
-
-  private int esqueletoRaivaX;
-  private int esqueletoRaivaY;
-
-  private int movimentoEsqueletoRaivaX = 3;
-
-  private int stepEsqueletoRaiva;
-  private int tempoSpriteEsqueletoRaiva;
-
-  public EsqueletoRaiva(int esqueletoRaivaX, int esqueletoRaivaY) {
-    this.esqueletoRaivaX = esqueletoRaivaX;
-    this.esqueletoRaivaY = esqueletoRaivaY;
-  }
-
-  public void display() {
-    image(sombraEsqueletoRaiva, esqueletoRaivaX + 16, esqueletoRaivaY + 114);
-
-    if (millis() > tempoSpriteEsqueletoRaiva + 75) {
-      spriteEsqueletoRaiva = esqueletoRaiva.get(stepEsqueletoRaiva, 0, 76, 126);
-      stepEsqueletoRaiva = stepEsqueletoRaiva % 228 + 76;
-      image(spriteEsqueletoRaiva, esqueletoRaivaX, esqueletoRaivaY);
-      tempoSpriteEsqueletoRaiva = millis();
-    } else {
-      image(spriteEsqueletoRaiva, esqueletoRaivaX, esqueletoRaivaY);
-    }
-
-    if (stepEsqueletoRaiva == esqueletoRaiva.width) {
-      stepEsqueletoRaiva = 0;
-    }
-  }
-
-  public void update() {
-    esqueletoRaivaX = esqueletoRaivaX + movimentoEsqueletoRaivaX;
-
-    if (esqueletoRaivaX < 100) {
-      movimentoEsqueletoRaivaX = 3;
-    }
-    if (esqueletoRaivaX + 30 > 700) {
-      movimentoEsqueletoRaivaX = -3;
-    } 
-
-    esqueletoRaivaY = esqueletoRaivaY + 3;
-  }
-
-  public boolean ataque() {
-    if (esqueletoRaivaX + 76 > jLeiteX && esqueletoRaivaX < jLeiteX + 63 && esqueletoRaivaY + 126 > jLeiteY && esqueletoRaivaY < jLeiteY + 126) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  public boolean saiuDaTela() {
-    if (esqueletoRaivaY > height) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
-
-ArrayList<EsqueletoRaiva> esqueletosRaiva;
-
-int esqueletoRaivaC, esqueletoRaivaL;
-
-int indexRandomEsqueletoRaivaXMapaBoss;
-
-public void esqueletoRaiva() {
-  if (indexInimigos == 4) {
-    if (estadoJogo == "MapaPadre") { 
-      if (esqueletosRaiva.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
-        indexRandomEsqueletoRaivaXMapaBoss = PApplet.parseInt(random(0, valoresInimigosXMapaPadre.length));
-        esqueletosRaiva.add(new EsqueletoRaiva(valoresInimigosXMapaPadre[indexRandomEsqueletoRaivaXMapaBoss], 0));
-        totalInimigos = totalInimigos + 1;
-      }
-    }
-
-    if (!telaTutorialAndandoAtiva && totalCenariosCriados < totalCenariosPossiveis) {
-      if (estadoJogo == "TerceiroMapa" && esqueletosRaiva.size() < 2 && totalInimigos < 6) {
-        esqueletoRaivaC = PApplet.parseInt(random(0, 7));
-        esqueletoRaivaL = PApplet.parseInt(random(0, 4));
-
-        if (posicoesInimigosNoTerceiroMapa[esqueletoRaivaC][esqueletoRaivaL] == ESQUELETORAIVA) {
-          esqueletosRaiva.add(new EsqueletoRaiva(100 + (esqueletoRaivaC * (600 / 7)), -150 - (esqueletoRaivaL * 150)));
-          totalInimigos = totalInimigos + 1;
-        }
-      }
-    }
-  }
-
-
-  for (int i = esqueletosRaiva.size() - 1; i >= 0; i = i - 1) {
-    EsqueletoRaiva e = esqueletosRaiva.get(i);
-    e.display();
-    e.update();
-    if (e.saiuDaTela()) {
-      totalInimigos = totalInimigos - 1;
-      esqueletosRaiva.remove(e);
-    }
-    if (e.ataque() && !jLeiteImune) {
-      vidaJLeiteAtual = vidaJLeiteAtual - 3;
-      jLeiteImune = true;
-      tempoImune = millis();
-    }
-  }
-
-  for (int i = esqueletosRaiva.size() - 1; i >= 0; i = i - 1) {
-    EsqueletoRaiva e = esqueletosRaiva.get(i);
-    for (int j = pasAtaque.size() - 1; j >= 0; j = j - 1) {
-      PaAtaque p = pasAtaque.get(j);
-      if (p.acertouEsqueletoRaiva(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.esqueletoRaivaX, e.esqueletoRaivaY);
-        esqueletosRaiva.remove(e);
-      }
-    }
-    for (int j = pedrasAtiradas.size() - 1; j >= 0; j = j - 1) {
-      PedraAtirada p = pedrasAtiradas.get(j);
-      if (p.acertouEsqueletoRaiva(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.esqueletoRaivaX, e.esqueletoRaivaY);
-        pedrasAtiradas.remove(p);
-        esqueletosRaiva.remove(e);
-      }
-    }
-    for (int j = chicotes.size() - 1; j >= 0; j = j - 1) {
-      ChicoteAtaque ch = chicotesAtaque.get(j);
-      if (ch.acertouEsqueletoRaiva(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.esqueletoRaivaX, e.esqueletoRaivaY);
-        esqueletosRaiva.remove(e);
-      }
-    }
-  }
-}
-
-public void posicoesEsqueletoRaiva() {
-  posicoesInimigosNoTerceiroMapa[0][0] = ESQUELETORAIVA;
-  posicoesInimigosNoTerceiroMapa[1][2] = ESQUELETORAIVA;
-  posicoesInimigosNoTerceiroMapa[2][3] = ESQUELETORAIVA;
-  posicoesInimigosNoTerceiroMapa[3][2] = ESQUELETORAIVA;
-  posicoesInimigosNoTerceiroMapa[4][1] = ESQUELETORAIVA;
-  posicoesInimigosNoTerceiroMapa[5][0] = ESQUELETORAIVA;
-  posicoesInimigosNoTerceiroMapa[6][2] = ESQUELETORAIVA;
 }
 PImage vidaJLeiteLayout, vidaJLeiteLayoutBackground, vidaJLeiteBarra;
 

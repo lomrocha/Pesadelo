@@ -37,12 +37,13 @@ public class Corvo extends Geral {
     image(skeletonCrowShadow, x + 24, y + 86);
   }  
 
-  void atualizaAlvo() {
+  void updateTarget() {
     if (y > 0) {
       if (targetX != jLeiteX && !hasNewTarget) {
         newTargetInterval = millis();
         hasNewTarget = true;
       }
+      
       if (millis() > newTargetInterval + randomTime) {
         targetX = jLeiteX;
         newTargetInterval = millis();
@@ -62,7 +63,7 @@ public class Corvo extends Geral {
     super.update();
   }
 
-  boolean hasAttacked() {
+  boolean hasCollided() {
     if (x + 95 > jLeiteX && x + 25 < jLeiteX + 63 && y + 86 > jLeiteY && y < jLeiteY + 126) {
       return true;
     } else {
@@ -98,12 +99,12 @@ void corvo() {
   for (int i = corvos.size() - 1; i >= 0; i = i - 1) {
     Corvo c = corvos.get(i);
     c.display();
-    c.atualizaAlvo();
+    c.updateTarget();
     c.update();
     if (c.hasExitScreen()) {
       corvos.remove(c);
     }
-    if (c.hasAttacked() && !jLeiteImune) {
+    if (c.hasCollided() && !jLeiteImune) {
       vidaJLeiteAtual = vidaJLeiteAtual - 3;
       jLeiteImune = true;
       tempoImune = millis();

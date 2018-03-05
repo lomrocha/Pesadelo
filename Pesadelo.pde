@@ -15,9 +15,9 @@ String ultimoEstado;
 
 float millisAvancada, millisAvancadaMapa;
 
-int enemyPositionsFirstMap[][];
+int enemyPositionsFirstMap  [][];
 int enemyPositionsSecondMap [][];
-int enemyPositionsThirdMap[][];
+int enemyPositionsThirdMap  [][];
 
 int[] valoresXMapaCoveiro = {50, 720};
 int[] valoresYMapaCoveiro = {380, 380};
