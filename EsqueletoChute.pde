@@ -18,30 +18,30 @@ public class EsqueletoChute extends Geral {
   private boolean gatilhoEsqueletoCabeca, esqueletoCabecaSaiu;
 
   public EsqueletoChute(int x, int y) {
-    this.x = x;
-    this.y = y;
+    this.setX(x);
+    this.setY(y);
 
-    spriteImage = headlessKickingSkeleton;
-    spriteInterval = 200;
-    spriteWidth = 48;
-    spriteHeight = 74;
+    setSpriteImage(headlessKickingSkeleton);
+    setSpriteInterval(200);
+    setSpriteWidth(48);
+    setSpriteHeight(74);
   }
 
   void display() {
-    image (kickingSkeletonShadow, x + 1, y + 50);
+    image (kickingSkeletonShadow, getX() + 1, getY() + 50);
 
     if (!hasLostHead) {
       if (millis() > kickingSkeletonSpriteTime + 200) { 
-        if (y < 0) {
+        if (getY() < 0) {
           kickingSkeletonSprite = kickingSkeleton.get(0, 0, 49, 74);
         } else {
           kickingSkeletonSprite = kickingSkeleton.get(kickingSkeletonStep, 0, 49, 74); 
           kickingSkeletonStep = kickingSkeletonStep % 245 + 49;
         }
-        image(kickingSkeletonSprite, x, y); 
+        image(kickingSkeletonSprite, getX(), getY()); 
         kickingSkeletonSpriteTime = millis();
       } else {
-        image(kickingSkeletonSprite, x, y);
+        image(kickingSkeletonSprite, getX(), getY());
       }
 
       if (kickingSkeletonStep == 196 && !gatilhoEsqueletoCabeca) {
@@ -59,14 +59,14 @@ public class EsqueletoChute extends Geral {
   }
 
   void update() {
-    x = x + movementX;
-    y = y + movementY;
+    setX(getX() + movementX);
+    setY(getY() + getMovementY());
 
     if (!hasLostHead) {
-      movementY = int(sceneryMovement);
+      setMovementY(int(sceneryMovement));
       movementX = 0;
     } else {
-      movementY = int(sceneryMovement) + 1;
+      setMovementY(int(sceneryMovement) + 1);
       if (millis() > changeDirectionDelay + 350) {
         movementX = int(random(-5, 5));
         changeDirectionDelay = millis();
@@ -91,7 +91,7 @@ void esqueletoChute() {
       }
     }
 
-    if (!telaTutorialAndandoAtiva && totalCenariosCriados < totalCenariosPossiveis) {
+    if (!telaTutorialAndandoAtiva) {
       if (estadoJogo == "PrimeiroMapa" && esqueletosChute.size() < 2 && totalInimigos < 6) {
         esqueletoChuteC = int(random(0, 7));
         esqueletoChuteL = int(random(0, 4));
@@ -126,7 +126,7 @@ void esqueletoChute() {
     EsqueletoChute e = esqueletosChute.get(i);
     e.display();
     if (e.esqueletoCabecaSaiu) {
-      cabecasEsqueleto.add(new CabecaEsqueleto(e.x, e.y, jLeiteX));
+      cabecasEsqueleto.add(new CabecaEsqueleto(e.getX(), e.getY(), jLeiteX));
       e.esqueletoCabecaSaiu = false;
     }
     e.update();
@@ -134,10 +134,8 @@ void esqueletoChute() {
       totalInimigos = totalInimigos - 1;
       esqueletosChute.remove(e);
     }
-    if (e.hasCollided() && !jLeiteImune) {
-      vidaJLeiteAtual = vidaJLeiteAtual - 2;
-      jLeiteImune = true;
-      tempoImune = millis();
+    if (e.hasCollided()) {
+      damage(2);
     }
   }
 
@@ -147,7 +145,7 @@ void esqueletoChute() {
       PaAtaque p = pasAtaque.get(j);
       if (p.acertouEsqueletoChute(e)) {
         totalInimigos = totalInimigos - 1;
-        hitInimigos(e.x - 40, e.y - 20);
+        hitInimigos(e.getX() - 40, e.getY() - 20);
         esqueletosChute.remove(e);
       }
     }
@@ -155,7 +153,7 @@ void esqueletoChute() {
       PedraAtirada p = pedrasAtiradas.get(j);
       if (p.acertouEsqueletoChute(e)) {
         totalInimigos = totalInimigos - 1;
-        hitInimigos(e.x - 40, e.y - 20);
+        hitInimigos(e.getX() - 40, e.getY() - 20);
         pedrasAtiradas.remove(p);
         esqueletosChute.remove(e);
       }
@@ -164,7 +162,7 @@ void esqueletoChute() {
       ChicoteAtaque c = chicotesAtaque.get(j);
       if (c.acertouEsqueletoChute(e)) {
         totalInimigos = totalInimigos - 1;
-        hitInimigos(e.x - 40, e.y - 20);
+        hitInimigos(e.getX() - 40, e.getY() - 20);
         esqueletosChute.remove(e);
       }
     }

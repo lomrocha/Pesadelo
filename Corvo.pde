@@ -5,66 +5,64 @@ public class Corvo extends Geral {
   private int targetX = jLeiteX;
 
   private int newTargetInterval;
-  private int randomTime = int(random(500, 1201));
 
   private boolean hasNewTarget;
 
   public Corvo() {
-    x = int(random(100, width - 163));
-    y = int(random(-300, -1000));
-    
-    spriteImage = skeletonCrow;
-    spriteInterval = 75;
-    spriteWidth = 121;
-    spriteHeight = 86;
-    movementY = 4;
+    setX(int(random(100, width - 163)));
+    setY(int(random(-300, -1000)));
+
+    setSpriteImage(skeletonCrow);
+    setSpriteInterval(75);
+    setSpriteWidth(121);
+    setSpriteHeight(86);
+    setMovementY(4);
   }
 
   public Corvo(int x, int y) {
-    this.x = x;
-    this.y = y;
+    this.setX(x);
+    this.setY(y);
 
-    spriteImage = skeletonCrow;
-    spriteInterval = 75;
-    spriteWidth = 121;
-    spriteHeight = 86;
-    movementY = 4;
+    setSpriteImage(skeletonCrow);
+    setSpriteInterval(75);
+    setSpriteWidth(121);
+    setSpriteHeight(86);
+    setMovementY(4);
   }
 
   void display() {
     super.display();
 
-    image(skeletonCrowShadow, x + 24, y + 86);
+    image(skeletonCrowShadow, getX() + 24, getY() + 86);
   }  
 
   void updateTarget() {
-    if (y > 0) {
-      if (targetX != jLeiteX && !hasNewTarget) {
+    if (getY() > 0) {
+      if (!hasNewTarget) {
+        targetX = jLeiteX;
         newTargetInterval = millis();
         hasNewTarget = true;
       }
-      
-      if (millis() > newTargetInterval + randomTime) {
-        targetX = jLeiteX;
-        newTargetInterval = millis();
+
+      if (millis() > newTargetInterval + 1000) {
         hasNewTarget = false;
       }
     }
   }
 
   void update() {
-    if (x < targetX) {
-      x = x + 3;
+    if (getX() < targetX) {
+      setX(getX() + 3);
     }
-    if (x > targetX) {
-      x = x - 3;
+    if (getX() > targetX) {
+      setX(getX() - 3);
     }
 
     super.update();
   }
 
   boolean hasCollided() {
-    if (x + 95 > jLeiteX && x + 25 < jLeiteX + 63 && y + 86 > jLeiteY && y < jLeiteY + 126) {
+    if (getX() + 95 > jLeiteX && getX() + 25 < jLeiteX + 63 && getY() + 86 > jLeiteY && getY() < jLeiteY + 126) {
       return true;
     } else {
       return false;
@@ -85,7 +83,7 @@ void corvo() {
       }
     }
 
-    if (!telaTutorialAndandoAtiva && totalCenariosCriados < totalCenariosPossiveis) {
+    if (!telaTutorialAndandoAtiva) {
       if (estadoJogo == "SegundoMapa" && corvos.size() < 2) {
         corvos.add(new Corvo());
       }
@@ -98,16 +96,14 @@ void corvo() {
 
   for (int i = corvos.size() - 1; i >= 0; i = i - 1) {
     Corvo c = corvos.get(i);
-    c.display();
     c.updateTarget();
     c.update();
+    c.display();
     if (c.hasExitScreen()) {
       corvos.remove(c);
     }
-    if (c.hasCollided() && !jLeiteImune) {
-      vidaJLeiteAtual = vidaJLeiteAtual - 3;
-      jLeiteImune = true;
-      tempoImune = millis();
+    if (c.hasCollided()) {
+      damage(3);
     }
   }
 
@@ -116,14 +112,14 @@ void corvo() {
     for (int j = pasAtaque.size() - 1; j >= 0; j = j - 1) {
       PaAtaque p = pasAtaque.get(j);
       if (p.acertouCorvo(c)) {
-        hitInimigos(c.x, c.y);
+        hitInimigos(c.getX(), c.getY());
         corvos.remove(c);
       }
     }
     for (int j = pedrasAtiradas.size() - 1; j >= 0; j = j - 1) {
       PedraAtirada p = pedrasAtiradas.get(j);
       if (p.acertouCorvo(c)) {
-        hitInimigos(c.x, c.y);
+        hitInimigos(c.getX(), c.getY());
         pedrasAtiradas.remove(p);
         corvos.remove(c);
       }
@@ -132,7 +128,7 @@ void corvo() {
       ChicoteAtaque ch = chicotesAtaque.get(j);
       if (ch.acertouCorvo(c)) {
         totalInimigos = totalInimigos - 1;
-        hitInimigos(c.x, c.y);
+        hitInimigos(c.getX(), c.getY());
         corvos.remove(c);
       }
     }

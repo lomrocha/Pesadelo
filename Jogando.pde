@@ -1,6 +1,4 @@
 void jogando() {
-  millisAvancadaMapa = millisAvancadaMapa + 1000 / 60;
-
   if (estadoJogo == "PrimeiroMapa") {
     if (musicasAtivas) {
       temaIgreja.play();
@@ -19,15 +17,15 @@ void jogando() {
     }
   }
 
-  if (millisAvancada > tempoBossMorreu + 3000 && coveiro.coveiroMorreu) {
+  if (millis() > tempoBossMorreu + 3000 && coveiro.coveiroMorreu) {
     estadoJogo = "SegundoMapa";
   }
 
-  if (millisAvancada > tempoBossMorreu + 3000 && fazendeiro.fazendeiroMorreu) {
+  if (millis() > tempoBossMorreu + 3000 && fazendeiro.fazendeiroMorreu) {
     estadoJogo = "TerceiroMapa";
   }
 
-  if (millisAvancada > tempoBossMorreu + 7000 && padre.padreMorreu) {
+  if (millis() > tempoBossMorreu + 7000 && padre.padreMorreu) {
     estadoJogo = "Vitoria";
   }
 
@@ -36,7 +34,7 @@ void jogando() {
   inimigosTodos();
   armas(); 
   jLeite(); 
-  comidaTodos();
+  foodAll();
   vida();
   caixaNumeroItem();
   if (telaTutorialAndandoAtiva) {

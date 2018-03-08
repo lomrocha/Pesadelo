@@ -41,6 +41,8 @@ void menu() {
         setup();
         estadoJogo = "PrimeiroMapa";
         telaTutorialAndandoAtiva = true;
+        cenarios.add(new Cenario(0, 0, 0));
+        cenarios.add(new Cenario(0, -600, 0));
         //begone.play();
       }
     } else {
@@ -145,29 +147,27 @@ void menu() {
     if (musicasAtivas) {
       temaBoss.play();
     }
-    
-    background(imagensCenariosBoss[0]);
+
+    background(bossSceneryImages[0]);
     coveiro();
     armas();
     jLeite();
     vida();
-    comidaTodos();
+    foodAll();
     caixaNumeroItem();
-    totalCenariosCriados = 0;
   }
 
   if (estadoJogo == "MapaFazendeiro") {
     if (musicasAtivas) {
       temaBoss.play();
     }
-    background(imagensCenariosBoss[1]);
+    background(bossSceneryImages[1]);
     fazendeiro();
     armas(); 
     jLeite();
     vida();
-    comidaTodos();
+    foodAll();
     caixaNumeroItem();
-    totalCenariosCriados = 0;
   }
 
   if (estadoJogo == "MapaPadre") {
@@ -175,14 +175,13 @@ void menu() {
       temaBoss.play();
     }
 
-    background(imagensCenariosBoss[2]);
+    background(bossSceneryImages[2]);
     padre();
     armas();
     jLeite();
     vida();
-    comidaTodos();
+    foodAll();
     caixaNumeroItem();
-    totalCenariosCriados = 0;
     telaGameOver();
   }
 }

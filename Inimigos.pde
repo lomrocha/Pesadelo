@@ -8,8 +8,8 @@ int[] valoresInimigosXMapaPadre = {25, 350, 679};
 
 void inimigosTodos() {
   if (!jLeiteMorreu) {
-    if (!telaTutorialAndandoAtiva && totalCenariosCriados < totalCenariosPossiveis) {
-      if (int(millisAvancada) > tempoGerarInimigo + 250) {
+    if (!telaTutorialAndandoAtiva) {
+      if (millis() > tempoGerarInimigo + 250) {
         if (estadoJogo == "PrimeiroMapa") {
           indexInimigos = int(random(0, 2));
         } 
@@ -27,7 +27,7 @@ void inimigosTodos() {
             maximoInimigosPadre = 4;
           }
         }
-        tempoGerarInimigo = int(millisAvancada);
+        tempoGerarInimigo = millis();
       }
     }
   } else {
@@ -40,4 +40,12 @@ void inimigosTodos() {
   cachorro();
   corvo();
   esqueletoRaiva();
+}
+
+void damage(int amount) {
+  if (!jLeiteImune) {
+    vidaJLeiteAtual -= amount;
+    jLeiteImune = true;
+    tempoImune = millis();
+  }
 }

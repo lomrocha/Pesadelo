@@ -145,17 +145,17 @@ public class Padre {
 
   private int indexRandomSomPadreIdle;
 
-  private int tempoNovoDestino = int(millisAvancada);
+  private int tempoNovoDestino = millis();
 
   private int tempoNovoAtaqueCruz, tempoDanoCruz;
 
-  private int tempoNovoAtaqueLevantem = int(millisAvancada), tempoDuracaoAtaqueLevantem, amountRecoveredLevantem;
+  private int tempoNovoAtaqueLevantem = millis(), tempoDuracaoAtaqueLevantem, amountRecoveredLevantem;
 
-  private int tempoNovoAtaqueCaveira = int(millisAvancada);
+  private int tempoNovoAtaqueCaveira = millis();
 
   private int tempoSpritePadreTomouDanoCaveira;
 
-  private int tempoSpritePadreCarregandoAtaqueRaio, tempoGatilhoCarregarNovoAtaqueRaio = int(millisAvancada);
+  private int tempoSpritePadreCarregandoAtaqueRaio, tempoGatilhoCarregarNovoAtaqueRaio = millis();
 
   private boolean somPadreIdleTocando;
 
@@ -235,7 +235,7 @@ public class Padre {
           stepPadreLevantem = 0;
         }
 
-        if (millisAvancada > tempoDuracaoAtaqueLevantem + 5000) {
+        if (millis() > tempoDuracaoAtaqueLevantem + 5000) {
           novoAtaqueLevantem = false;
           ataqueLevantemAcontecendo = false;
         }
@@ -294,7 +294,7 @@ public class Padre {
         if (stepPadreCaveiraDano == padreCaveiraDano[0].width) {
           stepPadreCaveiraDano = 0;
           padreCaveiraCaiuCabeca = false;
-          tempoSpritePadreTomouDanoCaveira = int(millisAvancada);
+          tempoSpritePadreTomouDanoCaveira = millis();
           padreTomouDanoCaveira = true;
         }
       }
@@ -302,7 +302,7 @@ public class Padre {
       if (padreTomouDanoCaveira) {
         image(padreCaveiraDano[1], padreX + 3, padreY - 47);
 
-        if (millisAvancada > tempoSpritePadreTomouDanoCaveira + 2000) {
+        if (millis() > tempoSpritePadreTomouDanoCaveira + 2000) {
           padreTomouDanoCaveira = false;
         }
       }
@@ -378,7 +378,7 @@ public class Padre {
             stepPadreRaivaLevantem = 0;
           }
 
-          if (millisAvancada > tempoDuracaoAtaqueLevantem + 5000) {
+          if (millis() > tempoDuracaoAtaqueLevantem + 5000) {
             novoAtaqueLevantem = false;
             ataqueLevantemAcontecendo = false;
           }
@@ -437,7 +437,7 @@ public class Padre {
             stepPadreRaivaCaveiraDano = 0;
             padreCaveiraCaiuCabeca = false;
             padreTomouDanoCaveira = true;
-            tempoSpritePadreTomouDanoCaveira = int(millisAvancada);
+            tempoSpritePadreTomouDanoCaveira = millis();
           }
         }
 
@@ -455,7 +455,7 @@ public class Padre {
             stepPadreRaivaCaveiraDano2 = 0;
           }
 
-          if (millisAvancada > tempoSpritePadreTomouDanoCaveira + 2000) {
+          if (millis() > tempoSpritePadreTomouDanoCaveira + 2000) {
             padreTomouDanoCaveira = false;
           }
         }
@@ -474,7 +474,7 @@ public class Padre {
             stepPadreRaivaRaio = 0;
           }
 
-          if (millisAvancada > tempoSpritePadreCarregandoAtaqueRaio + 3000) {
+          if (millis() > tempoSpritePadreCarregandoAtaqueRaio + 3000) {
             padreCarregandoNovoAtaqueRaio = false;
             padreParouCarregarRaio = true;
             gatilhoNovoAtaqueRaio = false;
@@ -510,10 +510,10 @@ public class Padre {
   void update() {
     if (!padreMudouForma || padreMudouForma) {
       if (!novoAtaqueLevantem && !ataqueLevantemAcontecendo && !ataqueCaveiraAcontecendo && !padreCaveiraCaiuCabeca && !padreTomouDanoCaveira && !padreCarregandoNovoAtaqueRaio && !padreMorreu) {
-        if (millisAvancada > tempoNovoDestino + 8000) {
+        if (millis() > tempoNovoDestino + 8000) {
           destinoPadreX = valoresPadreDestinoX[int(random(0, valoresPadreDestinoX.length))];
           destinoPadreY = valoresPadreDestinoY[int(random(0, valoresPadreDestinoY.length))];
-          tempoNovoDestino = int(millisAvancada);  
+          tempoNovoDestino = millis();  
           gatilhoNovoAtaqueRaioAtivo = false;
           gatilhoNovoAtaqueCaveiraAtivo = false;
           gatilhoNovoAtaqueLevantem = false;
@@ -540,9 +540,9 @@ public class Padre {
 
   void ataqueCruz() {
     if (!novoAtaqueLevantem && !ataqueLevantemAcontecendo && !ataqueCaveiraAcontecendo && !padreCaveiraCaiuCabeca && !padreTomouDanoCaveira && !padreCarregandoNovoAtaqueRaio && !padreMorreu) {
-      if (dist(padreX, padreY, jLeiteX, jLeiteY) < 100 && !ataqueCruzLigado && millisAvancada > tempoNovoAtaqueCruz + 1500) {
-        tempoNovoAtaqueCruz = int(millisAvancada);
-        tempoDanoCruz = int(millisAvancada);
+      if (dist(padreX, padreY, jLeiteX, jLeiteY) < 100 && !ataqueCruzLigado && millis() > tempoNovoAtaqueCruz + 1500) {
+        tempoNovoAtaqueCruz = millis();
+        tempoDanoCruz = millis();
         ataqueCruz = true;
         ataqueCruzLigado = true;
         ataqueCruzAcontecendo = true;
@@ -554,7 +554,7 @@ public class Padre {
     if (!novoAtaqueLevantem && !ataqueLevantemAcontecendo && !ataqueCaveiraAcontecendo && !padreCaveiraCaiuCabeca && !padreTomouDanoCaveira && !padreCarregandoNovoAtaqueRaio && !padreMorreu) {
       if (ataqueCruzAcontecendo) {
         if (!padreMudouForma) {
-          if (int(millisAvancada) > tempoDanoCruz + 750) {
+          if (millis() > tempoDanoCruz + 750) {
             if (!jLeiteImune) {
               hitHitCruzMostrando = true;
               hitCruz(jLeiteX - 30, jLeiteY);
@@ -564,7 +564,7 @@ public class Padre {
             }
           }
         } else {
-          if (int(millisAvancada) > tempoDanoCruz + 300) {
+          if (millis() > tempoDanoCruz + 300) {
             if (!jLeiteImune) {
               hitHitCruzMostrando = true;
               hitCruz(jLeiteX - 30, jLeiteY);
@@ -582,16 +582,16 @@ public class Padre {
     if (!novoAtaqueLevantem && !ataqueLevantemAcontecendo && !ataqueCaveiraAcontecendo && !padreCaveiraCaiuCabeca && !padreTomouDanoCaveira && !padreCarregandoNovoAtaqueRaio && !padreMorreu) {
       if (padreX == destinoPadreX && padreY == destinoPadreY) {
         if (!gatilhoNovoAtaqueLevantem) {
-          tempoNovoAtaqueLevantem = int(millisAvancada);
+          tempoNovoAtaqueLevantem = millis();
           gatilhoNovoAtaqueLevantem = true;
           amountRecoveredLevantem = 0;
           padreRaivaCurou = false;
         }
-        if (millisAvancada > tempoNovoAtaqueLevantem + 5000 && !gatilhoNovoAtaqueLevantemAtivo) {
+        if (millis() > tempoNovoAtaqueLevantem + 5000 && !gatilhoNovoAtaqueLevantemAtivo) {
           novoAtaqueLevantem = true;
           gatilhoNovoAtaqueLevantemAtivo = true;
           ataqueLevantemAcontecendo = true;
-          tempoDuracaoAtaqueLevantem = int(millisAvancada);
+          tempoDuracaoAtaqueLevantem = millis();
         }
       }
     }
@@ -600,13 +600,13 @@ public class Padre {
   void ataqueCaveira() {
     if (!novoAtaqueLevantem && !ataqueLevantemAcontecendo && !ataqueCaveiraAcontecendo && !padreCaveiraCaiuCabeca && !padreTomouDanoCaveira && !padreCarregandoNovoAtaqueRaio && !padreMorreu) {
       if (!gatilhoNovoAtaqueCaveira) {
-        tempoNovoAtaqueCaveira = int(millisAvancada);
+        tempoNovoAtaqueCaveira = millis();
         gatilhoNovoAtaqueCaveira = true;
       }
-      if (int(millisAvancada) > tempoNovoAtaqueCaveira + 40000 && !gatilhoNovoAtaqueCaveiraAtivo) {
+      if (millis() > tempoNovoAtaqueCaveira + 40000 && !gatilhoNovoAtaqueCaveiraAtivo) {
         ataqueCaveiraAcontecendo = true;
         novoAtaqueCaveira = true;
-        tempoPrimeiraCaveiraAtaque = int(millisAvancada);
+        tempoPrimeiraCaveiraAtaque = millis();
         gatilhoNovoAtaqueCaveiraAtivo = true;
         umOsso = true;
       }
@@ -624,11 +624,11 @@ public class Padre {
     if (padreMudouForma) {
       if (!novoAtaqueLevantem && !ataqueLevantemAcontecendo && !ataqueCaveiraAcontecendo && !padreCaveiraCaiuCabeca && !padreTomouDanoCaveira && !padreCarregandoNovoAtaqueRaio && !padreMorreu) {
         if (!gatilhoNovoAtaqueRaio) {
-          tempoGatilhoCarregarNovoAtaqueRaio = int(millisAvancada);
+          tempoGatilhoCarregarNovoAtaqueRaio = millis();
           gatilhoNovoAtaqueRaio = true;
         }
-        if (millisAvancada > tempoGatilhoCarregarNovoAtaqueRaio + 15000 && !gatilhoNovoAtaqueRaioAtivo) {
-          tempoSpritePadreCarregandoAtaqueRaio = int(millisAvancada);
+        if (millis() > tempoGatilhoCarregarNovoAtaqueRaio + 15000 && !gatilhoNovoAtaqueRaioAtivo) {
+          tempoSpritePadreCarregandoAtaqueRaio = millis();
           padreCarregandoNovoAtaqueRaio = true;
           gatilhoNovoAtaqueRaioAtivo = true;
         }
@@ -644,7 +644,7 @@ public class Padre {
         somPadreMorreu.rewind();
         somPadreMorreu.play();
       }
-      tempoBossMorreu = int(millisAvancada);
+      tempoBossMorreu = millis();
     }
   }
 }
@@ -853,7 +853,7 @@ int[] valoresIndexDeletados = new int [3];
 boolean gatilhoNovaCaveiraAtacar;
 
 void caveiraPadre() {   
-  if (caveirasPadre.size() > 0 && millisAvancada > tempoPrimeiraCaveiraAtaque + 1000 && !gatilhoNovaCaveiraAtacar) {
+  if (caveirasPadre.size() > 0 && millis() > tempoPrimeiraCaveiraAtaque + 1000 && !gatilhoNovaCaveiraAtacar) {
     randomIndexCaveiraPadre = int(random(0, 4));
     gatilhoNovaCaveiraAtacar = true;
   }
@@ -886,7 +886,7 @@ void caveiraPadre() {
         valoresIndexDeletados[4 - caveirasPadre.size()] = c.indexCaveiraPadre;
       } else {
         padre.caveiraApareceu = false;
-        padre.tempoNovoAtaqueCaveira = int(millisAvancada);
+        padre.tempoNovoAtaqueCaveira = millis();
         padreCaveiraCaiuCabeca = true;
         if (indexVidaPadreOsso >= 1 && umOsso) {
           if (!padre.padreMudouForma) {

@@ -7,19 +7,19 @@ int[] valoresCachorroXMapaFazendeiro = {70, 382, 695};
 
 public class Cachorro extends Geral {
   public Cachorro(int x, int y) {
-    this.x = x;
-    this.y = y;
-    
-    spriteImage = skeletonDog;
-    spriteInterval = 55;
-    spriteWidth = 45;
-    spriteHeight = 83;
-    movementY = 8;
+    this.setX(x);
+    this.setY(y);
+
+    setSpriteImage(skeletonDog);
+    setSpriteInterval(55);
+    setSpriteWidth(45);
+    setSpriteHeight(83);
+    setMovementY(8);
   }
 
   void display() {
-    image (skeletonDogShadow, x, y + 45);
-    
+    image (skeletonDogShadow, getX(), getY() + 45);
+
     super.display();
   }
 }
@@ -49,7 +49,7 @@ void cachorro() {
       }
     }
 
-    if (!telaTutorialAndandoAtiva && totalCenariosCriados < totalCenariosPossiveis) {
+    if (!telaTutorialAndandoAtiva) {
       if (estadoJogo == "SegundoMapa" && cachorros.size() < 2 && totalInimigos < 6) {
         cachorroC = int(random(0, 7));
         cachorroL = int(random(0, 4));
@@ -80,10 +80,8 @@ void cachorro() {
       totalInimigos = totalInimigos - 1;
       cachorros.remove(c);
     }
-    if (c.hasCollided() && !jLeiteImune) {
-      vidaJLeiteAtual = vidaJLeiteAtual - 2;
-      jLeiteImune = true;
-      tempoImune = millis();
+    if (c.hasCollided()) {
+      damage(2);
     }
   }
 
@@ -93,7 +91,7 @@ void cachorro() {
       PaAtaque p = pasAtaque.get(j);
       if (p.acertouCachorro(c)) {
         totalInimigos = totalInimigos - 1;
-        hitInimigos(c.x, c.y);
+        hitInimigos(c.getX(), c.getY());
         cachorros.remove(c);
       }
     }
@@ -101,7 +99,7 @@ void cachorro() {
       PedraAtirada p = pedrasAtiradas.get(j);
       if (p.acertouCachorro(c)) {
         totalInimigos = totalInimigos - 1;
-        hitInimigos(c.x, c.y);
+        hitInimigos(c.getX(), c.getY());
         pedrasAtiradas.remove(p);
         cachorros.remove(c);
       }
@@ -110,7 +108,7 @@ void cachorro() {
       ChicoteAtaque ch = chicotesAtaque.get(j);
       if (ch.acertouCachorro(c)) {
         totalInimigos = totalInimigos - 1;
-        hitInimigos(c.x, c.y);
+        hitInimigos(c.getX(), c.getY());
         cachorros.remove(c);
       }
     }

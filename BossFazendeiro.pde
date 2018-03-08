@@ -110,15 +110,15 @@ public class Fazendeiro {
   private int stepFazendeiroMorte;
   private int tempoSpriteFazendeiroMorte;
 
-  private int tempoNovoDestino = int(millisAvancada);
+  private int tempoNovoDestino = millis();
 
   private int indexRandomSomFazendeiroIdle;
   private int indexRandomSomFazendeiroMimosa;
 
   private int tempoNovoAtaqueFoice, tempoDanoFoice;
 
-  private int tempoNovoAtaqueMimosa = int(millisAvancada);
-  private int tempoNovoAtaquePneu = int(millisAvancada);
+  private int tempoNovoAtaqueMimosa = millis();
+  private int tempoNovoAtaquePneu = millis();
 
   private boolean somFazendeiroIdleTocando;
 
@@ -296,7 +296,7 @@ public class Fazendeiro {
           image(spriteFazendeiroPneuDano, fazendeiroX, fazendeiroY);
         }
 
-        if (stepFazendeiroPneuDano == fazendeiroPneuDano.width && millisAvancada > tempoSpriteFazendeiroTomouDanoPneu + 1400) {
+        if (stepFazendeiroPneuDano == fazendeiroPneuDano.width && millis() > tempoSpriteFazendeiroTomouDanoPneu + 1400) {
           fazendeiroTomouDanoPneu = false;
         }
 
@@ -328,10 +328,10 @@ public class Fazendeiro {
 
   void update() {
     if (!ataquePneuAcontecendo && !fazendeiroTomouDanoPneu && !fazendeiroMorreu) {
-      if (int(millisAvancada) > tempoNovoDestino + 5000) {
+      if (millis() > tempoNovoDestino + 5000) {
         destinoFazendeiroX = valoresFazendeiroDestinoX[int(random(0, valoresFazendeiroDestinoX.length))];
         destinoFazendeiroY = valoresFazendeiroDestinoY[int(random(0, valoresFazendeiroDestinoY.length))];
-        tempoNovoDestino = int(millisAvancada);
+        tempoNovoDestino = millis();
         gatilhoNovoAtaqueMimosa = false;
         gatilhoNovoAtaqueMimosaAtivo = false;
         gatilhoNovoAtaquePneuAtivo = false;
@@ -364,8 +364,8 @@ public class Fazendeiro {
 
   void ataqueFoice() {
     if (!ataqueMimosaAcontecendo && !ataquePneuAcontecendo && !fazendeiroTomouDanoPneu && !fazendeiroMorreu) {
-      if (dist(fazendeiroX, fazendeiroY, jLeiteX, jLeiteY) < 100 && !ataqueFoiceLigado && millisAvancada > tempoNovoAtaqueFoice + 1500) {
-        tempoNovoAtaqueFoice = int(millisAvancada);
+      if (dist(fazendeiroX, fazendeiroY, jLeiteX, jLeiteY) < 100 && !ataqueFoiceLigado && millis() > tempoNovoAtaqueFoice + 1500) {
+        tempoNovoAtaqueFoice = millis();
         tempoDanoFoice = millis();
         ataqueFoice = true;
         ataqueFoiceLigado = true;
@@ -392,10 +392,10 @@ public class Fazendeiro {
     if (!ataquePneuAcontecendo && !fazendeiroTomouDanoPneu && !fazendeiroMorreu) {
       if (fazendeiroX == destinoFazendeiroX && fazendeiroY == destinoFazendeiroY) {
         if (!gatilhoNovoAtaqueMimosa) {
-          tempoNovoAtaqueMimosa = int(millisAvancada);
+          tempoNovoAtaqueMimosa = millis();
           gatilhoNovoAtaqueMimosa = true;
         }
-        if (millisAvancada > tempoNovoAtaqueMimosa + 1500 && !gatilhoNovoAtaqueMimosaAtivo) {
+        if (millis() > tempoNovoAtaqueMimosa + 1500 && !gatilhoNovoAtaqueMimosaAtivo) {
           novoAtaqueMimosa = true;
           gatilhoNovoAtaqueMimosaAtivo = true;
         }
@@ -406,10 +406,10 @@ public class Fazendeiro {
   void ataquePneu() {
     if (!ataquePneuAcontecendo && !ataqueMimosaAcontecendo && !fazendeiroMorreu) {
       if (!gatilhoNovoAtaquePneu) {
-        tempoNovoAtaquePneu = int(millisAvancada);
+        tempoNovoAtaquePneu = millis();
         gatilhoNovoAtaquePneu = true;
       }
-      if (int(millisAvancada) > tempoNovoAtaquePneu + 32000 && !gatilhoNovoAtaquePneuAtivo) {
+      if (millis() > tempoNovoAtaquePneu + 32000 && !gatilhoNovoAtaquePneuAtivo) {
         novoAtaquePneu = true;
         gatilhoNovoAtaquePneuAtivo = true;
       }
@@ -424,7 +424,7 @@ public class Fazendeiro {
         somFazendeiroMorreu.rewind();
         somFazendeiroMorreu.play();
       }
-      tempoBossMorreu = int(millisAvancada);
+      tempoBossMorreu = millis();
     }
   }
 }
@@ -723,7 +723,7 @@ public class Pneu {
       if (indexVidaFazendeiroOsso >= 1) {
         indexVidaFazendeiroOsso = indexVidaFazendeiroOsso - 1;
       }
-      tempoSpriteFazendeiroTomouDanoPneu = int(millisAvancada);
+      tempoSpriteFazendeiroTomouDanoPneu = millis();
       fazendeiroTomouDanoPneu = true;
       return true;
     } else {

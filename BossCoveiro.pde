@@ -88,12 +88,12 @@ public class Coveiro {
   private int indexRandomSomCoveiroIdle;
   private int indexRandomSomCoveiroEsmaga;
 
-  private int tempoNovoDestino = int(millisAvancada);
+  private int tempoNovoDestino = millis();
 
   private int tempoNovoAtaquePa, tempoDanoPa;
 
-  private int tempoNovoAtaqueFenda = int(millisAvancada);
-  private int tempoGatilhoCarregarNovoAtaqueLapide = int(millisAvancada), tempoGatilhoNovoAtaqueLapide;
+  private int tempoNovoAtaqueFenda = millis();
+  private int tempoGatilhoCarregarNovoAtaqueLapide = millis(), tempoGatilhoNovoAtaqueLapide;
 
   private boolean somCoveiroIdleTocando;
 
@@ -235,7 +235,7 @@ public class Coveiro {
       if (coveiroTomouDanoAgua) {
         image(coveiroLapideDano, coveiroX, coveiroY);
 
-        if (millisAvancada > tempoCoveiroTomouDanoAgua + 1000) {
+        if (millis() > tempoCoveiroTomouDanoAgua + 1000) {
           coveiroTomouDanoAgua = false;
         }
       }
@@ -264,10 +264,10 @@ public class Coveiro {
   void update() {
     if (!novoAtaqueFenda && !coveiroDelayTomouDanoAgua && !coveiroTomouDanoAgua && !coveiroMorreu) {
       if (!carregandoNovoAtaqueLapide && !novoAtaqueLapide) {
-        if (int(millisAvancada) > tempoNovoDestino + 5000) {
+        if (millis() > tempoNovoDestino + 5000) {
           destinoCoveiroX = valoresCoveiroDestinoX[int(random(0, valoresCoveiroDestinoX.length))];
           destinoCoveiroY = valoresCoveiroDestinoY[int(random(0, valoresCoveiroDestinoY.length))];
-          tempoNovoDestino = int(millisAvancada);
+          tempoNovoDestino = millis();
           gatilhoNovoAtaqueFenda = false;
           gatilhoNovoAtaqueFendaAtivo = false;
           gatilhoNovoAtaqueLapideAtivo = false;
@@ -313,9 +313,9 @@ public class Coveiro {
 
   void ataquePa() {
     if (!novoAtaqueFenda && !carregandoNovoAtaqueLapide && !novoAtaqueLapide && !coveiroDelayTomouDanoAgua && !coveiroTomouDanoAgua && !coveiroMorreu) {
-      if (dist(coveiroX, coveiroY, jLeiteX, jLeiteY) < 200 && !ataquePaLigado && millisAvancada > tempoNovoAtaquePa + 1500) {
-        tempoNovoAtaquePa = int(millisAvancada);
-        tempoDanoPa = int(millisAvancada);
+      if (dist(coveiroX, coveiroY, jLeiteX, jLeiteY) < 200 && !ataquePaLigado && millis() > tempoNovoAtaquePa + 1500) {
+        tempoNovoAtaquePa = millis();
+        tempoDanoPa = millis();
         ataquePa = true;
         ataquePaLigado = true;
         ataquePaAcontecendo = true;
@@ -328,7 +328,7 @@ public class Coveiro {
   void colisaoPa() {
     if (!novoAtaqueFenda && !carregandoNovoAtaqueLapide && !novoAtaqueLapide && !coveiroDelayTomouDanoAgua && !coveiroTomouDanoAgua && !coveiroMorreu) {
       if (ataquePaAcontecendo && dist(coveiroX, coveiroY, jLeiteX, jLeiteY) < 200) {
-        if (int(millisAvancada) > tempoDanoPa + 775) {
+        if (millis() > tempoDanoPa + 775) {
           if (!jLeiteImune) {
             vidaJLeiteAtual = vidaJLeiteAtual - 5;
             jLeiteImune = true;
@@ -343,10 +343,10 @@ public class Coveiro {
     if (!novoAtaqueFenda && !ataqueFendaAcontecendo && !novoAtaqueLapide && !coveiroDelayTomouDanoAgua && !coveiroTomouDanoAgua && !coveiroMorreu) {
       if (coveiroX == destinoCoveiroX && coveiroY == destinoCoveiroY) {
         if (!gatilhoNovoAtaqueFenda) {
-          tempoNovoAtaqueFenda = int(millisAvancada);
+          tempoNovoAtaqueFenda = millis();
           gatilhoNovoAtaqueFenda = true;
         }
-        if (millisAvancada > tempoNovoAtaqueFenda + 1500 && !gatilhoNovoAtaqueFendaAtivo) {
+        if (millis() > tempoNovoAtaqueFenda + 1500 && !gatilhoNovoAtaqueFendaAtivo) {
           novoAtaqueFenda = true;
           gatilhoNovoAtaqueFendaAtivo = true;
         }
@@ -357,20 +357,20 @@ public class Coveiro {
   void ataqueCarregandoLapide() {
     if (!novoAtaqueFenda && !coveiroTomouDanoAgua && !coveiroMorreu) {
       if (!gatilhoNovoAtaqueLapide) {
-        tempoGatilhoCarregarNovoAtaqueLapide = int(millisAvancada);
+        tempoGatilhoCarregarNovoAtaqueLapide = millis();
         gatilhoNovoAtaqueLapide = true;
       }
-      if (millisAvancada > tempoGatilhoCarregarNovoAtaqueLapide + 32000 && !gatilhoNovoAtaqueLapideAtivo) {
+      if (millis() > tempoGatilhoCarregarNovoAtaqueLapide + 32000 && !gatilhoNovoAtaqueLapideAtivo) {
         carregandoNovoAtaqueLapide = true;
         ataqueLapideAcontecendo = true;
-        tempoGatilhoNovoAtaqueLapide = int(millisAvancada);
+        tempoGatilhoNovoAtaqueLapide = millis();
         gatilhoNovoAtaqueLapideAtivo = true;
       }
     }
   }
 
   void ataqueLapide() {
-    if (millisAvancada > tempoGatilhoNovoAtaqueLapide + 4000 && carregandoNovoAtaqueLapide) {
+    if (millis() > tempoGatilhoNovoAtaqueLapide + 4000 && carregandoNovoAtaqueLapide) {
       carregandoNovoAtaqueLapide = false;
       novoAtaqueLapide = true;
       lapideAtaqueSumiu = false;
@@ -386,7 +386,7 @@ public class Coveiro {
         somCoveiroMorreu.rewind();
         somCoveiroMorreu.play();
       }
-      tempoBossMorreu = int(millisAvancada);
+      tempoBossMorreu = millis();
     }
   }
 }
@@ -450,7 +450,7 @@ public class Fenda {
         abriuFenda = false;
         causouDanoJLeite = false;
         fendaAbriu = true;
-        tempoFendaAberta = int(millisAvancada);
+        tempoFendaAberta = millis();
         stepFendaAbrindo = 0;
       } else {
         causouDanoJLeite = true;
@@ -458,7 +458,7 @@ public class Fenda {
     }
 
     if (fendaAbriu) {
-      if (millisAvancada > tempoFendaAberta + 5000) {
+      if (millis() > tempoFendaAberta + 5000) {
         if (millis() > tempoSpriteFendaFechando + 250) {
           spriteFendaFechando = fendaFechando.get(stepFendaFechando, 0, 251, 612);
           stepFendaFechando = stepFendaFechando % 1715 + 251;
@@ -556,7 +556,7 @@ public class LapideAtaque {
   }
 
   boolean acertouJLeite() {
-    if (millisAvancada > coveiro.tempoGatilhoNovoAtaqueLapide + 4375) {
+    if (millis() > coveiro.tempoGatilhoNovoAtaqueLapide + 4375) {
       if (lapideX + 94 > jLeiteX && lapideX + 50 < jLeiteX + 63 && lapideY < jLeiteY + 126 && lapideY + 188 > jLeiteY) {
         return true;
       } else {
@@ -618,7 +618,7 @@ public class LapideCenario {
   }
 
   void display() {
-    if (millisAvancada > tempoLapideAtiva + 2500) {
+    if (millis() > tempoLapideAtiva + 2500) {
       if (millis() > tempoSpriteLapideCenario + 125) { 
         if (!lapideAcionada) {
           spriteLapideCenario = imagensLapidesCenario[indexLapideCenario].get(0, 0, 145, 183);
@@ -633,7 +633,7 @@ public class LapideCenario {
       }
 
       if (stepLapideCenario == imagensLapidesCenario[0].width) {
-        tempoLapideAtiva = int(millisAvancada);
+        tempoLapideAtiva = millis();
         lapideAcionada = false;
         stepLapideCenario = 0;
       }
@@ -641,7 +641,7 @@ public class LapideCenario {
   }
 
   void acionarLapide() {
-    if (indexLapideAtaque == indexLapideCenario && millisAvancada > coveiro.tempoGatilhoNovoAtaqueLapide + 4000 && !lapideAtaqueSumiu) {
+    if (indexLapideAtaque == indexLapideCenario && millis() > coveiro.tempoGatilhoNovoAtaqueLapide + 4000 && !lapideAtaqueSumiu) {
       lapideAcionada = true;
     }
   }
@@ -661,7 +661,7 @@ void lapideCenario() {
     l.display();
     if (!coveiro.coveiroMorreu) {
       l.acionarLapide();
-      if (l.lapideAcionada && millisAvancada > l.tempoLapideAtiva + 2000 && lapideAtaqueSumiu) {
+      if (l.lapideAcionada && millis() > l.tempoLapideAtiva + 2000 && lapideAtaqueSumiu) {
         l.lapideAcionada = false;
       }
     }
@@ -782,9 +782,9 @@ void pocaCenario() {
     }
   }
 
-  if (coveiroDelayTomouDanoAgua && millisAvancada > tempoCoveiroDelayTomouDanoAgua + 100) {
+  if (coveiroDelayTomouDanoAgua && millis() > tempoCoveiroDelayTomouDanoAgua + 100) {
     coveiroTomouDanoAgua = true;
-    tempoCoveiroTomouDanoAgua = int(millisAvancada);
+    tempoCoveiroTomouDanoAgua = millis();
     coveiroDelayTomouDanoAgua = false;
   }
 }

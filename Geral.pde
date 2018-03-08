@@ -1,17 +1,17 @@
 public class Geral {
-  protected PImage sprite;
-  protected PImage spriteImage;
+  private PImage sprite;
+  private PImage spriteImage;
 
-  protected int x;
-  protected int y;
-  protected int movementY;
+  private int x;
+  private int y;
+  private int movementY;
 
-  protected int step;
-  protected int spriteTime;
-  protected int spriteInterval;
+  private int step;
+  private int spriteTime;
+  private int spriteInterval;
 
-  protected int spriteWidth;
-  protected int spriteHeight;
+  private int spriteWidth;
+  private int spriteHeight;
 
   public PImage getSprite() {
     return sprite;
@@ -21,11 +21,11 @@ public class Geral {
     this.sprite = sprite;
   }
 
-  public PImage getEnemy() {
+  public PImage getSpriteImage() {
     return spriteImage;
   }
 
-  public void setEnemy(PImage enemy) {
+  public void setSpriteImage(PImage enemy) {
     this.spriteImage = enemy;
   }
 
@@ -45,11 +45,11 @@ public class Geral {
     this.y = y;
   }
 
-  public int getmovementY() {
+  public int getMovementY() {
     return movementY;
   }
 
-  public void setmovementY(int movementY) {
+  public void setMovementY(int movementY) {
     this.movementY = movementY;
   }
 
@@ -113,7 +113,7 @@ public class Geral {
   }
 
   boolean hasCollided() {
-    if (x + spriteWidth > jLeiteX && x < jLeiteX + 63 && y + spriteHeight > jLeiteY && y < jLeiteY + 126) {
+    if (x + spriteWidth >= jLeiteX && x <= jLeiteX + 63 && y + spriteHeight >= jLeiteY && y <= jLeiteY + 126) {
       return true;
     }
 

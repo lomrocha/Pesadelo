@@ -16,10 +16,10 @@ void armas() {
     totalArmas = 0;
   }
 
-  if (!telaTutorialAndandoAtiva && totalCenariosCriados < totalCenariosPossiveis) {
+  if (!telaTutorialAndandoAtiva) {
     if (!armaGerada) {
       indexArma = int(random(0, 10));
-      tempoGerarArma = int(millisAvancada);
+      tempoGerarArma = millis();
       armaGerada = true;
     }
   }
@@ -44,7 +44,7 @@ void caixaNumeroItem() {
   image(caixaNumeroItem, 705, 510);
   if (totalItem - 1 >= 0) {
     if (item == 1) {
-      caixaItemPedra = pedra.get(0, 0, 34, 27);
+      caixaItemPedra = stone.get(0, 0, 34, 27);
       image(caixaItemPedra, 729, 516);
     } else if (item == 2) {
       image(caixaItemPa, 705, 510);
@@ -52,132 +52,6 @@ void caixaNumeroItem() {
       image(caixaItemChicote, 705, 510);
     }
     image(imagensNumerosItem[totalItem - 1], 725, 552);
-  }
-}
-
-PImage pa;
-PImage sombraPa;
-
-public class Pa {
-  private PImage spritePa;
-
-  private int paX = int(random(100, 616));
-  private int paY = int(random(-300, -1000));
-
-  private int stepPa;
-  private int tempoSpritePa;
-
-  public Pa() {
-  }
-
-  public Pa(int paX, int paY) {
-    this.paX = paX;
-    this.paY = paY;
-  }
-
-  void display() {
-    image (sombraPa, paX + 1, paY + 85);
-
-    if (millis() > tempoSpritePa + 75) {
-      spritePa = pa.get(stepPa, 0, 84, 91); 
-      stepPa = stepPa % 504 + 84;
-      image(spritePa, paX, paY); 
-      tempoSpritePa = millis();
-    } else {
-      image(spritePa, paX, paY);
-    }
-
-    if (stepPa == pa.width) {
-      stepPa = 0;
-    }
-  }
-
-  void update() {
-    paY = paY + 1;
-  }
-
-  boolean apanhado() {
-    if (paX + 84 > jLeiteX && paX < jLeiteX + 63 && paY + 91 > jLeiteY && paY < jLeiteY + 126) {
-      tempoGerarArma = int(millisAvancada);
-      item = 2;
-      totalItem = 7;
-      armaGerada = false;
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  boolean saiuDaTela() {
-    if (paY > height) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
-
-ArrayList<Pa> pas;
-
-int indexRandomPaMapaBoss;
-
-void pa() {
-  if (totalArmas == 0 && millisAvancada > tempoGerarArma + 15000) {
-    if (estadoJogo == "PrimeiroMapa") {
-      if (pas.size() == 0 && indexArma >= 0 && indexArma <= 9 && !telaTutorialAndandoAtiva && totalCenariosCriados < totalCenariosPossiveis) {
-        pas.add(new Pa());
-        totalArmas = totalArmas + 1;
-      }
-    }
-
-    if (estadoJogo == "SegundoMapa") {
-      if (pas.size() == 0 && indexArma >= 0 && indexArma <= 4 && !telaTutorialAndandoAtiva && totalCenariosCriados < totalCenariosPossiveis) {
-        pas.add(new Pa());
-        totalArmas = totalArmas + 1;
-      }
-    }
-
-    if (estadoJogo == "TerceiroMapa") {
-      if (pas.size() == 0 && indexArma >= 0 && indexArma <= 2 && !telaTutorialAndandoAtiva && totalCenariosCriados < totalCenariosPossiveis) {
-        pas.add(new Pa());
-        totalArmas = totalArmas + 1;
-      }
-    }
-
-    if (estadoJogo == "MapaCoveiro") {
-      if (pas.size() == 0 && indexArma >= 0 && indexArma <= 9) {
-        indexRandomPaMapaBoss = int(random(0, valoresXMapaCoveiro.length));
-        pas.add(new Pa(valoresXMapaCoveiro[indexRandomPaMapaBoss], valoresYMapaCoveiro[indexRandomPaMapaBoss]));
-        totalArmas = totalArmas + 1;
-      }
-    }
-
-    if (estadoJogo == "MapaFazendeiro") {
-      if (pas.size() == 0 && indexArma >= 0 && indexArma <= 4) {
-        indexRandomPaMapaBoss = int(random(0, valoresXMapaFazendeiro.length));
-        pas.add(new Pa(valoresXMapaFazendeiro[indexRandomPaMapaBoss], valoresYMapaFazendeiro[indexRandomPaMapaBoss]));
-        totalArmas = totalArmas + 1;
-      }
-    }
-
-    if (estadoJogo == "MapaPadre") {
-      if (pas.size() == 0 && indexArma >= 0 && indexArma <= 2) {
-        indexRandomPaMapaBoss = int(random(0, valoresXMapaPadre.length));
-        pas.add(new Pa(valoresXMapaPadre[indexRandomPaMapaBoss], valoresYMapaPadre[indexRandomPaMapaBoss]));
-        totalArmas = totalArmas + 1;
-      }
-    }
-  }
-
-  for (int i = pas.size() - 1; i >= 0; i = i - 1) {
-    Pa p = pas.get(i);
-    p.display();
-    if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
-      p.update();
-    }
-    if (p.apanhado() || p.saiuDaTela()) {
-      pas.remove(p);
-    }
   }
 }
 
@@ -217,7 +91,7 @@ public class PaAtaque {
   }
 
   boolean acertouEsqueleto(Esqueleto e) {
-    if (jLeiteX + 160 > e.x && jLeiteX - 70 < e.x + 76 && jLeiteY + 56 > e.y && jLeiteY - 44 < e.y + 126) {
+    if (jLeiteX + 160 > e.getX() && jLeiteX - 70 < e.getX() + 76 && jLeiteY + 56 > e.getY() && jLeiteY - 44 < e.getY() + 126) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -226,7 +100,7 @@ public class PaAtaque {
   }
 
   boolean acertouEsqueletoChute(EsqueletoChute e) {
-    if (jLeiteX + 160 > e.x && jLeiteX - 70 < e.x + 49 && jLeiteY + 56 > e.y && jLeiteY - 44 < e.y + 74) {
+    if (jLeiteX + 160 > e.getX() && jLeiteX - 70 < e.getX() + 49 && jLeiteY + 56 > e.getY() && jLeiteY - 44 < e.getY() + 74) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -235,7 +109,7 @@ public class PaAtaque {
   }
 
   boolean acertouCachorro(Cachorro c) {
-    if (jLeiteX + 160 > c.x && jLeiteX - 70 < c.x + 45 && jLeiteY + 56 > c.y && jLeiteY - 44 < c.y + 83) {
+    if (jLeiteX + 160 > c.getX() && jLeiteX - 70 < c.getX() + 45 && jLeiteY + 56 > c.getY() && jLeiteY - 44 < c.getY() + 83) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -244,7 +118,7 @@ public class PaAtaque {
   }
 
   boolean acertouCorvo(Corvo c) {
-    if (jLeiteX + 160 > c.x + 45 && jLeiteX - 70 < c.x + 75 && jLeiteY + 56 > c.y && jLeiteY - 44 < c.y + 86) {
+    if (jLeiteX + 160 > c.getX() + 45 && jLeiteX - 70 < c.getX() + 75 && jLeiteY + 56 > c.getY() && jLeiteY - 44 < c.getY() + 86) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -253,7 +127,7 @@ public class PaAtaque {
   }
 
   boolean acertouEsqueletoRaiva(EsqueletoRaiva e) {
-    if (jLeiteX + 160 > e.x && jLeiteX - 70 < e.x + 76 && jLeiteY + 56 > e.y && jLeiteY - 44 < e.y + 126) {
+    if (jLeiteX + 160 > e.getX() && jLeiteX - 70 < e.getX() + 76 && jLeiteY + 56 > e.getY() && jLeiteY - 44 < e.getY() + 126) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -364,118 +238,6 @@ void paAtaque() {
   }
 }
 
-PImage pedra;
-PImage sombraPedra;
-
-public class Pedra {
-  private PImage spritePedra;
-
-  private int pedraX = int(random(100, 666));
-  private int pedraY = int(random(-300, -1000));
-
-  private int stepPedra;
-  private int tempoSpritePedra;
-
-  public Pedra() {
-  }
-
-  public Pedra(int pedraX, int pedraY) {
-    this.pedraX = pedraX;
-    this.pedraY = pedraY;
-  }
-
-  void display() {
-    image (sombraPedra, pedraX, pedraY + 17);
-
-    if (millis() > tempoSpritePedra + 75) {
-      spritePedra = pedra.get(stepPedra, 0, 34, 27); 
-      stepPedra = stepPedra % 204 + 34;
-      image(spritePedra, pedraX, pedraY); 
-      tempoSpritePedra = millis();
-    } else {
-      image(spritePedra, pedraX, pedraY);
-    }
-
-    if (stepPedra == pedra.width) {
-      stepPedra = 0;
-    }
-  }
-
-  void update() {
-    pedraY = pedraY + 1;
-  }
-
-  boolean apanhado() {
-    if (pedraX + 34 > jLeiteX && pedraX < jLeiteX + 63 && pedraY + 27 > jLeiteY && pedraY < jLeiteY + 126) {
-      tempoGerarArma = int(millisAvancada);
-      primeiraPedra = primeiraPedra + 1;
-      item = 1;
-      totalItem = 15;
-      armaGerada = false;
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  boolean saiuDaTela() {
-    if (pedraY > height) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
-
-ArrayList<Pedra> pedras;
-
-int indexRandomPedraMapaBoss;
-
-void pedra() {
-  if (totalArmas == 0 && millisAvancada > tempoGerarArma + 15000) {
-    if (estadoJogo == "SegundoMapa") {
-      if (pedras.size() == 0 && indexArma >= 5 && indexArma <= 9 && !telaTutorialAndandoAtiva && totalCenariosCriados < totalCenariosPossiveis) {
-        pedras.add(new Pedra());
-        totalArmas = totalArmas + 1;
-      }
-    }
-
-    if (estadoJogo == "TerceiroMapa") {
-      if (pedras.size() == 0 && indexArma >= 3 && indexArma <= 4 && !telaTutorialAndandoAtiva && totalCenariosCriados < totalCenariosPossiveis) {
-        pedras.add(new Pedra());
-        totalArmas = totalArmas + 1;
-      }
-    }
-
-    if (estadoJogo == "MapaFazendeiro") {
-      if (pas.size() == 0 && indexArma >= 5 && indexArma <= 9) {
-        indexRandomPedraMapaBoss = int(random(0, valoresXMapaFazendeiro.length));
-        pedras.add(new Pedra(valoresXMapaFazendeiro[indexRandomPedraMapaBoss], valoresYMapaFazendeiro[indexRandomPedraMapaBoss]));
-        totalArmas = totalArmas + 1;
-      }
-    }
-
-    if (estadoJogo == "MapaPadre") {
-      if (pas.size() == 0 && indexArma >= 3 && indexArma <= 4) {
-        indexRandomPedraMapaBoss = int(random(0, valoresXMapaPadre.length));
-        pedras.add(new Pedra(valoresXMapaPadre[indexRandomPedraMapaBoss], valoresYMapaPadre[indexRandomPedraMapaBoss]));
-        totalArmas = totalArmas + 1;
-      }
-    }
-  }
-
-  for (int i = pedras.size() - 1; i >= 0; i = i - 1) {
-    Pedra p = pedras.get(i);
-    p.display();
-    if (estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
-      p.update();
-    }
-    if (p.apanhado() || p.saiuDaTela()) {
-      pedras.remove(p);
-    }
-  }
-}
-
 PImage pedraFogo;
 
 public class PedraAtirada {
@@ -493,7 +255,7 @@ public class PedraAtirada {
   }
 
   boolean acertouEsqueleto(Esqueleto e) {
-    if (pedraFogoX + 16 > e.x && pedraFogoX < e.x + 76 && pedraFogoY + 26 > e.y && pedraFogoY < e.y + 126) {
+    if (pedraFogoX + 16 > e.getX() && pedraFogoX < e.getX() + 76 && pedraFogoY + 26 > e.getY() && pedraFogoY < e.getY() + 126) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -502,7 +264,7 @@ public class PedraAtirada {
   }
 
   boolean acertouEsqueletoChute(EsqueletoChute e) {
-    if (pedraFogoX + 16 > e.x && pedraFogoX < e.x + 49 && pedraFogoY + 26 > e.y && pedraFogoY < e.y + 74) {
+    if (pedraFogoX + 16 > e.getX() && pedraFogoX < e.getX() + 49 && pedraFogoY + 26 > e.getY() && pedraFogoY < e.getY() + 74) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -511,7 +273,7 @@ public class PedraAtirada {
   }
 
   boolean acertouCachorro(Cachorro c) {
-    if (pedraFogoX + 16 > c.x && pedraFogoX < c.x + 45 && pedraFogoY + 26 > c.y && pedraFogoY < c.y + 83) {
+    if (pedraFogoX + 16 > c.getX() && pedraFogoX < c.getX() + 45 && pedraFogoY + 26 > c.getY() && pedraFogoY < c.getY() + 83) {
       return true;
     } else { 
       return false;
@@ -519,7 +281,7 @@ public class PedraAtirada {
   }
 
   boolean acertouCorvo(Corvo c) {
-    if (pedraFogoX + 16 > c.x + 45 && pedraFogoX < c.x + 75 && pedraFogoY + 26 > c.y && pedraFogoY < c.y + 86) {
+    if (pedraFogoX + 16 > c.getX() + 45 && pedraFogoX < c.getX() + 75 && pedraFogoY + 26 > c.getY() && pedraFogoY < c.getY() + 86) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -528,7 +290,7 @@ public class PedraAtirada {
   }
 
   boolean acertouEsqueletoRaiva(EsqueletoRaiva e) {
-    if (pedraFogoX + 16 > e.x && pedraFogoX < e.x + 76 && pedraFogoY + 26 > e.y && pedraFogoY < e.y + 126) {
+    if (pedraFogoX + 16 > e.getX() && pedraFogoX < e.getX() + 76 && pedraFogoY + 26 > e.getY() && pedraFogoY < e.getY() + 126) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -628,102 +390,6 @@ void pedraAtirada() {
   }
 }
 
-PImage chicote;
-PImage sombraChicote;
-
-public class Chicote {
-  private PImage spriteChicote;
-
-  private int chicoteX = int(random(200, 500));
-  private int chicoteY = int(random(-300, -1000));
-
-  private int stepChicote;
-  private int tempoSpriteChicote;
-
-  public Chicote() {
-  }
-
-  public Chicote(int chicoteX, int chicoteY) {
-    this.chicoteX = chicoteX;
-    this.chicoteY = chicoteY;
-  }
-
-  void display() {
-    image (sombraChicote, chicoteX + 10, chicoteY + 76);
-
-    if (millis() > tempoSpriteChicote + 75) {
-      spriteChicote = chicote.get(stepChicote, 0, 101, 91); 
-      stepChicote = stepChicote % 606 + 101;
-      image(spriteChicote, chicoteX, chicoteY); 
-      tempoSpriteChicote = millis();
-    } else {
-      image(spriteChicote, chicoteX, chicoteY);
-    }
-
-    if (stepChicote == chicote.width) {
-      stepChicote = 0;
-    }
-  }
-
-  void update() {
-    chicoteY = chicoteY + 1;
-  }
-
-  boolean apanhado() {
-    if (chicoteX + 101 > jLeiteX && chicoteX < jLeiteX + 63 && chicoteY + 91 > jLeiteY && chicoteY < jLeiteY + 126) {
-      tempoGerarArma = int(millisAvancada);
-      item = 3;
-      totalItem = 10;
-      armaGerada = false;
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  boolean saiuDaTela() {
-    if (chicoteY > height) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
-
-ArrayList<Chicote> chicotes;
-
-int indexRandomChicoteMapaBoss;
-
-void chicote() {
-  if (totalArmas == 0 && millisAvancada > tempoGerarArma + 15000) {
-    if (estadoJogo == "TerceiroMapa") {
-      if (chicotes.size() == 0 && indexArma >= 5 && indexArma <= 9 && !telaTutorialAndandoAtiva && totalCenariosCriados < totalCenariosPossiveis) {
-        chicotes.add(new Chicote());
-        totalArmas = totalArmas + 1;
-      }
-    }
-
-    if (estadoJogo == "MapaPadre") {
-      if (chicotes.size() == 0 && indexArma >= 5 && indexArma <= 9) {
-        indexRandomChicoteMapaBoss = int(random(0, valoresXMapaPadre.length));
-        chicotes.add(new Chicote(valoresXMapaPadre[indexRandomChicoteMapaBoss], valoresYMapaPadre[indexRandomChicoteMapaBoss]));
-        totalArmas = totalArmas + 1;
-      }
-    }
-  }
-
-  for (int i = chicotes.size() - 1; i >= 0; i = i - 1) {
-    Chicote c = chicotes.get(i);
-    c.display();
-    if (estadoJogo == "TerceiroMapa") {
-      c.update();
-    }
-    if (c.apanhado() || c.saiuDaTela()) {
-      chicotes.remove(c);
-    }
-  }
-}
-
 PImage chicoteAtaque;
 
 public class ChicoteAtaque {
@@ -760,7 +426,7 @@ public class ChicoteAtaque {
   }
 
   boolean acertouEsqueleto(Esqueleto e) {
-    if (jLeiteX + 56 > e.x && jLeiteX + 50 < e.x + 76 && jLeiteY > e.y && jLeiteY - 140 < e.y + 126) {
+    if (jLeiteX + 56 > e.getX() && jLeiteX + 50 < e.getX() + 76 && jLeiteY > e.getY() && jLeiteY - 140 < e.getY() + 126) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -769,7 +435,7 @@ public class ChicoteAtaque {
   }
 
   boolean acertouEsqueletoChute(EsqueletoChute e) {
-    if (jLeiteX + 56 > e.x && jLeiteX + 50 < e.x + 49 && jLeiteY > e.y && jLeiteY - 140 < e.y + 74) {
+    if (jLeiteX + 56 > e.getX() && jLeiteX + 50 < e.getX() + 49 && jLeiteY > e.getY() && jLeiteY - 140 < e.getY() + 74) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -778,7 +444,7 @@ public class ChicoteAtaque {
   }
 
   boolean acertouCachorro(Cachorro c) {
-    if (jLeiteX + 56 > c.x && jLeiteX + 50 < c.x + 45 && jLeiteY > c.y && jLeiteY - 140 < c.y + 83) {
+    if (jLeiteX + 56 > c.getX() && jLeiteX + 50 < c.getX() + 45 && jLeiteY > c.getY() && jLeiteY - 140 < c.getY() + 83) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -787,7 +453,7 @@ public class ChicoteAtaque {
   }
 
   boolean acertouCorvo(Corvo c) {
-    if (jLeiteX + 56 > c.x + 45 && jLeiteX + 50 < c.x + 75 && jLeiteY > c.y && jLeiteY - 140 < c.y + 86) {
+    if (jLeiteX + 56 > c.getX() + 45 && jLeiteX + 50 < c.getX() + 75 && jLeiteY > c.getY() && jLeiteY - 140 < c.getY() + 86) {
       hitInimigosMostrando = true;
       return true;
     } else { 
@@ -796,7 +462,7 @@ public class ChicoteAtaque {
   }
 
   boolean acertouEsqueletoRaiva(EsqueletoRaiva e) {
-    if (jLeiteX + 56 > e.x && jLeiteX + 50 < e.x + 76 && jLeiteY > e.y && jLeiteY - 140 < e.y + 126) {
+    if (jLeiteX + 56 > e.getX() && jLeiteX + 50 < e.getX() + 76 && jLeiteY > e.getY() && jLeiteY - 140 < e.getY() + 126) {
       hitInimigosMostrando = true;
       return true;
     } else { 

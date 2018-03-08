@@ -7,29 +7,29 @@ public class EsqueletoRaiva extends Geral {
   private int movementX = 3;
 
   public EsqueletoRaiva(int x, int y) {
-    this.x = x;
-    this.y = y;
-    
-    spriteImage = redSkeleton;
-    spriteInterval = 75;
-    spriteWidth = 76;
-    spriteHeight = 126;
-    movementY = 3;
+    this.setX(x);
+    this.setY(y);
+
+    setSpriteImage(redSkeleton);
+    setSpriteInterval(75);
+    setSpriteWidth(76);
+    setSpriteHeight(126);
+    setMovementY(3);
   }
 
   void display() {
-    image(redSkeletonShadow, x + 16, y + 114);
-    
+    image(redSkeletonShadow, getX() + 16, getY() + 114);
+
     super.display();
   }
 
   void update() {
-    x = x + movementX;
+    setX(getX() + movementX);
 
-    if (x < 100) {
+    if (getX() < 100) {
       movementX = 3;
     }
-    if (x + 30 > 700) {
+    if (getX() + 30 > 700) {
       movementX = -3;
     } 
 
@@ -53,7 +53,7 @@ void esqueletoRaiva() {
       }
     }
 
-    if (!telaTutorialAndandoAtiva && totalCenariosCriados < totalCenariosPossiveis) {
+    if (!telaTutorialAndandoAtiva) {
       if (estadoJogo == "TerceiroMapa" && esqueletosRaiva.size() < 2 && totalInimigos < 6) {
         esqueletoRaivaC = int(random(0, 7));
         esqueletoRaivaL = int(random(0, 4));
@@ -75,10 +75,8 @@ void esqueletoRaiva() {
       totalInimigos = totalInimigos - 1;
       esqueletosRaiva.remove(e);
     }
-    if (e.hasCollided() && !jLeiteImune) {
-      vidaJLeiteAtual = vidaJLeiteAtual - 3;
-      jLeiteImune = true;
-      tempoImune = millis();
+    if (e.hasCollided()) {
+      damage(3);
     }
   }
 
@@ -88,7 +86,7 @@ void esqueletoRaiva() {
       PaAtaque p = pasAtaque.get(j);
       if (p.acertouEsqueletoRaiva(e)) {
         totalInimigos = totalInimigos - 1;
-        hitInimigos(e.x, e.y);
+        hitInimigos(e.getX(), e.getY());
         esqueletosRaiva.remove(e);
       }
     }
@@ -96,7 +94,7 @@ void esqueletoRaiva() {
       PedraAtirada p = pedrasAtiradas.get(j);
       if (p.acertouEsqueletoRaiva(e)) {
         totalInimigos = totalInimigos - 1;
-        hitInimigos(e.x, e.y);
+        hitInimigos(e.getX(), e.getY());
         pedrasAtiradas.remove(p);
         esqueletosRaiva.remove(e);
       }
@@ -105,7 +103,7 @@ void esqueletoRaiva() {
       ChicoteAtaque ch = chicotesAtaque.get(j);
       if (ch.acertouEsqueletoRaiva(e)) {
         totalInimigos = totalInimigos - 1;
-        hitInimigos(e.x, e.y);
+        hitInimigos(e.getX(), e.getY());
         esqueletosRaiva.remove(e);
       }
     }

@@ -64,7 +64,7 @@ void jLeite() {
     vidaJLeiteAtual = 15;
   }
 
-  if (totalCenariosCriados >= totalCenariosPossiveis && finalMapa) {
+  if (finalMapa) {
     if (jLeiteY + 126 < - 50) {
       if (estadoJogo == "PrimeiroMapa") {
         estadoJogo = ("MapaCoveiro");
@@ -87,75 +87,10 @@ void jLeite() {
     }
   }
 
-  if (!portaAberta) {
-    if (totalCenariosCriados >= totalCenariosPossiveis) {
-      if (jLeiteY < 126 && jLeiteY < height) {
-        jLeiteY = jLeiteY + 3;
-      }
-    }
-  }
-
-  if (!cercaAberta) {
-    if (totalCenariosCriados >= totalCenariosPossiveis) {
-      if (jLeiteY < 126 && jLeiteY < height) {
-        jLeiteY = jLeiteY + 3;
-      }
-    }
-  }
-
-  for (int i = cenarios.size() - 1; i >= 0; i = i - 1) {
-    Cenario c = cenarios.get(i);
-    if (c.indexCenarioCriado == totalCenariosPossiveis) {
-      if (jLeiteY < c.cenarioY + 474) {
-        finalMapa = true;
-      }
-    }
-  }
-
-  if (finalMapa && (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa")) {
-    if (jLeiteX != 380) {
-      if (jLeiteX < 380) {
-        jLeiteX = jLeiteX + 1;
-      } else {
-        jLeiteX = jLeiteX - 1;
-      }
-    } else {
-      if (estadoJogo == "PrimeiroMapa") {
-        if (portaAberta) {
-          if (jLeiteY + 126 > -100) {
-            jLeiteY = jLeiteY - 2;
-          } else {
-            jLeiteY = 474;
-            estadoJogo = "MapaCoveiro";
-            finalMapa = false;
-          }
-        }
-      } else if (estadoJogo == "SegundoMapa") {
-        if (cercaAberta) {
-          if (jLeiteY + 126 > -100) {
-            jLeiteY = jLeiteY - 2;
-          } else {
-            jLeiteY = 474;
-            estadoJogo = "MapaFazendeiro";
-            finalMapa = false;
-          }
-        }
-      } else if (estadoJogo == "TerceiroMapa") {
-        if (jLeiteY + 126 > -100) {
-          jLeiteY = jLeiteY - 2;
-        } else {
-          jLeiteY = 474;
-          estadoJogo = "MapaPadre";
-          finalMapa = false;
-        }
-      }
-    }
-  }
-
   if (vidaJLeiteAtual < 0 && !jLeiteMorreu) {
     jLeiteMorreu = true;
     jLeiteMorrendo = true;
-    tempoMorto = int(millisAvancada);
+    tempoMorto = millis();
     if (temaBoss.isPlaying()) {
       temaCidade.pause();
     }
@@ -195,7 +130,7 @@ void jLeite() {
     }
   }
 
-  if (jLeiteMorreu && millisAvancada > tempoMorto + 2500) {
+  if (jLeiteMorreu && millis() > tempoMorto + 2500) {
     if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
       setup();
       estadoJogo = "MenuInicial";

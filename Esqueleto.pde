@@ -7,18 +7,18 @@ int[] valoresEsqueletoXMapaCoveiro = {200, 520};
 
 public class Esqueleto extends Geral {
   public Esqueleto(int x, int y) {
-    this.x = x;
-    this.y = y;
+    this.setX(x);
+    this.setY(y);
 
-    spriteImage = skeleton;
-    spriteInterval = 155;
-    spriteWidth = 76;
-    spriteHeight = 126;
-    movementY = 3;
+    setSpriteImage(skeleton);
+    setSpriteInterval(155);
+    setSpriteWidth(76);
+    setSpriteHeight(126);
+    setMovementY(3);
   }
 
   void display() {
-    image (skeletonShadow, x + 16, y + 114);
+    image (skeletonShadow, getX() + 16, getY() + 114);
 
     super.display();
   }
@@ -49,7 +49,7 @@ void esqueleto() {
       }
     }
 
-    if (!telaTutorialAndandoAtiva && totalCenariosCriados < totalCenariosPossiveis) {
+    if (!telaTutorialAndandoAtiva) {
       if (estadoJogo == "PrimeiroMapa" && esqueletos.size() < 2 && totalInimigos < 6) {
         esqueletoC = int(random(0, 7));
         esqueletoL = int(random(0, 4));
@@ -84,16 +84,14 @@ void esqueleto() {
 
   for (int i = esqueletos.size() - 1; i >= 0; i = i - 1) {
     Esqueleto e = esqueletos.get(i);
-    e.display();
     e.update();
+    e.display();
     if (e.hasExitScreen()) {
       totalInimigos = totalInimigos - 1;
       esqueletos.remove(e);
     }
-    if (e.hasCollided() && !jLeiteImune) {
-      vidaJLeiteAtual = vidaJLeiteAtual - 2;
-      jLeiteImune = true;
-      tempoImune = millis();
+    if (e.hasCollided()) {
+      damage(2);
     }
   }
 
@@ -103,7 +101,7 @@ void esqueleto() {
       PaAtaque p = pasAtaque.get(j);
       if (p.acertouEsqueleto(e)) {
         totalInimigos = totalInimigos - 1;
-        hitInimigos(e.x, e.y);
+        hitInimigos(e.getX(), e.getY());
         esqueletos.remove(e);
       }
     }
@@ -111,7 +109,7 @@ void esqueleto() {
       PedraAtirada p = pedrasAtiradas.get(j);
       if (p.acertouEsqueleto(e)) {
         totalInimigos = totalInimigos - 1;
-        hitInimigos(e.x, e.y);
+        hitInimigos(e.getX(), e.getY());
         pedrasAtiradas.remove(p);
         esqueletos.remove(e);
       }
@@ -120,7 +118,7 @@ void esqueleto() {
       ChicoteAtaque c = chicotesAtaque.get(j);
       if (c.acertouEsqueleto(e)) {
         totalInimigos = totalInimigos - 1;
-        hitInimigos(e.x, e.y);
+        hitInimigos(e.getX(), e.getY());
         esqueletos.remove(e);
       }
     }

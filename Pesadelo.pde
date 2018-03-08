@@ -13,8 +13,6 @@ PImage[] vidaBossesLayoutOsso = new PImage [4];
 String estadoJogo;
 String ultimoEstado;
 
-float millisAvancada, millisAvancadaMapa;
-
 int enemyPositionsFirstMap  [][];
 int enemyPositionsSecondMap [][];
 int enemyPositionsThirdMap  [][];
@@ -126,15 +124,15 @@ void setup() {
 
   backgroundMenu = loadImage ("backgroundMenu.png");
 
-  for (int i = 0; i < imagensCenarios.length; i = i + 1) {
-    imagensCenarios[i] = loadImage("mapa" + i + ".png");
+  for (int i = 0; i < sceneryImages.length; i = i + 1) {
+    sceneryImages[i] = loadImage("mapa" + i + ".png");
   }
 
-  porta = loadImage ("porta.png");
-  cerca = loadImage ("cerca.png");
+  door = loadImage ("porta.png");
+  fence = loadImage ("cerca.png");
 
-  for (int i = 0; i < imagensCenariosBoss.length; i = i + 1) {
-    imagensCenariosBoss[i] = loadImage("mapaBoss" + i + ".png");
+  for (int i = 0; i < bossSceneryImages.length; i = i + 1) {
+    bossSceneryImages[i] = loadImage("mapaBoss" + i + ".png");
   }
 
   pesadeloLogo = loadImage ("pesadeloLogo.png");
@@ -170,17 +168,17 @@ void setup() {
   queijo = loadImage ("pdqueijo.png");
   foodShadow = loadImage ("sombraComidas.png");
 
-  pa = loadImage ("pa.png");
-  sombraPa = loadImage ("sombraPaChicote.png");
+  shovel = loadImage ("pa.png");
+  shovelShadow = loadImage ("sombraPaChicote.png");
   paAtaque = loadImage ("paAtaque.png");
   caixaItemPa = loadImage ("caixaItemPa.png");
 
-  pedra = loadImage ("pedra.png");
-  sombraPedra = loadImage ("sombraPedra.png");
+  stone = loadImage ("pedra.png");
+  stoneShadow = loadImage ("sombraPedra.png");
   pedraFogo = loadImage ("pedraFogo.png");
 
-  chicote = loadImage ("chicote.png");
-  sombraChicote = loadImage ("sombraPaChicote.png");
+  whip = loadImage ("chicote.png");
+  whipShadow = loadImage ("sombraPaChicote.png");
   chicoteAtaque = loadImage ("chicoteAtaque.png");
   caixaItemChicote = loadImage ("caixaItemChicote.png");
 
@@ -343,10 +341,6 @@ void setup() {
 
   estadoJogo = "MenuInicial";
 
-  millisAvancada = 0;
-  millisAvancadaMapa = 0;
-
-  totalCenariosCriados = 0;
   totalInimigos = 0;
 
   jLeiteX = 360;
@@ -358,7 +352,7 @@ void setup() {
 
   vidaJLeiteBarraX = 115;
 
-  indexComida = 10;
+  foodIndex = 10;
 
   vidaCoveiroAtual = 40;
   vidaCoveiroMin = 0;
@@ -405,9 +399,8 @@ void setup() {
 
   hitInimigosMostrando = true;
 
-  comidaGerada = false;
-
-  cenario = new Cenario(0, 0, 58008);
+  hasIndexChanged = false;
+  
   coveiro = new Coveiro();
   fazendeiro = new Fazendeiro();
   padre = new Padre();
@@ -449,8 +442,6 @@ void setup() {
 }
 
 void draw() {
-  millisAvancada = millisAvancada + 1000 / 60;
-
   if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
     jogando();
   } else {
@@ -488,9 +479,7 @@ void keyPressed() {
   if (key == ENTER) {
     if (estadoJogo == "PrimeiroMapa") {
       if (telaTutorialAndandoAtiva) {
-        millisAvancada = 0;
         telaTutorialAndandoAtiva = false;
-        totalCenariosCriados = 0;
       }
     }
     if (estadoJogo == "SegundoMapa") {
@@ -613,9 +602,7 @@ void mouseClicked() {
   if (estadoJogo == "PrimeiroMapa") {
     if (telaTutorialAndandoAtiva) {
       if (mouseX > 584 && mouseX < 620 && mouseY > 139 && mouseY < 175) {
-        millisAvancada = 0;
         telaTutorialAndandoAtiva = false;
-        totalCenariosCriados = 0;
       }
     }
   }  
