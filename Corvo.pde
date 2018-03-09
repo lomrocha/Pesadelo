@@ -3,13 +3,14 @@ PImage skeletonCrowShadow;
 
 public class Corvo extends Geral {
   private int targetX = jLeiteX;
+  private int movementX;
 
   private int newTargetInterval;
 
   private boolean hasNewTarget;
 
   public Corvo() {
-    setX(int(random(100, width - 163)));
+    setX(int(random(360)));
     setY(int(random(-300, -1000)));
 
     setSpriteImage(skeletonCrow);
@@ -27,14 +28,29 @@ public class Corvo extends Geral {
     setSpriteInterval(75);
     setSpriteWidth(121);
     setSpriteHeight(86);
-    setMovementY(4);
+    setMovementY(3);
   }
 
   void display() {
     super.display();
 
     image(skeletonCrowShadow, getX() + 24, getY() + 86);
-  }  
+  } 
+
+  void update() {
+    super.update();
+
+    setX(getX() + movementX);
+  }
+
+  void updateMovement() {
+    if (getX() <= targetX) {
+      movementX = 3;
+    }
+    if (getX() > targetX) {
+      movementX = - 3;
+    }
+  }
 
   void updateTarget() {
     if (getY() > 0) {
@@ -48,17 +64,6 @@ public class Corvo extends Geral {
         hasNewTarget = false;
       }
     }
-  }
-
-  void update() {
-    if (getX() < targetX) {
-      setX(getX() + 3);
-    }
-    if (getX() > targetX) {
-      setX(getX() - 3);
-    }
-
-    super.update();
   }
 
   boolean hasCollided() {
@@ -84,11 +89,11 @@ void corvo() {
     }
 
     if (!telaTutorialAndandoAtiva) {
-      if (estadoJogo == "SegundoMapa" && corvos.size() < 2) {
+      if (estadoJogo == "SegundoMapa" && corvos.size() < 1) {
         corvos.add(new Corvo());
       }
 
-      if (estadoJogo == "TerceiroMapa" && corvos.size() < 2) {
+      if (estadoJogo == "TerceiroMapa" && corvos.size() < 1) {
         corvos.add(new Corvo());
       }
     }
@@ -97,8 +102,10 @@ void corvo() {
   for (int i = corvos.size() - 1; i >= 0; i = i - 1) {
     Corvo c = corvos.get(i);
     c.updateTarget();
+    c.updateMovement();
     c.update();
     c.display();
+    println("Valor do X Corvo: " + c.getX());
     if (c.hasExitScreen()) {
       corvos.remove(c);
     }

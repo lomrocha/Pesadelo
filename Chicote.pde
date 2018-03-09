@@ -56,21 +56,4 @@ void chicote() {
       }
     }
   }
-
-  for (int i = itens.size() - 1; i >= 0; i = i - 1) {
-    Item it = itens.get(i);
-    if (estadoJogo == "TerceiroMapa") {
-      it.update();
-    }
-    it.display();
-    if (it.hasExitScreen() || it.hasCollided()) {
-      itens.remove(it);
-    }
-    if (it.hasCollided()) {
-      tempoGerarArma = millis();
-      item = it.getItemIndex();
-      totalItem = it.getItemTotal();
-      armaGerada = false;
-    }
-  }
 }

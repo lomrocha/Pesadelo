@@ -434,6 +434,7 @@ void setup() {
 }
 
 void draw() {
+  println("Valor do X: " + jLeiteX);
   if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
     jogando();
   } else {
