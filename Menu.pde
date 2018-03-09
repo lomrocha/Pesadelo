@@ -43,6 +43,7 @@ void menu() {
         telaTutorialAndandoAtiva = true;
         cenarios.add(new Cenario(0, 0, 0));
         cenarios.add(new Cenario(0, -600, 0));
+        itens.add(new Chicote(200, -400));
         //begone.play();
       }
     } else {

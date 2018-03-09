@@ -15,7 +15,7 @@ public class EsqueletoChute extends Geral {
   private int kickingSkeletonSpriteTime;
 
   private boolean hasLostHead;
-  private boolean gatilhoEsqueletoCabeca, esqueletoCabecaSaiu;
+  private boolean kickHeadTrigger, hasKickedHead;
 
   public EsqueletoChute(int x, int y) {
     this.setX(x);
@@ -44,9 +44,9 @@ public class EsqueletoChute extends Geral {
         image(kickingSkeletonSprite, getX(), getY());
       }
 
-      if (kickingSkeletonStep == 196 && !gatilhoEsqueletoCabeca) {
-        esqueletoCabecaSaiu = true;
-        gatilhoEsqueletoCabeca = true;
+      if (kickingSkeletonStep == 196 && !kickHeadTrigger) {
+        hasKickedHead = true;
+        kickHeadTrigger = true;
       }
 
       if (kickingSkeletonStep == kickingSkeleton.width) {
@@ -61,13 +61,15 @@ public class EsqueletoChute extends Geral {
   void update() {
     setX(getX() + movementX);
     setY(getY() + getMovementY());
+  }
 
+  void updateMovement() {
     if (!hasLostHead) {
       setMovementY(int(sceneryMovement));
       movementX = 0;
     } else {
       setMovementY(int(sceneryMovement) + 1);
-      if (millis() > changeDirectionDelay + 350) {
+      if (millis() > changeDirectionDelay + 250) {
         movementX = int(random(-5, 5));
         changeDirectionDelay = millis();
       }
@@ -124,12 +126,13 @@ void esqueletoChute() {
 
   for (int i = esqueletosChute.size() - 1; i >= 0; i = i - 1) {
     EsqueletoChute e = esqueletosChute.get(i);
-    e.display();
-    if (e.esqueletoCabecaSaiu) {
-      cabecasEsqueleto.add(new CabecaEsqueleto(e.getX(), e.getY(), jLeiteX));
-      e.esqueletoCabecaSaiu = false;
-    }
+    e.updateMovement();
     e.update();
+    e.display();
+    if (e.hasKickedHead) {
+      cabecasEsqueleto.add(new CabecaEsqueleto(e.getX(), e.getY(), jLeiteX));
+      e.hasKickedHead = false;
+    }
     if (e.hasExitScreen()) {
       totalInimigos = totalInimigos - 1;
       esqueletosChute.remove(e);
@@ -141,35 +144,21 @@ void esqueletoChute() {
 
   for (int i = esqueletosChute.size() - 1; i >= 0; i = i - 1) {
     EsqueletoChute e = esqueletosChute.get(i);
-    for (int j = pasAtaque.size() - 1; j >= 0; j = j - 1) {
-      PaAtaque p = pasAtaque.get(j);
-      if (p.acertouEsqueletoChute(e)) {
+    for (int j = armas.size() - 1; j >= 0; j = j - 1) {
+      Arma a = armas.get(j);
+      if (a.hasHit(e)) {
         totalInimigos = totalInimigos - 1;
         hitInimigos(e.getX() - 40, e.getY() - 20);
         esqueletosChute.remove(e);
-      }
-    }
-    for (int j = pedrasAtiradas.size() - 1; j >= 0; j = j - 1) {
-      PedraAtirada p = pedrasAtiradas.get(j);
-      if (p.acertouEsqueletoChute(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.getX() - 40, e.getY() - 20);
-        pedrasAtiradas.remove(p);
-        esqueletosChute.remove(e);
-      }
-    }
-    for (int j = chicotes.size() - 1; j >= 0; j = j - 1) {
-      ChicoteAtaque c = chicotesAtaque.get(j);
-      if (c.acertouEsqueletoChute(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.getX() - 40, e.getY() - 20);
-        esqueletosChute.remove(e);
+        if (a.getIsStone()) {
+          armas.remove(a);
+        }
       }
     }
   }
 }
 
-void posicoesEsqueletoChute() {
+void kickingSkeletonPositions() {
   enemyPositionsFirstMap  [0][2] = KICKINGSKELETON;
   enemyPositionsFirstMap  [1][0] = KICKINGSKELETON;
   enemyPositionsFirstMap  [2][2] = KICKINGSKELETON;

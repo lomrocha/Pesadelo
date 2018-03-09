@@ -16,7 +16,7 @@ public class Corvo extends Geral {
     setSpriteInterval(75);
     setSpriteWidth(121);
     setSpriteHeight(86);
-    setMovementY(4);
+    setMovementY(3);
   }
 
   public Corvo(int x, int y) {
@@ -44,7 +44,7 @@ public class Corvo extends Geral {
         hasNewTarget = true;
       }
 
-      if (millis() > newTargetInterval + 1000) {
+      if (millis() > newTargetInterval + 750) {
         hasNewTarget = false;
       }
     }
@@ -109,27 +109,14 @@ void corvo() {
 
   for (int i = corvos.size() - 1; i >= 0; i = i - 1) {
     Corvo c = corvos.get(i);
-    for (int j = pasAtaque.size() - 1; j >= 0; j = j - 1) {
-      PaAtaque p = pasAtaque.get(j);
-      if (p.acertouCorvo(c)) {
+    for (int j = armas.size() - 1; j >= 0; j = j - 1) {
+      Arma a = armas.get(j);
+      if (a.hasHitCrow(c)) {
         hitInimigos(c.getX(), c.getY());
         corvos.remove(c);
-      }
-    }
-    for (int j = pedrasAtiradas.size() - 1; j >= 0; j = j - 1) {
-      PedraAtirada p = pedrasAtiradas.get(j);
-      if (p.acertouCorvo(c)) {
-        hitInimigos(c.getX(), c.getY());
-        pedrasAtiradas.remove(p);
-        corvos.remove(c);
-      }
-    }
-    for (int j = chicotes.size() - 1; j >= 0; j = j - 1) {
-      ChicoteAtaque ch = chicotesAtaque.get(j);
-      if (ch.acertouCorvo(c)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(c.getX(), c.getY());
-        corvos.remove(c);
+        if (a.getIsStone()) {
+          armas.remove(a);
+        }
       }
     }
   }

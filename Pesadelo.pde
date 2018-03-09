@@ -170,16 +170,16 @@ void setup() {
 
   shovel = loadImage ("pa.png");
   shovelShadow = loadImage ("sombraPaChicote.png");
-  paAtaque = loadImage ("paAtaque.png");
+  shovelAttack = loadImage ("paAtaque.png");
   caixaItemPa = loadImage ("caixaItemPa.png");
 
   stone = loadImage ("pedra.png");
   stoneShadow = loadImage ("sombraPedra.png");
-  pedraFogo = loadImage ("pedraFogo.png");
+  stoneAttack = loadImage ("pedraFogo.png");
 
   whip = loadImage ("chicote.png");
   whipShadow = loadImage ("sombraPaChicote.png");
-  chicoteAtaque = loadImage ("chicoteAtaque.png");
+  whipAttack = loadImage ("chicoteAtaque.png");
   caixaItemChicote = loadImage ("caixaItemChicote.png");
 
   caixaNumeroItem = loadImage ("caixaNumeroItem.png");
@@ -330,10 +330,10 @@ void setup() {
   enemyPositionsSecondMap  = new int [7][4];
   enemyPositionsThirdMap = new int [7][4];
 
-  posicoesEsqueleto();
-  posicoesEsqueletoChute();
-  posicoesCachorro();
-  posicoesEsqueletoRaiva();
+  skeletonPositions();
+  kickingSkeletonPositions();
+  skeletonDogPositions();
+  redSkeletonPositions();
 
   creditosY = 0;
   creditos2Y = 1000;
@@ -400,25 +400,17 @@ void setup() {
   hitInimigosMostrando = true;
 
   hasIndexChanged = false;
-  
+
   coveiro = new Coveiro();
   fazendeiro = new Fazendeiro();
   padre = new Padre();
 
   cenarios = new ArrayList<Cenario>();
 
-  pas = new ArrayList<Pa>();
-  pasAtaque = new ArrayList<PaAtaque>(); 
+  armas = new ArrayList<Arma>();
+  itens = new ArrayList<Item>();
 
-  pedras = new ArrayList<Pedra>();
-  pedrasAtiradas = new ArrayList<PedraAtirada>();
-
-  chicotes = new ArrayList<Chicote>();
-  chicotesAtaque = new ArrayList<ChicoteAtaque>();
-
-  coxinhas = new ArrayList<Coxinha>();
-  brigadeiros = new ArrayList<Brigadeiro>();
-  queijos = new ArrayList<Queijo>();
+  comidas = new ArrayList<Comida>();
 
   esqueletos = new ArrayList<Esqueleto>();
   esqueletosChute = new ArrayList<EsqueletoChute>();
@@ -497,6 +489,8 @@ void keyPressed() {
     }
     if (key == '2') {
       estadoJogo = "SegundoMapa";
+      cenarios.add(new Cenario(0, 0, 2));
+      cenarios.add(new Cenario(0, -600, 2));
     }
     if (key == '3') {
       estadoJogo = "TerceiroMapa";

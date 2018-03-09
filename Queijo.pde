@@ -11,7 +11,8 @@ public class Queijo extends Comida {
     setSpriteHeight(29);
     setMovementY(1);
 
-    amountRecovered = 0;
+    setAmountHeal(4);
+    setAmountRecovered(0);
   }
 
   public Queijo() {
@@ -24,7 +25,8 @@ public class Queijo extends Comida {
     setSpriteHeight(29);
     setMovementY(1);
 
-    amountRecovered = 0;
+    setAmountHeal(4);
+    setAmountRecovered(0);
   }
 
   void display() {
@@ -34,60 +36,39 @@ public class Queijo extends Comida {
   }
 }
 
-ArrayList<Queijo> queijos;
-
 int indexRandomQueijoMapaBoss;
 
-int amountHealQueijo = 4;
-
 void queijo() {
-  if (totalFood < 1 && hasIndexChanged && millis() > timeToGenerateFood + 10000) {
+  if (totalFood < 1 && hasIndexChanged && millis() > timeToGenerateFood + intervalToGenerateFood) {
     if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
-      if (queijos.size() == 0 && foodIndex >= 5 && foodIndex <= 7 && !telaTutorialAndandoAtiva) {
-        queijos.add(new Queijo());
+      if (comidas.size() == 0 && foodIndex >= 5 && foodIndex <= 7 && !telaTutorialAndandoAtiva) {
+        comidas.add(new Queijo());
         totalFood += 1;
       }
     }
 
     if (estadoJogo == "MapaCoveiro") {
-      if (queijos.size() == 0 && foodIndex >= 5 && foodIndex <= 7) {
+      if (comidas.size() == 0 && foodIndex >= 5 && foodIndex <= 7) {
         indexRandomQueijoMapaBoss = int(random(0, valoresXMapaCoveiro.length));
-        queijos.add(new Queijo(valoresXMapaCoveiro[indexRandomQueijoMapaBoss], valoresYMapaCoveiro[indexRandomQueijoMapaBoss]));
+        comidas.add(new Queijo(valoresXMapaCoveiro[indexRandomQueijoMapaBoss], valoresYMapaCoveiro[indexRandomQueijoMapaBoss]));
         totalFood += 1;
       }
     }
 
     if (estadoJogo == "MapaFazendeiro") {
-      if (queijos.size() == 0 && foodIndex >= 5 && foodIndex <= 7) {
+      if (comidas.size() == 0 && foodIndex >= 5 && foodIndex <= 7) {
         indexRandomQueijoMapaBoss = int(random(0, valoresXMapaFazendeiro.length));
-        queijos.add(new Queijo(valoresXMapaFazendeiro[indexRandomQueijoMapaBoss], valoresYMapaFazendeiro[indexRandomQueijoMapaBoss]));
+        comidas.add(new Queijo(valoresXMapaFazendeiro[indexRandomQueijoMapaBoss], valoresYMapaFazendeiro[indexRandomQueijoMapaBoss]));
         totalFood += 1;
       }
     }
 
     if (estadoJogo == "MapaPadre") {
-      if (queijos.size() == 0 && foodIndex >= 5 && foodIndex <= 7) {
+      if (comidas.size() == 0 && foodIndex >= 5 && foodIndex <= 7) {
         indexRandomQueijoMapaBoss = int(random(0, valoresXMapaFazendeiro.length));
-        queijos.add(new Queijo(valoresXMapaPadre[indexRandomQueijoMapaBoss], valoresYMapaPadre[indexRandomQueijoMapaBoss]));
+        comidas.add(new Queijo(valoresXMapaPadre[indexRandomQueijoMapaBoss], valoresYMapaPadre[indexRandomQueijoMapaBoss]));
         totalFood += 1;
       }
-    }
-  }
-
-  for (int i = queijos.size() - 1; i >= 0; i = i - 1) {
-    Queijo q = queijos.get(i);
-    q.display();
-    if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
-      q.update();
-    }
-    if (q.hasExitScreen() || q.hasCollided()) {
-      queijos.remove(q);
-      totalFood -= 1;
-      hasIndexChanged = false;
-      timeToGenerateFood = millis();
-    }
-    if (q.hasCollided()) {
-      heal(amountHealQueijo, q);
     }
   }
 }

@@ -1,7 +1,7 @@
 PImage shovel;
 PImage shovelShadow;
 
-public class Pa extends Geral {
+public class Pa extends Item {
   public Pa() {
     setX(int(random(100, 616)));
     setY(int(random(-300, -1000)));
@@ -10,7 +10,10 @@ public class Pa extends Geral {
     setSpriteInterval(75);
     setSpriteWidth(84);
     setSpriteHeight(91);
-    setMovementY(sceneryMovement);
+    setMovementY(1);
+
+    setItemIndex(2);
+    setItemTotal(7);
   }
 
   public Pa(int x, int y) {
@@ -21,7 +24,10 @@ public class Pa extends Geral {
     setSpriteInterval(75);
     setSpriteWidth(84);
     setSpriteHeight(91);
-    setMovementY(sceneryMovement);
+    setMovementY(1);
+
+    setItemIndex(2);
+    setItemTotal(7);
   }
 
   void display() {
@@ -31,71 +37,69 @@ public class Pa extends Geral {
   }
 }
 
-ArrayList<Pa> pas;
-
 int indexRandomPaMapaBoss;
 
 void pa() {
   if (totalArmas == 0 && millis() > tempoGerarArma + 15000) {
     if (estadoJogo == "PrimeiroMapa") {
-      if (pas.size() == 0 && indexArma >= 0 && indexArma <= 9 && !telaTutorialAndandoAtiva) {
-        pas.add(new Pa());
+      if (itens.size() == 0 && indexArma >= 0 && indexArma <= 9 && !telaTutorialAndandoAtiva) {
+        itens.add(new Pa());
         totalArmas = totalArmas + 1;
       }
     }
 
     if (estadoJogo == "SegundoMapa") {
-      if (pas.size() == 0 && indexArma >= 0 && indexArma <= 4 && !telaTutorialAndandoAtiva) {
-        pas.add(new Pa());
+      if (itens.size() == 0 && indexArma >= 0 && indexArma <= 4 && !telaTutorialAndandoAtiva) {
+        itens.add(new Pa());
         totalArmas = totalArmas + 1;
       }
     }
 
     if (estadoJogo == "TerceiroMapa") {
-      if (pas.size() == 0 && indexArma >= 0 && indexArma <= 2 && !telaTutorialAndandoAtiva) {
-        pas.add(new Pa());
+      if (itens.size() == 0 && indexArma >= 0 && indexArma <= 2 && !telaTutorialAndandoAtiva) {
+        itens.add(new Pa());
         totalArmas = totalArmas + 1;
       }
     }
 
     if (estadoJogo == "MapaCoveiro") {
-      if (pas.size() == 0 && indexArma >= 0 && indexArma <= 9) {
+      if (itens.size() == 0 && indexArma >= 0 && indexArma <= 9) {
         indexRandomPaMapaBoss = int(random(0, valoresXMapaCoveiro.length));
-        pas.add(new Pa(valoresXMapaCoveiro[indexRandomPaMapaBoss], valoresYMapaCoveiro[indexRandomPaMapaBoss]));
+        itens.add(new Pa(valoresXMapaCoveiro[indexRandomPaMapaBoss], valoresYMapaCoveiro[indexRandomPaMapaBoss]));
         totalArmas = totalArmas + 1;
       }
     }
 
     if (estadoJogo == "MapaFazendeiro") {
-      if (pas.size() == 0 && indexArma >= 0 && indexArma <= 4) {
+      if (itens.size() == 0 && indexArma >= 0 && indexArma <= 4) {
         indexRandomPaMapaBoss = int(random(0, valoresXMapaFazendeiro.length));
-        pas.add(new Pa(valoresXMapaFazendeiro[indexRandomPaMapaBoss], valoresYMapaFazendeiro[indexRandomPaMapaBoss]));
+        itens.add(new Pa(valoresXMapaFazendeiro[indexRandomPaMapaBoss], valoresYMapaFazendeiro[indexRandomPaMapaBoss]));
         totalArmas = totalArmas + 1;
       }
     }
 
     if (estadoJogo == "MapaPadre") {
-      if (pas.size() == 0 && indexArma >= 0 && indexArma <= 2) {
+      if (itens.size() == 0 && indexArma >= 0 && indexArma <= 2) {
         indexRandomPaMapaBoss = int(random(0, valoresXMapaPadre.length));
-        pas.add(new Pa(valoresXMapaPadre[indexRandomPaMapaBoss], valoresYMapaPadre[indexRandomPaMapaBoss]));
+        itens.add(new Pa(valoresXMapaPadre[indexRandomPaMapaBoss], valoresYMapaPadre[indexRandomPaMapaBoss]));
         totalArmas = totalArmas + 1;
       }
     }
   }
 
-  for (int i = pas.size() - 1; i >= 0; i = i - 1) {
-    Pa p = pas.get(i);
+  for (int i = itens.size() - 1; i >= 0; i = i - 1) {
+    Item it = itens.get(i);
     if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
-      p.update();
+      it.update();
     }
-    p.display();
-    if (p.hasExitScreen() || p.hasCollided()) {
-      pas.remove(p);
+    it.display();
+    if (it.hasExitScreen() || it.hasCollided()) {
+      itens.remove(it);
     }
-    if (p.hasCollided()) {
+    if (it.hasCollided()) {
       tempoGerarArma = millis();
-      item = 2;
-      totalItem = 7;
+      item = it.getItemIndex();
+      totalItem = it.getItemTotal();
       armaGerada = false;
     }
   }

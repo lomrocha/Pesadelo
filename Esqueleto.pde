@@ -97,35 +97,21 @@ void esqueleto() {
 
   for (int i = esqueletos.size() - 1; i >= 0; i = i - 1) {
     Esqueleto e = esqueletos.get(i);
-    for (int j = pasAtaque.size() - 1; j >= 0; j = j - 1) {
-      PaAtaque p = pasAtaque.get(j);
-      if (p.acertouEsqueleto(e)) {
+    for (int j = armas.size() - 1; j >= 0; j = j - 1) {
+      Arma a = armas.get(j);
+      if (a.hasHit(e)) {
         totalInimigos = totalInimigos - 1;
         hitInimigos(e.getX(), e.getY());
         esqueletos.remove(e);
-      }
-    }
-    for (int j = pedrasAtiradas.size() - 1; j >= 0; j = j - 1) {
-      PedraAtirada p = pedrasAtiradas.get(j);
-      if (p.acertouEsqueleto(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.getX(), e.getY());
-        pedrasAtiradas.remove(p);
-        esqueletos.remove(e);
-      }
-    }
-    for (int j = chicotes.size() - 1; j >= 0; j = j - 1) {
-      ChicoteAtaque c = chicotesAtaque.get(j);
-      if (c.acertouEsqueleto(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.getX(), e.getY());
-        esqueletos.remove(e);
+        if(a.getIsStone()){
+          armas.remove(a);
+        }
       }
     }
   }
 }
 
-void posicoesEsqueleto() {
+void skeletonPositions() {
   enemyPositionsFirstMap  [0][0] = SKELETON;
   enemyPositionsFirstMap  [1][2] = SKELETON;
   enemyPositionsFirstMap  [2][0] = SKELETON;

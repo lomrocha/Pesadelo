@@ -79,38 +79,23 @@ void esqueletoRaiva() {
       damage(3);
     }
   }
-
   for (int i = esqueletosRaiva.size() - 1; i >= 0; i = i - 1) {
     EsqueletoRaiva e = esqueletosRaiva.get(i);
-    for (int j = pasAtaque.size() - 1; j >= 0; j = j - 1) {
-      PaAtaque p = pasAtaque.get(j);
-      if (p.acertouEsqueletoRaiva(e)) {
+    for (int j = armas.size() - 1; j >= 0; j = j - 1) {
+      Arma a = armas.get(j);
+      if (a.hasHit(e)) {
         totalInimigos = totalInimigos - 1;
         hitInimigos(e.getX(), e.getY());
         esqueletosRaiva.remove(e);
-      }
-    }
-    for (int j = pedrasAtiradas.size() - 1; j >= 0; j = j - 1) {
-      PedraAtirada p = pedrasAtiradas.get(j);
-      if (p.acertouEsqueletoRaiva(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.getX(), e.getY());
-        pedrasAtiradas.remove(p);
-        esqueletosRaiva.remove(e);
-      }
-    }
-    for (int j = chicotes.size() - 1; j >= 0; j = j - 1) {
-      ChicoteAtaque ch = chicotesAtaque.get(j);
-      if (ch.acertouEsqueletoRaiva(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.getX(), e.getY());
-        esqueletosRaiva.remove(e);
+        if (a.getIsStone()) {
+          armas.remove(a);
+        }
       }
     }
   }
 }
 
-void posicoesEsqueletoRaiva() {
+void redSkeletonPositions() {
   enemyPositionsThirdMap[0][0] = REDSKELETON;
   enemyPositionsThirdMap[1][2] = REDSKELETON;
   enemyPositionsThirdMap[2][3] = REDSKELETON;

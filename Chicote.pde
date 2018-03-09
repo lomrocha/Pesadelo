@@ -1,7 +1,7 @@
 PImage whip;
 PImage whipShadow;
 
-public class Chicote extends Geral {
+public class Chicote extends Item {
   public Chicote() {
     setX(int(random(100, 599)));
     setY(int(random(-300, -1000)));
@@ -10,7 +10,10 @@ public class Chicote extends Geral {
     setSpriteInterval(75);
     setSpriteWidth(101);
     setSpriteHeight(91);
-    setMovementY(sceneryMovement);
+    setMovementY(1);
+
+    setItemIndex(3);
+    setItemTotal(10);
   }
 
   public Chicote(int x, int y) {
@@ -21,7 +24,10 @@ public class Chicote extends Geral {
     setSpriteInterval(75);
     setSpriteWidth(101);
     setSpriteHeight(91);
-    setMovementY(sceneryMovement);
+    setMovementY(1);
+
+    setItemIndex(3);
+    setItemTotal(10);
   }
 
   void display() {
@@ -31,41 +37,39 @@ public class Chicote extends Geral {
   }
 }
 
-ArrayList<Chicote> chicotes;
-
 int indexRandomChicoteMapaBoss;
 
 void chicote() {
   if (totalArmas == 0 && millis() > tempoGerarArma + 15000) {
     if (estadoJogo == "TerceiroMapa") {
-      if (chicotes.size() == 0 && indexArma >= 5 && indexArma <= 9 && !telaTutorialAndandoAtiva) {
-        chicotes.add(new Chicote());
+      if (itens.size() == 0 && indexArma >= 5 && indexArma <= 9 && !telaTutorialAndandoAtiva) {
+        itens.add(new Chicote());
         totalArmas = totalArmas + 1;
       }
     }
 
     if (estadoJogo == "MapaPadre") {
-      if (chicotes.size() == 0 && indexArma >= 5 && indexArma <= 9) {
+      if (itens.size() == 0 && indexArma >= 5 && indexArma <= 9) {
         indexRandomChicoteMapaBoss = int(random(0, valoresXMapaPadre.length));
-        chicotes.add(new Chicote(valoresXMapaPadre[indexRandomChicoteMapaBoss], valoresYMapaPadre[indexRandomChicoteMapaBoss]));
+        itens.add(new Chicote(valoresXMapaPadre[indexRandomChicoteMapaBoss], valoresYMapaPadre[indexRandomChicoteMapaBoss]));
         totalArmas = totalArmas + 1;
       }
     }
   }
 
-  for (int i = chicotes.size() - 1; i >= 0; i = i - 1) {
-    Chicote c = chicotes.get(i);
+  for (int i = itens.size() - 1; i >= 0; i = i - 1) {
+    Item it = itens.get(i);
     if (estadoJogo == "TerceiroMapa") {
-      c.update();
+      it.update();
     }
-    c.display();
-    if (c.hasExitScreen() || c.hasCollided()) {
-      chicotes.remove(c);
+    it.display();
+    if (it.hasExitScreen() || it.hasCollided()) {
+      itens.remove(it);
     }
-    if (c.hasCollided()) {
+    if (it.hasCollided()) {
       tempoGerarArma = millis();
-      item = 3;
-      totalItem = 10;
+      item = it.getItemIndex();
+      totalItem = it.getItemTotal();
       armaGerada = false;
     }
   }
