@@ -141,21 +141,6 @@ void esqueletoChute() {
       damage(2);
     }
   }
-
-  for (int i = esqueletosChute.size() - 1; i >= 0; i = i - 1) {
-    EsqueletoChute e = esqueletosChute.get(i);
-    for (int j = armas.size() - 1; j >= 0; j = j - 1) {
-      Arma a = armas.get(j);
-      if (a.hasHit(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.getX() - 40, e.getY() - 20);
-        esqueletosChute.remove(e);
-        if (a.getIsStone()) {
-          armas.remove(a);
-        }
-      }
-    }
-  }
 }
 
 void kickingSkeletonPositions() {

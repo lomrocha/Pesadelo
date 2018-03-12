@@ -10,7 +10,7 @@ public class PedraAtirada extends Arma {
     setSpriteWidth(0);
     setSpriteHeight(0);
 
-    setDeleteWeapon(false);
+    setDeleteObject(false);
     setDamageBoss(false);
     setIsStone(true);
 
@@ -37,7 +37,7 @@ public class PedraAtirada extends Arma {
       } else {
         hitEscudoMostrando = true;
         hitEscudo(fazendeiroX + 30, fazendeiroY + 20);
-        setDeleteWeapon(true);
+        setDeleteObject(true);
         return false;
       }
     } 
@@ -71,7 +71,7 @@ void pedraAtirada() {
     Arma a = armas.get(i);
     a.display();
     a.update();
-    if (a.hasExitScreen() || a.getDeleteWeapon()) {
+    if (a.hasExitScreen() || a.getDeleteObject()) {
       armas.remove(a);
     }
     if (estadoJogo == "MapaFazendeiro") {

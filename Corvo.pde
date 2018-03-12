@@ -10,20 +10,20 @@ public class Corvo extends Geral {
   private boolean hasNewTarget;
 
   public Corvo() {
-    setX(int(random(360)));
+    setX(360);
     setY(int(random(-300, -1000)));
 
-    setSpriteImage(skeletonCrow);
-    setSpriteInterval(75);
-    setSpriteWidth(121);
-    setSpriteHeight(86);
-    setMovementY(3);
+    setValues();
   }
 
   public Corvo(int x, int y) {
     this.setX(x);
     this.setY(y);
 
+    setValues();
+  }
+
+  private void setValues() {
     setSpriteImage(skeletonCrow);
     setSpriteInterval(75);
     setSpriteWidth(121);
@@ -44,12 +44,8 @@ public class Corvo extends Geral {
   }
 
   void updateMovement() {
-    if (getX() <= targetX) {
-      movementX = 3;
-    }
-    if (getX() > targetX) {
-      movementX = - 3;
-    }
+    if (getX() != targetX) movementX = (getX() < targetX) ? 3 : -3;
+    else movementX = 0;
   }
 
   void updateTarget() {
@@ -105,26 +101,11 @@ void corvo() {
     c.updateMovement();
     c.update();
     c.display();
-    println("Valor do X Corvo: " + c.getX());
     if (c.hasExitScreen()) {
       corvos.remove(c);
     }
     if (c.hasCollided()) {
       damage(3);
-    }
-  }
-
-  for (int i = corvos.size() - 1; i >= 0; i = i - 1) {
-    Corvo c = corvos.get(i);
-    for (int j = armas.size() - 1; j >= 0; j = j - 1) {
-      Arma a = armas.get(j);
-      if (a.hasHitCrow(c)) {
-        hitInimigos(c.getX(), c.getY());
-        corvos.remove(c);
-        if (a.getIsStone()) {
-          armas.remove(a);
-        }
-      }
     }
   }
 }

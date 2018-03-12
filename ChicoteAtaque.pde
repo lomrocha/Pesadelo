@@ -10,7 +10,7 @@ public class ChicoteAtaque extends Arma {
     setSpriteWidth(234);
     setSpriteHeight(278);
 
-    setDeleteWeapon(false);
+    setDeleteObject(false);
     setDamageBoss(false);
     setIsStone(false);
 
@@ -41,7 +41,7 @@ void chicoteAtaque() {
     Arma a = armas.get(i);
     a.update();
     a.display();
-    if (a.getDeleteWeapon()) {
+    if (a.getDeleteObject()) {
       armas.remove(a);
     }
 

@@ -10,7 +10,7 @@ public class PaAtaque extends Arma {
     setSpriteWidth(234);
     setSpriteHeight(173);
 
-    setDeleteWeapon(false);
+    setDeleteObject(false);
     setDamageBoss(false);
     setIsStone(false);
 
@@ -19,8 +19,8 @@ public class PaAtaque extends Arma {
     setFirstCollisionY(jLeiteY + 56);
     setSecondCollisionY(jLeiteY - 44);
   }
-  
-  void update(){
+
+  void update() {
     setX(jLeiteX - 70);
     setY(jLeiteY - 44);
   }
@@ -41,7 +41,7 @@ void paAtaque() {
     Arma a = armas.get(i);
     a.update();
     a.display();
-    if (a.getDeleteWeapon()) {
+    if (a.getDeleteObject()) {
       armas.remove(a);
     }
     if (estadoJogo == "MapaCoveiro") {

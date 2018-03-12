@@ -5,20 +5,17 @@ public class Coxinha extends Comida {
     this.setX(x);
     this.setY(y);
 
-    setSpriteImage(coxinha);
-    setSpriteInterval(75);
-    setSpriteWidth(28);
-    setSpriteHeight(30);
-    setMovementY(1);
-
-    setAmountHeal(5);
-    setAmountRecovered(0);
+    setValues();
   }
 
   public Coxinha() {
     setX(int(random(200, 500)));
     setY(int(random(-300, -1000)));
 
+    setValues();
+  }
+
+  void setValues() {
     setSpriteImage(coxinha);
     setSpriteInterval(75);
     setSpriteWidth(28);

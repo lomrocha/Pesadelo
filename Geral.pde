@@ -1,4 +1,4 @@
-public class Geral {
+public class MaisGeral {
   private PImage sprite;
   private PImage spriteImage;
 
@@ -13,11 +13,13 @@ public class Geral {
   private int spriteWidth;
   private int spriteHeight;
 
+  private boolean deleteObject;
+
   public PImage getSprite() {
     return sprite;
   }
 
-  public void setSprite(PImage sprite) {
+  protected void setSprite(PImage sprite) {
     this.sprite = sprite;
   }
 
@@ -25,7 +27,7 @@ public class Geral {
     return spriteImage;
   }
 
-  public void setSpriteImage(PImage enemy) {
+  protected void setSpriteImage(PImage enemy) {
     this.spriteImage = enemy;
   }
 
@@ -33,7 +35,7 @@ public class Geral {
     return x;
   }
 
-  public void setX(int x) {
+  protected void setX(int x) {
     this.x = x;
   }
 
@@ -41,7 +43,7 @@ public class Geral {
     return y;
   }
 
-  public void setY(int y) {
+  protected void setY(int y) {
     this.y = y;
   }
 
@@ -93,6 +95,14 @@ public class Geral {
     this.spriteHeight = spriteHeight;
   }
 
+  public boolean getDeleteObject() {
+    return deleteObject;
+  }
+
+  public void setDeleteObject(boolean deleteObject) {
+    this.deleteObject = deleteObject;
+  }
+
   void display() {
     if (millis() > spriteTime + spriteInterval) {
       sprite = spriteImage.get(step, 0, spriteWidth, spriteHeight);
@@ -105,15 +115,18 @@ public class Geral {
 
     if (step == spriteImage.width) {
       step = 0;
+      deleteObject = true;
     }
   }
+}
 
+public class Geral extends MaisGeral {
   void update() {
-    y = y + movementY;
+    setY(getY() + getMovementY());
   }
 
   boolean hasCollided() {
-    if (x + spriteWidth >= jLeiteX && x <= jLeiteX + 63 && y + spriteHeight >= jLeiteY && y <= jLeiteY + 126) {
+    if (getX() + getSpriteWidth() >= jLeiteX && getX() <= jLeiteX + 63 && getY() + getSpriteHeight() >= jLeiteY && getY() <= jLeiteY + 126) {
       return true;
     }
 
@@ -121,7 +134,7 @@ public class Geral {
   }
 
   boolean hasExitScreen() {
-    if (y > height) {
+    if (getY() > height) {
       return true;
     }
 

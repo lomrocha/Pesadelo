@@ -94,21 +94,6 @@ void esqueleto() {
       damage(2);
     }
   }
-
-  for (int i = esqueletos.size() - 1; i >= 0; i = i - 1) {
-    Esqueleto e = esqueletos.get(i);
-    for (int j = armas.size() - 1; j >= 0; j = j - 1) {
-      Arma a = armas.get(j);
-      if (a.hasHit(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.getX(), e.getY());
-        esqueletos.remove(e);
-        if(a.getIsStone()){
-          armas.remove(a);
-        }
-      }
-    }
-  }
 }
 
 void skeletonPositions() {

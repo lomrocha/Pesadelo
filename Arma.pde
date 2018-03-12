@@ -58,21 +58,7 @@ void caixaNumeroItem() {
 
 ArrayList<Arma> armas;
 
-public class Arma {
-  private PImage sprite;
-  private PImage spriteImage;
-
-  private int x;
-  private int y;
-
-  private int step;
-  private int spriteTime;
-  private int spriteInterval;
-
-  private int spriteWidth;
-  private int spriteHeight;
-
-  private boolean deleteWeapon;
+public abstract class Arma extends MaisGeral {
   private boolean damageBoss;
   private boolean isStone;
 
@@ -80,86 +66,6 @@ public class Arma {
   private int secondCollisionX;
   private int firstCollisionY;
   private int secondCollisionY;
-
-  public PImage getSprite() {
-    return sprite;
-  }
-
-  public void setSprite(PImage sprite) {
-    this.sprite = sprite;
-  }
-
-  public PImage getSpriteImage() {
-    return spriteImage;
-  }
-
-  public void setSpriteImage(PImage enemy) {
-    this.spriteImage = enemy;
-  }
-
-  public int getX() {
-    return x;
-  }
-
-  public void setX(int x) {
-    this.x = x;
-  }
-
-  public int getY() {
-    return y;
-  }
-
-  public void setY(int y) {
-    this.y = y;
-  }
-
-  public int getStep() {
-    return step;
-  }
-
-  public void setStep(int step) {
-    this.step = step;
-  }
-
-  public int getSpriteTime() {
-    return spriteTime;
-  }
-
-  public void setSpriteTime(int spriteTime) {
-    this.spriteTime = spriteTime;
-  }
-
-  public int getSpriteInterval() {
-    return spriteInterval;
-  }
-
-  public void setSpriteInterval(int spriteInterval) {
-    this.spriteInterval = spriteInterval;
-  }
-
-  public int getSpriteWidth() {
-    return spriteWidth;
-  }
-
-  public void setSpriteWidth(int spriteWidth) {
-    this.spriteWidth = spriteWidth;
-  }
-
-  public int getSpriteHeight() {
-    return spriteHeight;
-  }
-
-  public void setSpriteHeight(int spriteHeight) {
-    this.spriteHeight = spriteHeight;
-  }
-
-  public boolean getDeleteWeapon() {
-    return deleteWeapon;
-  }
-
-  public void setDeleteWeapon(boolean deleteWeapon) {
-    this.deleteWeapon = deleteWeapon;
-  }
 
   public boolean getDamageBoss() {
     return damageBoss;
@@ -209,24 +115,7 @@ public class Arma {
     this.secondCollisionY = secondCollisionY;
   }
 
-  void display() {
-    if (millis() > spriteTime + spriteInterval) {
-      sprite = spriteImage.get(step, 0, spriteWidth, spriteHeight);
-      step = step % spriteImage.width + spriteWidth;
-      image(sprite, x, y);
-      spriteTime = millis();
-    } else {
-      image(sprite, x, y);
-    }
-
-    if (step == spriteImage.width) {
-      step = 0;
-      deleteWeapon = true;
-    }
-  }
-
-  void update() {
-  }
+  abstract void update();
 
   boolean hasHit(Geral g) {
     if (firstCollisionX > g.getX() && secondCollisionX < g.getX() + g.getSpriteWidth() && firstCollisionY > g.getY() && secondCollisionY < g.getY() + g.getSpriteHeight()) {

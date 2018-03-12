@@ -24,16 +24,17 @@ public class EsqueletoRaiva extends Geral {
   }
 
   void update() {
+    super.update();
     setX(getX() + movementX);
+  }
 
+  void updateMovement(){
     if (getX() < 100) {
       movementX = 3;
     }
     if (getX() + 30 > 700) {
       movementX = -3;
     } 
-
-    super.update();
   }
 }
 
@@ -65,32 +66,18 @@ void esqueletoRaiva() {
       }
     }
   }
-
-
-  for (int i = esqueletosRaiva.size() - 1; i >= 0; i = i - 1) {
+  
+  for (int i = esqueletosRaiva.size() - 1; i >= 0; i = i + 1) {
     EsqueletoRaiva e = esqueletosRaiva.get(i);
-    e.display();
+    e.updateMovement();
     e.update();
+    e.display();
     if (e.hasExitScreen()) {
       totalInimigos = totalInimigos - 1;
       esqueletosRaiva.remove(e);
     }
     if (e.hasCollided()) {
       damage(3);
-    }
-  }
-  for (int i = esqueletosRaiva.size() - 1; i >= 0; i = i - 1) {
-    EsqueletoRaiva e = esqueletosRaiva.get(i);
-    for (int j = armas.size() - 1; j >= 0; j = j - 1) {
-      Arma a = armas.get(j);
-      if (a.hasHit(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.getX(), e.getY());
-        esqueletosRaiva.remove(e);
-        if (a.getIsStone()) {
-          armas.remove(a);
-        }
-      }
     }
   }
 }

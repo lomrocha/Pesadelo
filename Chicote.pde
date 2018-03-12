@@ -6,20 +6,17 @@ public class Chicote extends Item {
     setX(int(random(100, 599)));
     setY(int(random(-300, -1000)));
 
-    setSpriteImage(whip);
-    setSpriteInterval(75);
-    setSpriteWidth(101);
-    setSpriteHeight(91);
-    setMovementY(1);
-
-    setItemIndex(3);
-    setItemTotal(10);
+    setValues();
   }
 
   public Chicote(int x, int y) {
     this.setX(x);
     this.setY(y);
 
+    setValues();
+  }
+
+  void setValues() {
     setSpriteImage(whip);
     setSpriteInterval(75);
     setSpriteWidth(101);

@@ -74,29 +74,14 @@ void cachorro() {
 
   for (int i = cachorros.size() - 1; i >= 0; i = i - 1) {
     Cachorro c = cachorros.get(i);
-    c.display();
     c.update();
+    c.display();
     if (c.hasExitScreen()) {
       totalInimigos = totalInimigos - 1;
       cachorros.remove(c);
     }
     if (c.hasCollided()) {
       damage(2);
-    }
-  }
-
-  for (int i = cachorros.size() - 1; i >= 0; i = i - 1) {
-    Cachorro c = cachorros.get(i);
-    for (int j = armas.size() - 1; j >= 0; j = j - 1) {
-      Arma a = armas.get(j);
-      if (a.hasHit(c)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(c.getX(), c.getY());
-        cachorros.remove(c);
-        if (a.getIsStone()) {
-          armas.remove(a);
-        }
-      }
     }
   }
 }

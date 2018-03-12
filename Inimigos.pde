@@ -34,11 +34,30 @@ void inimigosTodos() {
     indexInimigos = 6;
   }
 
+  if (esqueletos.size() > 0) {
+    deleteEnemy(esqueletos);
+  }
   esqueleto();
+
+  if (esqueletosChute.size() > 0) {
+    deleteEnemy(esqueletosChute);
+  }
   esqueletoChute();
   cabecaEsqueleto();
+
+  if (cachorros.size() > 0) {
+    deleteEnemy(cachorros);
+  }
   cachorro();
+
+  if (corvos.size() > 0) {
+    deleteEnemy(corvos);
+  }
   corvo();
+
+  if (esqueletosRaiva.size() > 0) {
+    deleteEnemy(esqueletosRaiva);
+  }
   esqueletoRaiva();
 }
 
@@ -47,5 +66,22 @@ void damage(int amount) {
     vidaJLeiteAtual -= amount;
     jLeiteImune = true;
     tempoImune = millis();
+  }
+}
+
+<Inimigo extends Geral> void deleteEnemy(ArrayList<Inimigo> inimigos) {
+  for (int i = inimigos.size() - 1; i >= 0; i--) {
+    Inimigo inimigo = inimigos.get(i);
+    for (int j = armas.size() - 1; j >= 0; j--) {
+      Arma arma = armas.get(j);
+      if (arma.hasHit(inimigo)) {
+        totalInimigos--;
+        hitInimigos(inimigo.getX() - 40, inimigo.getY() - 20);
+        inimigos.remove(inimigo);
+        if (arma.getIsStone()) {
+          armas.remove(arma);
+        }
+      }
+    }
   }
 }

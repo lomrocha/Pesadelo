@@ -5,20 +5,17 @@ public class Queijo extends Comida {
     this.setX(x);
     this.setY(y);
 
-    setSpriteImage(queijo);
-    setSpriteInterval(75);
-    setSpriteWidth(31);
-    setSpriteHeight(29);
-    setMovementY(1);
-
-    setAmountHeal(4);
-    setAmountRecovered(0);
+    setValues();
   }
 
   public Queijo() {
     this.setX(int(random(200, 500)));
     this.setY(int(random(-300, -1000)));
 
+    setValues();
+  }
+
+  void setValues() {    
     setSpriteImage(queijo);
     setSpriteInterval(75);
     setSpriteWidth(31);
