@@ -1,20 +1,22 @@
 PImage skeletonHead;
 
-public class CabecaEsqueleto extends Geral {
+public class CabecaEsqueleto extends Inimigo {
+  private int startingX;
+
   private int movementX;
 
-  private int skeletonHeadTarget;
+  private PVector target = new PVector (jLeiteX, jLeiteY);
 
-  private boolean isHeadStraight;
-
-  public CabecaEsqueleto(int x, int y, int skeletonHeadTarget) {
+  public CabecaEsqueleto(int x, int y) {
     this.setX(x);
     this.setY(y);
-    this.skeletonHeadTarget = skeletonHeadTarget;
-    
+
+    startingX = x;
     setSpriteWidth(36);
     setSpriteHeight(89);
-    setMovementY(12);
+    
+    setDamage(2);
+    setIsHead(true);
   }
 
   void display() {
@@ -22,50 +24,15 @@ public class CabecaEsqueleto extends Geral {
   }
 
   void update() {
-    setX(getX() + movementX);
-    if (!isHeadStraight) {
-      if (getX() > skeletonHeadTarget) {
-        movementX = -8;
-      } else {
-        movementX = 8;
-      }
-    } else {
-      movementX = 0;
-    }
+    super.update();
 
-    setY(getY() + getMovementY());
+    setX(getX() + movementX);
   }
 
-  void checaCabecaEsqueletoReta() {
-    if (getX() < skeletonHeadTarget) {
-      if (skeletonHeadTarget - getX() < 10) {  
-        isHeadStraight = true;
-      } else {
-        isHeadStraight = false;
-      }
-    } else {
-      if (getX() - skeletonHeadTarget < 10) {  
-        isHeadStraight = true;
-      } else {
-        isHeadStraight = false;
-      }
-    }
+  void updateMovement() {
+    movementX = (startingX > target.x) ? -9 : 9;
+    setMovementY(12);
   }
 }
 
 ArrayList<CabecaEsqueleto> cabecasEsqueleto;
-
-void cabecaEsqueleto() {
-  for (int i = cabecasEsqueleto.size() - 1; i >= 0; i = i - 1) {
-    CabecaEsqueleto c = cabecasEsqueleto.get(i);
-    c.update();
-    c.display();
-    c.checaCabecaEsqueletoReta();
-    if (c.hasExitScreen()) {
-      cabecasEsqueleto.remove(c);
-    }
-    if (c.hasCollided()) {
-      damage(2);
-    }
-  }
-}

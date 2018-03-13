@@ -34,31 +34,34 @@ void inimigosTodos() {
     indexInimigos = 6;
   }
 
-  if (esqueletos.size() > 0) {
-    deleteEnemy(esqueletos);
-  }
+
   esqueleto();
-
-  if (esqueletosChute.size() > 0) {
-    deleteEnemy(esqueletosChute);
-  }
   esqueletoChute();
-  cabecaEsqueleto();
-
-  if (cachorros.size() > 0) {
-    deleteEnemy(cachorros);
-  }
   cachorro();
-
-  if (corvos.size() > 0) {
-    deleteEnemy(corvos);
-  }
   corvo();
-
-  if (esqueletosRaiva.size() > 0) {
-    deleteEnemy(esqueletosRaiva);
-  }
   esqueletoRaiva();
+}
+
+public abstract class Inimigo extends Geral {
+  private int damage;
+
+  private boolean isHead;
+
+  public int getDamage() {
+    return damage;
+  }
+  protected void setDamage(int damage) {
+    this.damage = damage;
+  }
+
+  public boolean getIsHead() {
+    return isHead;
+  } 
+  protected void setIsHead(boolean isHead) {
+    this.isHead = isHead;
+  }
+
+  abstract void updateMovement();
 }
 
 void damage(int amount) {
@@ -69,15 +72,33 @@ void damage(int amount) {
   }
 }
 
-<Inimigo extends Geral> void deleteEnemy(ArrayList<Inimigo> inimigos) {
+<Enemy extends Inimigo> void computeEnemy(ArrayList<Enemy> inimigos) {
+  for (int i = inimigos.size() - 1; i >= 0; i = i - 1) {
+    Enemy enemy = inimigos.get(i);
+    enemy.updateMovement();
+    enemy.update();
+    enemy.display();
+    if (enemy.hasExitScreen()) {
+      if (!enemy.getIsHead()) {
+        totalInimigos--;
+      }
+      inimigos.remove(enemy);
+    }
+    if (enemy.hasCollided()) {
+      damage(enemy.getDamage());
+    }
+  }
+}
+
+<Enemy extends Geral> void deleteEnemy(ArrayList<Enemy> inimigos) {
   for (int i = inimigos.size() - 1; i >= 0; i--) {
-    Inimigo inimigo = inimigos.get(i);
+    Enemy enemy = inimigos.get(i);
     for (int j = armas.size() - 1; j >= 0; j--) {
       Arma arma = armas.get(j);
-      if (arma.hasHit(inimigo)) {
+      if (arma.hasHit(enemy)) {
         totalInimigos--;
-        hitInimigos(inimigo.getX() - 40, inimigo.getY() - 20);
-        inimigos.remove(inimigo);
+        hitInimigos(enemy.getX() - 40, enemy.getY() - 20);
+        inimigos.remove(enemy);
         if (arma.getIsStone()) {
           armas.remove(arma);
         }

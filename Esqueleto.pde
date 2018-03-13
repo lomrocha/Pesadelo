@@ -5,7 +5,7 @@ final int SKELETON = 0;
 
 int[] valoresEsqueletoXMapaCoveiro = {200, 520};
 
-public class Esqueleto extends Geral {
+public class Esqueleto extends Inimigo {
   public Esqueleto(int x, int y) {
     this.setX(x);
     this.setY(y);
@@ -14,13 +14,19 @@ public class Esqueleto extends Geral {
     setSpriteInterval(155);
     setSpriteWidth(76);
     setSpriteHeight(126);
-    setMovementY(3);
+
+    setDamage(2);
+    setIsHead(false);
   }
 
   void display() {
     image (skeletonShadow, getX() + 16, getY() + 114);
 
     super.display();
+  }
+
+  void updateMovement() {
+    setMovementY(3);
   }
 }
 
@@ -81,18 +87,10 @@ void esqueleto() {
       }
     }
   }
-
-  for (int i = esqueletos.size() - 1; i >= 0; i = i - 1) {
-    Esqueleto e = esqueletos.get(i);
-    e.update();
-    e.display();
-    if (e.hasExitScreen()) {
-      totalInimigos = totalInimigos - 1;
-      esqueletos.remove(e);
-    }
-    if (e.hasCollided()) {
-      damage(2);
-    }
+  
+  if (esqueletos.size() > 0) {
+    computeEnemy(esqueletos);
+    deleteEnemy(esqueletos);
   }
 }
 

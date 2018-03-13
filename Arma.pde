@@ -1,7 +1,6 @@
 int item;
 
 int totalItem;
-int primeiraPedra;
 
 int tempoGerarArma;
 int indexArma;
@@ -27,8 +26,6 @@ void armas() {
   item();
   pa();
   paAtaque();
-  pedra();
-  pedraAtirada();
   chicote();
   chicoteAtaque();
 }
@@ -38,16 +35,12 @@ PImage[] imagensNumerosItem = new PImage [15];
 PImage imagemNumeroItemInfinito;
 
 PImage caixaItemPa;
-PImage caixaItemPedra;
 PImage caixaItemChicote;
 
 void caixaNumeroItem() {
   image(caixaNumeroItem, 705, 510);
   if (totalItem - 1 >= 0) {
-    if (item == 1) {
-      caixaItemPedra = stone.get(0, 0, 34, 27);
-      image(caixaItemPedra, 729, 516);
-    } else if (item == 2) {
+    if (item == 2) {
       image(caixaItemPa, 705, 510);
     } else if (item == 3) {
       image(caixaItemChicote, 705, 510);
@@ -120,6 +113,7 @@ public abstract class Arma extends MaisGeral {
   boolean hasHit(Geral g) {
     if (firstCollisionX > g.getX() && secondCollisionX < g.getX() + g.getSpriteWidth() && firstCollisionY > g.getY() && secondCollisionY < g.getY() + g.getSpriteHeight()) {
       hitInimigosMostrando = true;
+      println("acertou");
       return true;
     }
 
@@ -168,10 +162,6 @@ public abstract class Arma extends MaisGeral {
       return true;
     } 
 
-    return false;
-  }
-
-  boolean hasExitScreen() {
     return false;
   }
 }

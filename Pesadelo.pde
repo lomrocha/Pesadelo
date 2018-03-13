@@ -173,10 +173,6 @@ void setup() {
   shovelAttack = loadImage ("paAtaque.png");
   caixaItemPa = loadImage ("caixaItemPa.png");
 
-  stone = loadImage ("pedra.png");
-  stoneShadow = loadImage ("sombraPedra.png");
-  stoneAttack = loadImage ("pedraFogo.png");
-
   whip = loadImage ("chicote.png");
   whipShadow = loadImage ("sombraPaChicote.png");
   whipAttack = loadImage ("chicoteAtaque.png");
@@ -383,9 +379,7 @@ void setup() {
   item = 0;
 
   totalItem = 0;
-
-  primeiraPedra = 0;
-
+  
   botaoXAparecendoSom = false;
   sonsAtivos = true;
 
@@ -477,8 +471,6 @@ void keyPressed() {
     if (estadoJogo == "SegundoMapa") {
       if (telaTutorialPedraAtiva) {
         loop();
-        primeiraPedra = primeiraPedra + 1;
-        umaPedra = false;
       }
     }
   }
@@ -528,10 +520,7 @@ void keyPressed() {
         tempoItemAtivo = millis();
         ativaBarraEspaco = true;
         jLeiteUsoItemConfirma = true;
-        if (item == 1) {
-          tempoPedraAtirada = millis();
-          umaPedra = false;
-        } else if (item == 2) {
+        if (item == 2) {
           umaPa = false;
         } else if (item == 3) {
           umChicote = false;
@@ -605,8 +594,6 @@ void mouseClicked() {
     if (telaTutorialPedraAtiva) {
       if (mouseX > 514 && mouseX < 550 && mouseY > 182 && mouseY < 218) {
         loop();
-        primeiraPedra = primeiraPedra + 1;
-        umaPedra = false;
       }
     }
   }

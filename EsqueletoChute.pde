@@ -59,8 +59,9 @@ public class EsqueletoChute extends Geral {
   }
 
   void update() {
+    super.update();
+
     setX(getX() + movementX);
-    setY(getY() + getMovementY());
   }
 
   void updateMovement() {
@@ -123,23 +124,31 @@ void esqueletoChute() {
       }
     }
   }
+  
+  if (esqueletosChute.size() > 0) {
+    for (int i = esqueletosChute.size() - 1; i >= 0; i = i - 1) {
+      EsqueletoChute e = esqueletosChute.get(i);
+      e.updateMovement();
+      e.update();
+      e.display();
+      if (e.hasKickedHead) {
+        cabecasEsqueleto.add(new CabecaEsqueleto(e.getX(), e.getY()));
+        e.hasKickedHead = false;
+      }
+      if (e.hasExitScreen()) {
+        totalInimigos--;
+        esqueletosChute.remove(e);
+      }
+      if (e.hasCollided()) {
+        damage(2);
+      }
+    }
+    
+    deleteEnemy(esqueletosChute);
+  }
 
-  for (int i = esqueletosChute.size() - 1; i >= 0; i = i - 1) {
-    EsqueletoChute e = esqueletosChute.get(i);
-    e.updateMovement();
-    e.update();
-    e.display();
-    if (e.hasKickedHead) {
-      cabecasEsqueleto.add(new CabecaEsqueleto(e.getX(), e.getY(), jLeiteX));
-      e.hasKickedHead = false;
-    }
-    if (e.hasExitScreen()) {
-      totalInimigos = totalInimigos - 1;
-      esqueletosChute.remove(e);
-    }
-    if (e.hasCollided()) {
-      damage(2);
-    }
+  if (cabecasEsqueleto.size() > 0) {
+    computeEnemy(cabecasEsqueleto);
   }
 }
 

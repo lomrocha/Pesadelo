@@ -2,7 +2,7 @@ PImage skeletonCrow;
 PImage skeletonCrowShadow;
 
 public class Corvo extends Geral {
-  private int targetX = jLeiteX;
+  private PVector target = new PVector(jLeiteX, jLeiteY);
   private int movementX;
 
   private int newTargetInterval;
@@ -44,14 +44,14 @@ public class Corvo extends Geral {
   }
 
   void updateMovement() {
-    if (getX() != targetX) movementX = (getX() < targetX) ? 3 : -3;
+    if (getX() != target.x) movementX = (getX() < target.x) ? 3 : -3;
     else movementX = 0;
   }
 
   void updateTarget() {
     if (getY() > 0) {
       if (!hasNewTarget) {
-        targetX = jLeiteX;
+        target.x = jLeiteX;
         newTargetInterval = millis();
         hasNewTarget = true;
       }
@@ -95,17 +95,21 @@ void corvo() {
     }
   }
 
-  for (int i = corvos.size() - 1; i >= 0; i = i - 1) {
-    Corvo c = corvos.get(i);
-    c.updateTarget();
-    c.updateMovement();
-    c.update();
-    c.display();
-    if (c.hasExitScreen()) {
-      corvos.remove(c);
+  if (corvos.size() > 0) {
+    for (int i = corvos.size() - 1; i >= 0; i = i - 1) {
+      Corvo c = corvos.get(i);
+      c.updateTarget();
+      c.updateMovement();
+      c.update();
+      c.display();
+      if (c.hasExitScreen()) {
+        corvos.remove(c);
+      }
+      if (c.hasCollided()) {
+        damage(3);
+      }
     }
-    if (c.hasCollided()) {
-      damage(3);
-    }
+
+    deleteEnemy(corvos);
   }
 }

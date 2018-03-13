@@ -3,7 +3,7 @@ PImage redSkeletonShadow;
 
 final int REDSKELETON = 3;
 
-public class EsqueletoRaiva extends Geral {
+public class EsqueletoRaiva extends Inimigo {
   private int movementX = 3;
 
   public EsqueletoRaiva(int x, int y) {
@@ -14,7 +14,9 @@ public class EsqueletoRaiva extends Geral {
     setSpriteInterval(75);
     setSpriteWidth(76);
     setSpriteHeight(126);
-    setMovementY(3);
+
+    setDamage(3);
+    setIsHead(false);
   }
 
   void display() {
@@ -25,16 +27,19 @@ public class EsqueletoRaiva extends Geral {
 
   void update() {
     super.update();
+
     setX(getX() + movementX);
   }
 
-  void updateMovement(){
+  void updateMovement() {
     if (getX() < 100) {
-      movementX = 3;
+      movementX = 4;
     }
     if (getX() + 30 > 700) {
-      movementX = -3;
-    } 
+      movementX = -4;
+    }
+
+    setMovementY(4);
   }
 }
 
@@ -67,18 +72,9 @@ void esqueletoRaiva() {
     }
   }
   
-  for (int i = esqueletosRaiva.size() - 1; i >= 0; i = i + 1) {
-    EsqueletoRaiva e = esqueletosRaiva.get(i);
-    e.updateMovement();
-    e.update();
-    e.display();
-    if (e.hasExitScreen()) {
-      totalInimigos = totalInimigos - 1;
-      esqueletosRaiva.remove(e);
-    }
-    if (e.hasCollided()) {
-      damage(3);
-    }
+  if (esqueletosRaiva.size() > 0) {
+    computeEnemy(esqueletosRaiva);
+    deleteEnemy(esqueletosRaiva);
   }
 }
 

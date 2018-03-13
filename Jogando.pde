@@ -40,9 +40,6 @@ void jogando() {
   if (telaTutorialAndandoAtiva) {
     telaTutorialAndando();
   }
-  if (primeiraPedra == 1) {
-    telaTutorialPedra();
-  }
   telaGameOver();
   telaVitoria();
 }

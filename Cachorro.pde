@@ -5,7 +5,7 @@ final int SKELETONDOG = 2;
 
 int[] valoresCachorroXMapaFazendeiro = {70, 382, 695};
 
-public class Cachorro extends Geral {
+public class Cachorro extends Inimigo {
   public Cachorro(int x, int y) {
     this.setX(x);
     this.setY(y);
@@ -14,13 +14,19 @@ public class Cachorro extends Geral {
     setSpriteInterval(55);
     setSpriteWidth(45);
     setSpriteHeight(83);
-    setMovementY(8);
+
+    setDamage(2);
+    setIsHead(false);
   }
 
   void display() {
     image (skeletonDogShadow, getX(), getY() + 45);
 
     super.display();
+  }
+
+  void updateMovement() {
+    setMovementY(8);
   }
 }
 
@@ -72,17 +78,9 @@ void cachorro() {
     }
   }
 
-  for (int i = cachorros.size() - 1; i >= 0; i = i - 1) {
-    Cachorro c = cachorros.get(i);
-    c.update();
-    c.display();
-    if (c.hasExitScreen()) {
-      totalInimigos = totalInimigos - 1;
-      cachorros.remove(c);
-    }
-    if (c.hasCollided()) {
-      damage(2);
-    }
+  if (cachorros.size() > 0) {
+    computeEnemy(cachorros);
+    deleteEnemy(cachorros);
   }
 }
 
