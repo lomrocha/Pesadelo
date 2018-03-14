@@ -12,7 +12,6 @@ public class ChicoteAtaque extends Arma {
 
     setDeleteObject(false);
     setDamageBoss(false);
-    setIsStone(false);
 
     setFirstCollisionX(jLeiteX + 86);
     setSecondCollisionX(jLeiteX + 20);
@@ -30,9 +29,9 @@ boolean umChicote;
 
 void chicoteAtaque() {
   if (jLeiteUsoItem) {
-    if (armas.size() == 0 && item == 3 && totalItem > 0 && !umChicote) {
+    if (armas.size() == 0 && item == WHIP && weaponTotal > 0 && !umChicote) {
       armas.add(new ChicoteAtaque());
-      totalItem = totalItem - 1;
+      weaponTotal--;
       umChicote = true;
     }
   }

@@ -7,9 +7,6 @@ AudioPlayer temaIgreja;
 AudioPlayer temaFazenda;
 AudioPlayer temaCidade;
 
-PImage vidaBossesLayoutBackground, vidaBossesBarra;
-PImage[] vidaBossesLayoutOsso = new PImage [4];
-
 String estadoJogo;
 String ultimoEstado;
 
@@ -171,18 +168,17 @@ void setup() {
   shovel = loadImage ("pa.png");
   shovelShadow = loadImage ("sombraPaChicote.png");
   shovelAttack = loadImage ("paAtaque.png");
-  caixaItemPa = loadImage ("caixaItemPa.png");
+  shovelBox = loadImage ("caixaItemPa.png");
 
   whip = loadImage ("chicote.png");
   whipShadow = loadImage ("sombraPaChicote.png");
   whipAttack = loadImage ("chicoteAtaque.png");
-  caixaItemChicote = loadImage ("caixaItemChicote.png");
+  whipBox = loadImage ("caixaItemChicote.png");
 
-  caixaNumeroItem = loadImage ("caixaNumeroItem.png");
-  for (int i = 0; i < imagensNumerosItem.length; i = i + 1) {
-    imagensNumerosItem[i] = loadImage ("numeroItem" + i + ".png");
+  itemBox = loadImage ("caixaNumeroItem.png");
+  for (int i = 0; i < itemNumbers.length; i = i + 1) {
+    itemNumbers[i] = loadImage ("numeroItem" + i + ".png");
   }
-  imagemNumeroItemInfinito = loadImage ("numeroItemInfinito.png");
 
   jLeiteMovimento = loadImage ("joaoleite.png");
   jLeiteIdle = loadImage ("jLeiteIdle.png");
@@ -193,9 +189,9 @@ void setup() {
 
   sombraJLeite = loadImage ("sombrajoaoleite.png");
 
-  vidaJLeiteLayout = loadImage ("vidaJLeiteLayout.png");
-  vidaJLeiteLayoutBackground = loadImage ("vidaJLeiteLayoutBackground.png");
-  vidaJLeiteBarra = loadImage ("vidaJLeiteBarra.png");
+  playerHitpointsLayout = loadImage ("vidaJLeiteLayout.png");
+  playerHitpointsLayoutBackground = loadImage ("vidaJLeiteLayoutBackground.png");
+  playerHitpointsBar = loadImage ("vidaJLeiteBarra.png");
 
   skeleton = loadImage ("esqueleto.png");
   skeletonShadow = loadImage ("sombraEsqueleto.png");
@@ -212,11 +208,11 @@ void setup() {
 
   hitInimigos = loadImage ("hitInimigos.png");
 
-  vidaBossesLayoutBackground = loadImage ("vidaBossesLayoutBackground.png");
-  vidaBossesBarra = loadImage ("vidaBossesBarra.png");
+  bossHitpointsLayoutBackground = loadImage ("vidaBossesLayoutBackground.png");
+  bossHitpointsBar = loadImage ("vidaBossesBarra.png");
 
-  for (int i = 0; i < vidaBossesLayoutOsso.length; i = i + 1) {
-    vidaBossesLayoutOsso[i] = loadImage ("vidaBossesLayoutOsso" + i + ".png");
+  for (int i = 0; i < bossBonesLayout.length; i = i + 1) {
+    bossBonesLayout[i] = loadImage ("vidaBossesLayoutOsso" + i + ".png");
   }
 
   vidaCoveiroLayout = loadImage ("vidaCoveiroLayout.png");
@@ -342,44 +338,34 @@ void setup() {
   jLeiteX = 360;
   jLeiteY = 345; 
 
-  vidaJLeiteAtual = 15;
-  vidaJleiteMax = 15; 
-  vidaJLeiteMin = 0;
-
-  vidaJLeiteBarraX = 115;
+  playerHitpointsCurrent = 15;
+  prayerHitpointsMaximum = 15; 
+  playerHitpointsMinimum = 0;
 
   foodIndex = 10;
 
-  vidaCoveiroAtual = 40;
-  vidaCoveiroMin = 0;
+  coveiroHitpointsCurrent = 40;
+  coveiroHitpointsMinimum = 0;
 
-  vidaCoveiroBarraX = 230;
-
-  indexVidaCoveiroOsso = 3;
+  coveiroBonesIndex = 3;
 
   vidaFazendeiroAtual = 40;
   vidaFazendeiroMin = 0;
-
-  vidaFazendeiroBarraX = 230;
 
   indexVidaFazendeiroOsso = 3;
 
   vidaPadreAtual = 40;
   vidaPadreMin = 0;
 
-  vidaPadreBarraX = 230;
-
   vidaPadreRaivaAtual = 40;
   vidaPadreRaivaMin = 0;
-
-  vidaPadreRaivaBarraX = 230;
 
   indexVidaPadreOsso = 4;
 
   item = 0;
 
-  totalItem = 0;
-  
+  weaponTotal = 0;
+
   botaoXAparecendoSom = false;
   sonsAtivos = true;
 
@@ -393,7 +379,7 @@ void setup() {
 
   hitInimigosMostrando = true;
 
-  hasIndexChanged = false;
+  hasFoodIndexChanged = false;
 
   coveiro = new Coveiro();
   fazendeiro = new Fazendeiro();
@@ -520,10 +506,13 @@ void keyPressed() {
         tempoItemAtivo = millis();
         ativaBarraEspaco = true;
         jLeiteUsoItemConfirma = true;
-        if (item == 2) {
+        if (item == SHOVEL) {
           umaPa = false;
-        } else if (item == 3) {
+        } else if (item == WHIP) {
           umChicote = false;
+        }
+        if (weaponTotal == 1) {
+          generateItem(15000);
         }
       }
     }

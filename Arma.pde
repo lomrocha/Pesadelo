@@ -1,51 +1,44 @@
 int item;
 
-int totalItem;
+int weaponTotal;
 
-int tempoGerarArma;
-int indexArma;
+int itemTotal;
+int timeToGenerateItem;
+int itemIndex;
 
-int totalArmas;
+int itemRandomMapPositionIndex;
 
-boolean armaGerada;
+int intervalToGenerateItem;
+
+boolean hasItemIndexChanged;
 
 void armas() {
-  if (totalItem == 0 && !jLeiteUsoItem && itens.size() == 0 && itens.size() == 0 && itens.size() == 0) {
+  if (weaponTotal == 0 && !jLeiteUsoItem && itens.size() == 0) {
     item = 0;
-    totalArmas = 0;
+    itemTotal = 0;
   }
-
-  if (!telaTutorialAndandoAtiva) {
-    if (!armaGerada) {
-      indexArma = int(random(0, 10));
-      tempoGerarArma = millis();
-      armaGerada = true;
+  if (itemTotal == 0 && hasItemIndexChanged && millis() > timeToGenerateItem + intervalToGenerateItem && itens.size() == 0) {
+    if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
+      addItem();
+    } else if (estadoJogo == "MapaCoveiro" || estadoJogo == "MapaFazendeiro" || estadoJogo == "MapaPadre") {
+      addItemBoss();
     }
   }
-
+  generateItemIndex();
   item();
-  pa();
+  if (armas.size() > 0) {
+    arma();
+  }
   paAtaque();
-  chicote();
   chicoteAtaque();
 }
 
-PImage caixaNumeroItem;
-PImage[] imagensNumerosItem = new PImage [15];
-PImage imagemNumeroItemInfinito;
-
-PImage caixaItemPa;
-PImage caixaItemChicote;
-
-void caixaNumeroItem() {
-  image(caixaNumeroItem, 705, 510);
-  if (totalItem - 1 >= 0) {
-    if (item == 2) {
-      image(caixaItemPa, 705, 510);
-    } else if (item == 3) {
-      image(caixaItemChicote, 705, 510);
+void generateItemIndex() {
+  if (!telaTutorialAndandoAtiva) {
+    if (!hasItemIndexChanged) {
+      itemIndex = int(random(0, 10));
+      hasItemIndexChanged = true;
     }
-    image(imagensNumerosItem[totalItem - 1], 725, 552);
   }
 }
 
@@ -53,7 +46,6 @@ ArrayList<Arma> armas;
 
 public abstract class Arma extends MaisGeral {
   private boolean damageBoss;
-  private boolean isStone;
 
   private int firstCollisionX;
   private int secondCollisionX;
@@ -63,48 +55,35 @@ public abstract class Arma extends MaisGeral {
   public boolean getDamageBoss() {
     return damageBoss;
   }
-
-  public void setDamageBoss(boolean damageBoss) {
+  protected void setDamageBoss(boolean damageBoss) {
     this.damageBoss = damageBoss;
-  }
-
-  public boolean getIsStone() {
-    return isStone;
-  }
-
-  public void setIsStone(boolean isStone) {
-    this.isStone = isStone;
   }
 
   public int getFirstCollisionX() {
     return firstCollisionX;
   }
-
-  public void setFirstCollisionX(int firstCollisionX) {
+  protected void setFirstCollisionX(int firstCollisionX) {
     this.firstCollisionX = firstCollisionX;
   }
 
   public int getSecondCollisionX() {
     return secondCollisionX;
   }
-
-  public void setSecondCollisionX(int secondCollisionX) {
+  protected void setSecondCollisionX(int secondCollisionX) {
     this.secondCollisionX = secondCollisionX;
   }
 
   public int getFirstCollisionY() {
     return firstCollisionY;
   }
-
-  public void setFirstCollisionY(int firstCollisionY) {
+  protected void setFirstCollisionY(int firstCollisionY) {
     this.firstCollisionY = firstCollisionY;
   }
 
   public int getSecondCollisionY() {
     return secondCollisionY;
   }
-
-  public void setSecondCollisionY(int secondCollisionY) {
+  protected void setSecondCollisionY(int secondCollisionY) {
     this.secondCollisionY = secondCollisionY;
   }
 
@@ -113,7 +92,6 @@ public abstract class Arma extends MaisGeral {
   boolean hasHit(Geral g) {
     if (firstCollisionX > g.getX() && secondCollisionX < g.getX() + g.getSpriteWidth() && firstCollisionY > g.getY() && secondCollisionY < g.getY() + g.getSpriteHeight()) {
       hitInimigosMostrando = true;
-      println("acertou");
       return true;
     }
 
@@ -163,5 +141,59 @@ public abstract class Arma extends MaisGeral {
     } 
 
     return false;
+  }
+}
+
+void arma() {
+  for (int i = armas.size() - 1; i >= 0; i = i - 1) {
+    Arma a = armas.get(i);
+    a.update();
+    a.display();
+    if (a.getDeleteObject()) {
+      armas.remove(a);
+    }
+    if (estadoJogo == "MapaCoveiro") {
+      if (a.hasHitCoveiro() && !a.getDamageBoss()) {
+        if (sonsAtivos) {
+          indexRandomSomCoveiroTomandoDano = int(random(0, sonsCoveiroTomandoDano.length));
+          sonsCoveiroTomandoDano[indexRandomSomCoveiroTomandoDano].rewind();
+          sonsCoveiroTomandoDano[indexRandomSomCoveiroTomandoDano].play();
+        }
+        coveiroHitpointsCurrent -= 2;
+        a.setDamageBoss(true);
+      }
+    }
+    if (estadoJogo == "MapaFazendeiro") {
+      if (a.hasHitFazendeiro() && !a.getDamageBoss()) {
+        if (sonsAtivos) {
+          indexRandomSomFazendeiroTomandoDano = int(random(0, sonsFazendeiroTomandoDano.length));
+          sonsFazendeiroTomandoDano[indexRandomSomFazendeiroTomandoDano].rewind();
+          sonsFazendeiroTomandoDano[indexRandomSomFazendeiroTomandoDano].play();
+        }
+        vidaFazendeiroAtual -= 2;
+        a.setDamageBoss(true);
+      }
+    }
+    if (estadoJogo == "MapaPadre") {
+      if (a.hasHitPadre() && !a.getDamageBoss()) {
+        if (vidaPadreAtual > 0) {
+          if (sonsAtivos) {
+            indexRandomSomPadreTomandoDano = int(random(0, sonsPadreTomandoDano.length));
+            sonsPadreTomandoDano[indexRandomSomPadreTomandoDano].rewind();
+            sonsPadreTomandoDano[indexRandomSomPadreTomandoDano].play();
+          }
+          vidaPadreAtual -= 2;
+          a.setDamageBoss(true);
+        } else {
+          if (sonsAtivos) {
+            indexRandomSomPadreTomandoDano = int(random(0, sonsPadreRaivaTomandoDano.length));
+            sonsPadreRaivaTomandoDano[indexRandomSomPadreTomandoDano].rewind();
+            sonsPadreRaivaTomandoDano[indexRandomSomPadreTomandoDano].play();
+          }
+          vidaPadreRaivaAtual -= 2;
+          a.setDamageBoss(true);
+        }
+      }
+    }
   }
 }

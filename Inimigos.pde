@@ -66,7 +66,7 @@ public abstract class Inimigo extends Geral {
 
 void damage(int amount) {
   if (!jLeiteImune) {
-    vidaJLeiteAtual -= amount;
+    playerHitpointsCurrent -= amount;
     jLeiteImune = true;
     tempoImune = millis();
   }
@@ -99,9 +99,6 @@ void damage(int amount) {
         totalInimigos--;
         hitInimigos(enemy.getX() - 40, enemy.getY() - 20);
         inimigos.remove(enemy);
-        if (arma.getIsStone()) {
-          armas.remove(arma);
-        }
       }
     }
   }

@@ -10,18 +10,18 @@ int vidaFazendeiroBarraX;
 int indexVidaFazendeiroOsso;
 
 void vidaFazendeiro() {
-  image(vidaBossesLayoutBackground, 0, 0);
+  image(bossHitpointsLayoutBackground, 0, 0);
 
   vidaFazendeiroMin = 0;
   vidaFazendeiroBarraX = 230;
   while (vidaFazendeiroMin < vidaFazendeiroAtual) {
-    image(vidaBossesBarra, vidaFazendeiroBarraX, 23);
+    image(bossHitpointsBar, vidaFazendeiroBarraX, 23);
     vidaFazendeiroBarraX = vidaFazendeiroBarraX + 11;
     vidaFazendeiroMin = vidaFazendeiroMin + 1;
   }
 
   image(vidaFazendeiroLayout, 0, 0);
-  image(vidaBossesLayoutOsso[indexVidaFazendeiroOsso], 84, 54);
+  image(bossBonesLayout[indexVidaFazendeiroOsso], 84, 54);
 
   if (vidaFazendeiroAtual == 20) {
     if (sonsAtivos) {
@@ -380,7 +380,7 @@ public class Fazendeiro {
     if (ataqueFoiceAcontecendo && dist(fazendeiroX, fazendeiroY, jLeiteX, jLeiteY) < 100) {
       if (millis() > tempoDanoFoice + 310) {
         if (!jLeiteImune) {
-          vidaJLeiteAtual = vidaJLeiteAtual - 3;
+          playerHitpointsCurrent = playerHitpointsCurrent - 3;
           jLeiteImune = true;
           tempoImune = millis();
         }
@@ -563,7 +563,7 @@ void mimosa() {
     }
 
     if (m.acertouJLeite() && !jLeiteImune) {
-      vidaJLeiteAtual = vidaJLeiteAtual - 2;
+      playerHitpointsCurrent = playerHitpointsCurrent - 2;
       jLeiteImune = true;
       tempoImune = millis();
       if (sonsAtivos) {
@@ -757,7 +757,7 @@ void pneu() {
         somAcertouPneuJLeite.rewind();
         somAcertouPneuJLeite.play();
       }
-      vidaJLeiteAtual = vidaJLeiteAtual - 5;
+      playerHitpointsCurrent = playerHitpointsCurrent - 5;
       jLeiteImune = true;
       tempoImune = millis();
     }

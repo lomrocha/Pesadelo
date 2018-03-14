@@ -14,7 +14,7 @@ int vidaPadreRaivaBarraX;
 int indexVidaPadreOsso;
 
 void vidaPadre() {
-  image(vidaBossesLayoutBackground, 0, 0);
+  image(bossHitpointsLayoutBackground, 0, 0);
 
   vidaPadreRaivaMin = 0;
   vidaPadreRaivaBarraX = 230;
@@ -27,7 +27,7 @@ void vidaPadre() {
   vidaPadreMin = 0;
   vidaPadreBarraX = 230;
   while (vidaPadreMin < vidaPadreAtual) {
-    image(vidaBossesBarra, vidaPadreBarraX, 23);
+    image(bossHitpointsBar, vidaPadreBarraX, 23);
     vidaPadreBarraX = vidaPadreBarraX + 11;
     vidaPadreMin = vidaPadreMin + 1;
   }
@@ -558,7 +558,7 @@ public class Padre {
             if (!jLeiteImune) {
               hitHitCruzMostrando = true;
               hitCruz(jLeiteX - 30, jLeiteY);
-              vidaJLeiteAtual = vidaJLeiteAtual - 2;
+              playerHitpointsCurrent = playerHitpointsCurrent - 2;
               jLeiteImune = true;
               tempoImune = millis();
             }
@@ -568,7 +568,7 @@ public class Padre {
             if (!jLeiteImune) {
               hitHitCruzMostrando = true;
               hitCruz(jLeiteX - 30, jLeiteY);
-              vidaJLeiteAtual = vidaJLeiteAtual - 3;
+              playerHitpointsCurrent = playerHitpointsCurrent - 3;
               jLeiteImune = true;
               tempoImune = millis();
             }
@@ -909,7 +909,7 @@ void caveiraPadre() {
     }
 
     if (c.acertouJLeite() && !jLeiteImune) {
-      vidaJLeiteAtual = vidaJLeiteAtual - 4;
+      playerHitpointsCurrent = playerHitpointsCurrent - 4;
       jLeiteImune = true;
       tempoImune = millis();
       ataqueCaveiraAcontecendo = false;
@@ -986,7 +986,7 @@ void raio() {
     Raio r = raios.get(i);
     r.display();
     if (r.acertouJLeite() && !imortalidade) {
-      vidaJLeiteAtual = vidaJLeiteAtual - 9999999;
+      playerHitpointsCurrent = playerHitpointsCurrent - 9999999;
     }
     if (r.deletarRaio) {
       raios.remove(r);

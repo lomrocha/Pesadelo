@@ -1,25 +1,13 @@
 PImage vidaCoveiroLayout;
 
-int vidaCoveiroAtual;
-int vidaCoveiroMin;
+int coveiroHitpointsCurrent;
+int coveiroHitpointsMinimum;
 
-int vidaCoveiroBarraX;
-
-int indexVidaCoveiroOsso;
+int coveiroBonesIndex;
 
 void vidaCoveiro() {
-  image(vidaBossesLayoutBackground, 0, 0);
-
-  vidaCoveiroMin = 0;
-  vidaCoveiroBarraX = 230;
-  while (vidaCoveiroMin < vidaCoveiroAtual) {
-    image(vidaBossesBarra, vidaCoveiroBarraX, 23);
-    vidaCoveiroBarraX = vidaCoveiroBarraX + 11;
-    vidaCoveiroMin = vidaCoveiroMin + 1;
-  }
-
-  image(vidaCoveiroLayout, 0, 0);
-  image(vidaBossesLayoutOsso[indexVidaCoveiroOsso], 84, 54);
+  genericHitpointsLayout(bossHitpointsLayoutBackground, bossHitpointsLayoutBackgroundX, bossHitpointsLayoutBackgroundY, coveiroHitpointsMinimum, bossHitpointsBarX, bossHitpointsBarXStart, coveiroHitpointsCurrent, bossHitpointsBar, bossHitpointsBarY, bossHitpointsInterval, vidaCoveiroLayout, bossHitpointsLayoutX, bossHitpointsLayoutY);
+  image(bossBonesLayout[coveiroBonesIndex], 84, 54);
 }
 
 AudioPlayer[] sonsCoveiroIdle = new AudioPlayer [3];
@@ -330,7 +318,7 @@ public class Coveiro {
       if (ataquePaAcontecendo && dist(coveiroX, coveiroY, jLeiteX, jLeiteY) < 200) {
         if (millis() > tempoDanoPa + 775) {
           if (!jLeiteImune) {
-            vidaJLeiteAtual = vidaJLeiteAtual - 5;
+            playerHitpointsCurrent = playerHitpointsCurrent - 5;
             jLeiteImune = true;
             tempoImune = millis();
           }
@@ -379,7 +367,7 @@ public class Coveiro {
   }
 
   void coveiroMorte() {
-    if ((vidaCoveiroAtual <= 0 || indexVidaCoveiroOsso == 0) && !coveiroMorreu) {
+    if ((coveiroHitpointsCurrent <= 0 || coveiroBonesIndex == 0) && !coveiroMorreu) {
       coveiroMorreu = true;
       coveiroMorrendo = true;
       if (sonsAtivos) {
@@ -482,7 +470,7 @@ public class Fenda {
   void colisao() {
     if (jLeiteX + 63 > fendaX + 40 && jLeiteX < fendaX + 220 && jLeiteY > fendaY - 50) {
       if (causouDanoJLeite && !jLeiteImune) {
-        vidaJLeiteAtual = vidaJLeiteAtual - 4;
+        playerHitpointsCurrent = playerHitpointsCurrent - 4;
         jLeiteImune = true;
         tempoImune = millis();
       }
@@ -587,7 +575,7 @@ void lapideAtaque() {
     }
 
     if (l.acertouJLeite() && !jLeiteImune) {
-      vidaJLeiteAtual = vidaJLeiteAtual - 5;
+      playerHitpointsCurrent = playerHitpointsCurrent - 5;
       jLeiteImune = true;
       tempoImune = millis();
     }
@@ -747,8 +735,8 @@ public class PocaCenario {
     if (coveiro.coveiroSocoChao) {
       if (coveiroX > pocaCenarioX && coveiroX < pocaCenarioX + 160 && coveiroY + 200 > pocaCenarioY) {
         if (!pocaEsvaziou) {
-          if (indexVidaCoveiroOsso >= 1) {
-            indexVidaCoveiroOsso = indexVidaCoveiroOsso - 1;
+          if (coveiroBonesIndex >= 1) {
+            coveiroBonesIndex = coveiroBonesIndex - 1;
           }
         }
         coveiro.coveiroSocoChao = false;

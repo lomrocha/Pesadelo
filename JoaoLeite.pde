@@ -1,25 +1,3 @@
-PImage vidaJLeiteLayout, vidaJLeiteLayoutBackground, vidaJLeiteBarra;
-
-int vidaJLeiteAtual;
-int vidaJleiteMax;
-int vidaJLeiteMin;
-
-int vidaJLeiteBarraX;
-
-void vida() {
-  image(vidaJLeiteLayoutBackground, 8, 490);
-
-  vidaJLeiteMin = 0;
-  vidaJLeiteBarraX = 115;
-  while (vidaJLeiteMin < vidaJLeiteAtual) {
-    image (vidaJLeiteBarra, vidaJLeiteBarraX, 566);
-    vidaJLeiteBarraX = vidaJLeiteBarraX + 12;
-    vidaJLeiteMin = vidaJLeiteMin + 1;
-  }
-
-  image(vidaJLeiteLayout, 8, 490);
-}
-
 AudioPlayer[] sonsMorteJLeite = new AudioPlayer [4];
 
 PImage jLeiteMovimento, spriteJLeiteMovimento; 
@@ -33,6 +11,10 @@ PImage sombraJLeite;
 
 float tempoItem;
 float tempoItemAtivo;
+
+int playerHitpointsCurrent;
+int prayerHitpointsMaximum;
+int playerHitpointsMinimum;
 
 int jLeiteX, jLeiteY; 
 
@@ -61,7 +43,7 @@ boolean imortalidade;
 
 void jLeite() {
   if (imortalidade) {
-    vidaJLeiteAtual = 15;
+    playerHitpointsCurrent = 15;
   }
 
   if (finalMapa) {
@@ -87,7 +69,7 @@ void jLeite() {
     }
   }
 
-  if (vidaJLeiteAtual < 0 && !jLeiteMorreu) {
+  if (playerHitpointsCurrent < 0 && !jLeiteMorreu) {
     jLeiteMorreu = true;
     jLeiteMorrendo = true;
     tempoMorto = millis();

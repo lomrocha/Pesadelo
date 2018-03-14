@@ -1,6 +1,9 @@
 PImage whip;
 PImage whipShadow;
 
+final int WHIP = 2;
+final int WHIPTOTAL = 5;
+
 public class Chicote extends Item {
   public Chicote() {
     setX(int(random(100, 599)));
@@ -23,34 +26,13 @@ public class Chicote extends Item {
     setSpriteHeight(91);
     setMovementY(1);
 
-    setItemIndex(3);
-    setItemTotal(10);
+    setItemIndex(WHIP);
+    setItemTotal(WHIPTOTAL);
   }
 
   void display() {
     image (whipShadow, getX() + 10, getY() + 76);
 
     super.display();
-  }
-}
-
-int indexRandomChicoteMapaBoss;
-
-void chicote() {
-  if (totalArmas == 0 && millis() > tempoGerarArma + 15000) {
-    if (estadoJogo == "TerceiroMapa") {
-      if (itens.size() == 0 && indexArma >= 5 && indexArma <= 9 && !telaTutorialAndandoAtiva) {
-        itens.add(new Chicote());
-        totalArmas = totalArmas + 1;
-      }
-    }
-
-    if (estadoJogo == "MapaPadre") {
-      if (itens.size() == 0 && indexArma >= 5 && indexArma <= 9) {
-        indexRandomChicoteMapaBoss = int(random(0, valoresXMapaPadre.length));
-        itens.add(new Chicote(valoresXMapaPadre[indexRandomChicoteMapaBoss], valoresYMapaPadre[indexRandomChicoteMapaBoss]));
-        totalArmas = totalArmas + 1;
-      }
-    }
   }
 }
