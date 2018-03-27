@@ -318,7 +318,7 @@ public class Coveiro {
       if (ataquePaAcontecendo && dist(coveiroX, coveiroY, jLeiteX, jLeiteY) < 200) {
         if (millis() > tempoDanoPa + 775) {
           if (!jLeiteImune) {
-            playerHitpointsCurrent = playerHitpointsCurrent - 5;
+            playerHitpointsCurrent -= 5;
             jLeiteImune = true;
             tempoImune = millis();
           }
@@ -470,7 +470,7 @@ public class Fenda {
   void colisao() {
     if (jLeiteX + 63 > fendaX + 40 && jLeiteX < fendaX + 220 && jLeiteY > fendaY - 50) {
       if (causouDanoJLeite && !jLeiteImune) {
-        playerHitpointsCurrent = playerHitpointsCurrent - 4;
+        playerHitpointsCurrent -= 4;
         jLeiteImune = true;
         tempoImune = millis();
       }
@@ -481,7 +481,7 @@ public class Fenda {
   }
 }
 
-ArrayList<Fenda> fendas;
+ArrayList<Fenda> fendas = new ArrayList<Fenda>();
 
 void fenda() {
   if (fendas.size() == 0 && abriuFenda) {
@@ -556,7 +556,7 @@ public class LapideAtaque {
   }
 }
 
-ArrayList<LapideAtaque> lapidesAtaque;
+ArrayList<LapideAtaque> lapidesAtaque = new ArrayList<LapideAtaque>();
 
 void lapideAtaque() {
   if (ataqueLapideAcontecendo && lapidesAtaque.size() == 0) {
@@ -575,7 +575,7 @@ void lapideAtaque() {
     }
 
     if (l.acertouJLeite() && !jLeiteImune) {
-      playerHitpointsCurrent = playerHitpointsCurrent - 5;
+      playerHitpointsCurrent -= 5;
       jLeiteImune = true;
       tempoImune = millis();
     }
@@ -635,7 +635,7 @@ public class LapideCenario {
   }
 }
 
-ArrayList<LapideCenario> lapidesCenario;
+ArrayList<LapideCenario> lapidesCenario = new ArrayList<LapideCenario>();
 
 void lapideCenario() {
   if (lapidesCenario.size() == 0) {
@@ -690,7 +690,7 @@ public class AguaPocaCenario {
   }
 }
 
-ArrayList<AguaPocaCenario> aguasPocaCenario;
+ArrayList<AguaPocaCenario> aguasPocaCenario = new ArrayList<AguaPocaCenario>();
 
 void aguaPocaCenario() {
   for (int i = aguasPocaCenario.size() - 1; i >= 0; i = i - 1) {
@@ -752,7 +752,7 @@ public class PocaCenario {
   }
 }
 
-ArrayList<PocaCenario> pocasCenario;
+ArrayList<PocaCenario> pocasCenario = new ArrayList<PocaCenario>();
 
 void pocaCenario() {
   if (pocasCenario.size() == 0) {

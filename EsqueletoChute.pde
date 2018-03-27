@@ -84,7 +84,7 @@ public class EsqueletoChute extends Geral {
   }
 }
 
-ArrayList<EsqueletoChute> esqueletosChute;
+ArrayList<EsqueletoChute> esqueletosChute = new ArrayList<EsqueletoChute>();
 
 int esqueletoChuteC, esqueletoChuteL;
 
@@ -140,7 +140,7 @@ void esqueletoChute() {
   }
 }
 
-int kickingSkeletonPositions[][];
+int kickingSkeletonPositions[][] = new int [8][12];
 
 void kickingSkeletonPositions() {
   kickingSkeletonPositions [0][0] = KICKINGSKELETON;

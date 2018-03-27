@@ -16,8 +16,11 @@ PImage botaoX;
 
 PImage imagemControles;
 
-PImage maoApontandoEsquerda;
-PImage maoPolegar;
+PImage menuPointingBack;
+PImage menuThumbsUp;
+
+PImage telaVitoria;
+PImage telaGameOver;
 
 int stepBackgroundMenu;
 int tempoSpriteBackgroundMenu;
@@ -26,6 +29,7 @@ boolean botaoXAparecendoSom;
 boolean botaoXAparecendoMusica;
 
 void menu() {
+  winLose();
   if (gameState == GameState.INITIALMENU.ordinal()) {
     if (millis() > tempoSpriteBackgroundMenu + 140) {
       spriteBackgroundMenu = backgroundMenu.get(stepBackgroundMenu, 0, 800, 600);
@@ -86,7 +90,7 @@ void menu() {
     }
   }
 
-  //botões.
+  // Botões.
   if (gameState == GameState.CONTROLSMENU.ordinal()) {
     background(51);
 
@@ -118,7 +122,7 @@ void menu() {
     }
   }
 
-  //créditos.
+  // Créditos
   if (gameState == GameState.CREDITSMENU.ordinal()) {
     closingCredit();
 
@@ -167,10 +171,10 @@ void menu() {
     playerHitpoints();
     foodAll();
     caixaNumeroItem();
-    telaGameOver();
   }
+
   if (gameState >= GameState.CONTROLSMENU.ordinal() && gameState <= GameState.GAMEOVER.ordinal()) {
-    thumb();
+    menuHand();
   }
 }
 
@@ -208,36 +212,30 @@ void weaponTutorialScreen() {
   weaponTutorialScreenActive = true;
 }
 
-PImage telaVitoria;
-
-void telaVitoria() {
-  if (gameState == GameState.WIN.ordinal()) {
-    image (telaVitoria, 0, 0);
-  }
-}
-
-PImage telaGameOver;
-
-void telaGameOver() {
-  if (gameState == GameState.GAMEOVER.ordinal()) {
-    image(telaGameOver, 0, 0);
-  }
-}
-
-void thumb() {
+void menuHand() {
   if (mouseX > 20 && mouseX < 125 && mouseY > 520 && mouseY < 573) {
-    image(maoPolegar, 20, 520);
+    image(menuThumbsUp, 20, 520);
     if (mousePressed) {
-      gameState = GameState.INITIALMENU.ordinal();
       if (gameState == GameState.CREDITSMENU.ordinal()) {
         for (int i = closingCredits.size() - 1; i >= 0; --i) {
           closingCredits.remove(closingCredits.get(i));
         }
       }
+
+      gameState = GameState.INITIALMENU.ordinal();
     }
   } else {
-    image(maoApontandoEsquerda, 20, 520);
+    image(menuPointingBack, 20, 520);
   }
 }
 
-public enum GameState{FIRSTMAP, SECONDMAP, THIRDMAP, FIRSTBOSS, SECONDBOSS, THIRDBOSS, INITIALMENU, CONTROLSMENU, CREDITSMENU, WIN, GAMEOVER}
+void winLose() {
+  switch (gameState) {
+  case 9:
+    image(telaVitoria, 0, 0);
+    break;
+  case 10: 
+    image(telaGameOver, 0, 0);
+    break;
+  }
+}

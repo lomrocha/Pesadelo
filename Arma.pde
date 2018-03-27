@@ -46,7 +46,7 @@ void generateItemIndex() {
   }
 }
 
-ArrayList<Arma> armas;
+ArrayList<Arma> armas = new ArrayList<Arma>();
 
 public abstract class Arma extends MaisGeral {
   private boolean damageBoss;
@@ -172,7 +172,7 @@ void arma() {
     if (a.getDeleteObject()) {
       armas.remove(a);
     }
-    if (gameState == GameState.FIRSTMAP.ordinal()) {
+    if (gameState == GameState.FIRSTBOSS.ordinal()) {
       if (a.hasHitCoveiro() && !a.getDamageBoss()) {
         if (sonsAtivos) {
           indexRandomSomCoveiroTomandoDano = int(random(0, sonsCoveiroTomandoDano.length));
@@ -183,7 +183,7 @@ void arma() {
         a.setDamageBoss(true);
       }
     }
-    if (gameState == GameState.SECONDMAP.ordinal()) {
+    if (gameState == GameState.SECONDBOSS.ordinal()) {
       if (a.hasHitFazendeiro() && !a.getDamageBoss()) {
         if (sonsAtivos) {
           indexRandomSomFazendeiroTomandoDano = int(random(0, sonsFazendeiroTomandoDano.length));
@@ -194,7 +194,7 @@ void arma() {
         a.setDamageBoss(true);
       }
     }
-    if (gameState == GameState.THIRDMAP.ordinal()) {
+    if (gameState == GameState.THIRDBOSS.ordinal()) {
       if (a.hasHitPadre() && !a.getDamageBoss()) {
         if (vidaPadreAtual > 0) {
           if (sonsAtivos) {

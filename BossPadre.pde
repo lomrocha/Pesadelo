@@ -558,7 +558,7 @@ public class Padre {
             if (!jLeiteImune) {
               hitHitCruzMostrando = true;
               hitCruz(jLeiteX - 30, jLeiteY);
-              playerHitpointsCurrent = playerHitpointsCurrent - 2;
+              playerHitpointsCurrent -= 2;
               jLeiteImune = true;
               tempoImune = millis();
             }
@@ -568,7 +568,7 @@ public class Padre {
             if (!jLeiteImune) {
               hitHitCruzMostrando = true;
               hitCruz(jLeiteX - 30, jLeiteY);
-              playerHitpointsCurrent = playerHitpointsCurrent - 3;
+              playerHitpointsCurrent -= 3;
               jLeiteImune = true;
               tempoImune = millis();
             }
@@ -843,7 +843,7 @@ public class CaveiraPadre {
   }
 }
 
-ArrayList<CaveiraPadre> caveirasPadre;
+ArrayList<CaveiraPadre> caveirasPadre = new ArrayList<CaveiraPadre>();
 
 int tempoPrimeiraCaveiraAtaque;
 int randomIndexCaveiraPadre = 4;
@@ -909,7 +909,7 @@ void caveiraPadre() {
     }
 
     if (c.acertouJLeite() && !jLeiteImune) {
-      playerHitpointsCurrent = playerHitpointsCurrent - 4;
+      playerHitpointsCurrent -= 4;
       jLeiteImune = true;
       tempoImune = millis();
       ataqueCaveiraAcontecendo = false;
@@ -975,7 +975,7 @@ public class Raio {
   }
 }
 
-ArrayList<Raio> raios;
+ArrayList<Raio> raios = new ArrayList<Raio>();
 
 void raio() {
   if (raios.size() == 0 && padre.padreCarregandoNovoAtaqueRaio) {
@@ -986,7 +986,7 @@ void raio() {
     Raio r = raios.get(i);
     r.display();
     if (r.acertouJLeite() && !imortalidade) {
-      playerHitpointsCurrent = playerHitpointsCurrent - 9999999;
+      playerHitpointsCurrent -= 9999999;
     }
     if (r.deletarRaio) {
       raios.remove(r);

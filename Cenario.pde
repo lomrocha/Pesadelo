@@ -30,7 +30,7 @@ private PVector scenery = new PVector();
   }
 }
 
-ArrayList<Cenario> cenarios;
+ArrayList<Cenario> cenarios = new ArrayList<Cenario>();
 
 void cenario() {
   for (Cenario c : cenarios) {

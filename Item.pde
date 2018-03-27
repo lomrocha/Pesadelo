@@ -1,4 +1,4 @@
-ArrayList<Item> itens;
+ArrayList<Item> itens = new ArrayList<Item>();
 
 public class Item extends Geral {
   private int itemIndex;

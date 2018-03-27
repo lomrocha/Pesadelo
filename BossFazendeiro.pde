@@ -359,7 +359,7 @@ public class Fazendeiro {
     if (ataqueFoiceAcontecendo && dist(fazendeiroX, fazendeiroY, jLeiteX, jLeiteY) < 100) {
       if (millis() > tempoDanoFoice + 310) {
         if (!jLeiteImune) {
-          playerHitpointsCurrent = playerHitpointsCurrent - 3;
+          playerHitpointsCurrent -= 3;
           jLeiteImune = true;
           tempoImune = millis();
         }
@@ -519,7 +519,7 @@ public class Mimosa {
   }
 }
 
-ArrayList<Mimosa> mimosas;
+ArrayList<Mimosa> mimosas = new ArrayList<Mimosa>();
 
 void mimosa() {
   if (ataqueMimosaAcontecendo && mimosas.size() == 0) {
@@ -542,7 +542,7 @@ void mimosa() {
     }
 
     if (m.acertouJLeite() && !jLeiteImune) {
-      playerHitpointsCurrent = playerHitpointsCurrent - 2;
+      playerHitpointsCurrent -= 2;
       jLeiteImune = true;
       tempoImune = millis();
       if (sonsAtivos) {
@@ -711,7 +711,7 @@ public class Pneu {
   }
 }
 
-ArrayList<Pneu> pneus;
+ArrayList<Pneu> pneus = new ArrayList<Pneu>();
 
 void pneu() {
   if (pneus.size() == 0) {
@@ -736,7 +736,7 @@ void pneu() {
         somAcertouPneuJLeite.rewind();
         somAcertouPneuJLeite.play();
       }
-      playerHitpointsCurrent = playerHitpointsCurrent - 5;
+      playerHitpointsCurrent -= 5;
       jLeiteImune = true;
       tempoImune = millis();
     }

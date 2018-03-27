@@ -7,11 +7,15 @@ PImage whipBox;
 void caixaNumeroItem() {
   image(itemBox, 705, 510);
   if (weaponTotal - 1 >= 0) {
-    if (item == SHOVEL) {
+    switch(item) {
+    case SHOVEL:
       image(shovelBox, 705, 510);
-    } else if (item == WHIP) {
+      break;
+    case WHIP:
       image(whipBox, 705, 510);
+      break;
     }
+
     image(itemNumbers[weaponTotal - 1], 725, 552);
   }
 }

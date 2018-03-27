@@ -40,4 +40,4 @@ public class CabecaEsqueleto extends Inimigo {
   }
 }
 
-ArrayList<CabecaEsqueleto> cabecasEsqueleto;
+ArrayList<CabecaEsqueleto> cabecasEsqueleto = new ArrayList<CabecaEsqueleto>();

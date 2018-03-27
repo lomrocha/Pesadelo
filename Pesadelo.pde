@@ -7,12 +7,14 @@ AudioPlayer temaIgreja;
 AudioPlayer temaFazenda;
 AudioPlayer temaCidade;
 
+public enum GameState{FIRSTMAP, SECONDMAP, THIRDMAP, FIRSTBOSS, SECONDBOSS, THIRDBOSS, INITIALMENU, CONTROLSMENU, CREDITSMENU, WIN, GAMEOVER}
+
 int gameState;
 int lastState;
 
-int enemyPositionsFirstMap  [][];
-int enemyPositionsSecondMap [][];
-int enemyPositionsThirdMap  [][];
+final int enemyPositionsFirstMap  [][] = new int [7][4];
+final int enemyPositionsSecondMap [][] = new int [7][4];
+final int enemyPositionsThirdMap  [][] = new int [7][4];
 
 int[] valoresXPrimeiroMapaBoss = {50, 720};
 int[] valoresYPrimeiroMapaBoss = {380, 380};
@@ -152,8 +154,8 @@ void setup() {
   telaTutorialPedraSeta = loadImage ("telaTutorialPedraSeta.png");
   telaTutorialX = loadImage ("telaTutorialX.png");
 
-  maoApontandoEsquerda = loadImage ("maoApontandoEsquerda.png");
-  maoPolegar = loadImage ("maoPolegar.png");
+  menuPointingBack = loadImage ("maoApontandoEsquerda.png");
+  menuThumbsUp = loadImage ("maoPolegar.png");
 
   telaGameOver = loadImage ("telaGameOver.png");
   telaVitoria = loadImage ("telaVitoria.png");
@@ -316,11 +318,6 @@ void setup() {
   hitBosses = loadImage ("hitBosses.png");
   hitEscudo = loadImage ("hitEscudo.png");
 
-  enemyPositionsFirstMap = new int [7][4];
-  enemyPositionsSecondMap  = new int [7][4];
-  enemyPositionsThirdMap = new int [7][4];
-  kickingSkeletonPositions = new int [8][12];
-
   skeletonPositions();
   kickingSkeletonPositions();
   skeletonDogPositions();
@@ -377,34 +374,6 @@ void setup() {
   coveiro = new Coveiro();
   fazendeiro = new Fazendeiro();
   padre = new Padre();
-
-  cenarios = new ArrayList<Cenario>();
-  closingCredits = new ArrayList<ClosingCredit>();
-
-  armas = new ArrayList<Arma>();
-  itens = new ArrayList<Item>();
-
-  comidas = new ArrayList<Comida>();
-
-  esqueletos = new ArrayList<Esqueleto>();
-  esqueletosChute = new ArrayList<EsqueletoChute>();
-  cabecasEsqueleto = new ArrayList<CabecaEsqueleto>();
-  cachorros = new ArrayList<Cachorro>();
-  corvos = new ArrayList<Corvo>();
-  esqueletosRaiva = new ArrayList<EsqueletoRaiva>();
-
-  fendas = new ArrayList<Fenda>();
-  lapidesAtaque = new ArrayList<LapideAtaque>();
-  lapidesCenario = new ArrayList<LapideCenario>();
-  pocasCenario = new ArrayList<PocaCenario>();
-  aguasPocaCenario = new ArrayList<AguaPocaCenario>();
-
-  mimosas = new ArrayList<Mimosa>();
-  pneus = new ArrayList<Pneu>();
-
-  caveirasPadre = new ArrayList<CaveiraPadre>();
-
-  raios = new ArrayList<Raio>();
 }
 
 void draw() {

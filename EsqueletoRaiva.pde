@@ -43,7 +43,7 @@ public class EsqueletoRaiva extends Inimigo {
   }
 }
 
-ArrayList<EsqueletoRaiva> esqueletosRaiva;
+ArrayList<EsqueletoRaiva> esqueletosRaiva = new ArrayList<EsqueletoRaiva>();
 
 int esqueletoRaivaC, esqueletoRaivaL;
 

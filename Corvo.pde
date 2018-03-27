@@ -76,7 +76,7 @@ public class Corvo extends Geral {
   }
 }
 
-ArrayList<Corvo> corvos;
+ArrayList<Corvo> corvos = new ArrayList<Corvo>();
 
 int indexRandomCorvoXMapaBoss;
 

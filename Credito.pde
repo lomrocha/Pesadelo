@@ -27,7 +27,7 @@ public class ClosingCredit {
   }
 }
 
-ArrayList<ClosingCredit> closingCredits;
+ArrayList<ClosingCredit> closingCredits = new ArrayList<ClosingCredit>();
 
 void closingCredit() {
   for (ClosingCredit cc : closingCredits) {

@@ -29,7 +29,6 @@ void jogando() {
     gameState = GameState.WIN.ordinal();
   }
 
-
   cenario();
   inimigosTodos();
   armas(); 
@@ -40,6 +39,4 @@ void jogando() {
   if (telaTutorialAndandoAtiva) {
     telaTutorialAndando();
   }
-  telaGameOver();
-  telaVitoria();
 }

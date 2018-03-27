@@ -36,7 +36,7 @@ void generateFoodIndex() {
   }
 }
 
-ArrayList<Comida> comidas;
+ArrayList<Comida> comidas = new ArrayList<Comida>();
 
 public class Comida extends Geral {
   private int amountHeal;

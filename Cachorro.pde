@@ -3,7 +3,7 @@ PImage skeletonDogShadow;
 
 final int SKELETONDOG = 2;
 
-int[] valoresCachorroXSegundoMapaBoss = {70, 382, 695};
+int[] skeletonDogSpawnPointsSecondBoss = {70, 382, 695};
 
 public class Cachorro extends Inimigo {
   public Cachorro(int x, int y) {
@@ -30,7 +30,7 @@ public class Cachorro extends Inimigo {
   }
 }
 
-ArrayList<Cachorro> cachorros;
+ArrayList<Cachorro> cachorros = new ArrayList<Cachorro>();;
 
 int cachorroC, cachorroL;
 
@@ -41,8 +41,8 @@ void cachorro() {
     if (gameState == GameState.SECONDBOSS.ordinal()) {
       if (cachorros.size() == 0 && !fazendeiroTomouDanoPneu && !fazendeiro.fazendeiroMorreu) {
         for (int i = 0; i < 2; i = i + 1) {
-          indexRandomCachorroXMapaBoss = int(random(0, valoresCachorroXSegundoMapaBoss.length));
-          cachorros.add(new Cachorro(valoresCachorroXSegundoMapaBoss[indexRandomCachorroXMapaBoss], 0));
+          indexRandomCachorroXMapaBoss = int(random(0, skeletonDogSpawnPointsSecondBoss.length));
+          cachorros.add(new Cachorro(skeletonDogSpawnPointsSecondBoss[indexRandomCachorroXMapaBoss], 0));
         }
       }
     }
