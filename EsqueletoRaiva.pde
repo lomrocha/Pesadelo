@@ -51,7 +51,7 @@ int indexRandomEsqueletoRaivaXMapaBoss;
 
 void esqueletoRaiva() {
   if (indexInimigos == 4) {
-    if (estadoJogo == "TerceiroMapaBoss") { 
+    if (gameState == GameState.THIRDBOSS.ordinal()) { 
       if (esqueletosRaiva.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
         indexRandomEsqueletoRaivaXMapaBoss = int(random(0, valoresInimigosXTerceiroMapaBoss.length));
         esqueletosRaiva.add(new EsqueletoRaiva(valoresInimigosXTerceiroMapaBoss[indexRandomEsqueletoRaivaXMapaBoss], 0));
@@ -60,7 +60,7 @@ void esqueletoRaiva() {
     }
 
     if (!telaTutorialAndandoAtiva) {
-      if (estadoJogo == "TerceiroMapaNormal" && esqueletosRaiva.size() < 2 && totalInimigos < 6) {
+      if (gameState == GameState.THIRDMAP.ordinal() && esqueletosRaiva.size() < 2 && totalInimigos < 6) {
         esqueletoRaivaC = int(random(0, 7));
         esqueletoRaivaL = int(random(0, 4));
 

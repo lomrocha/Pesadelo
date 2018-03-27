@@ -75,7 +75,7 @@ public class EsqueletoChute extends Geral {
         movementX = 0;
       }
     } else {
-      setMovementY(sceneryMovement + 1);
+      setMovementY(SCENERYMOVEMENT + 1);
       if (millis() > changeDirectionDelay + 250) {
         movementX = int(random(-5, 5));
         changeDirectionDelay = millis();
@@ -92,7 +92,7 @@ int indexRandomEsqueletoChuteXMapaBoss;
 
 void esqueletoChute() {
   if (indexInimigos == 1) {
-    if (estadoJogo == "TerceiroMapaBoss") { 
+    if (gameState == GameState.THIRDBOSS.ordinal()) { 
       if (esqueletosChute.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
         indexRandomEsqueletoChuteXMapaBoss = int(random(0, valoresInimigosXTerceiroMapaBoss.length));
         esqueletosChute.add(new EsqueletoChute(valoresInimigosXTerceiroMapaBoss[indexRandomEsqueletoChuteXMapaBoss], 0));
@@ -101,7 +101,7 @@ void esqueletoChute() {
     }
 
     if (!telaTutorialAndandoAtiva) {
-      if ((estadoJogo == "PrimeiroMapaNormal" || estadoJogo == "SegundoMapaNormal" || estadoJogo == "TerceiroMapaNormal") && esqueletosChute.size() < 2 && totalInimigos < 6) {
+      if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal() && esqueletosChute.size() < 2 && totalInimigos < 6) {
         esqueletoChuteC = int(random(0, 8));
         esqueletoChuteL = int(random(0, 12));
 

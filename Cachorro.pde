@@ -38,7 +38,7 @@ int indexRandomCachorroXMapaBoss;
 
 void cachorro() {
   if (indexInimigos == 2) {
-    if (estadoJogo == "SegundoMapaBoss") {
+    if (gameState == GameState.SECONDBOSS.ordinal()) {
       if (cachorros.size() == 0 && !fazendeiroTomouDanoPneu && !fazendeiro.fazendeiroMorreu) {
         for (int i = 0; i < 2; i = i + 1) {
           indexRandomCachorroXMapaBoss = int(random(0, valoresCachorroXSegundoMapaBoss.length));
@@ -47,7 +47,7 @@ void cachorro() {
       }
     }
 
-    if (estadoJogo == "TerceiroMapaBoss") { 
+    if (gameState == GameState.THIRDBOSS.ordinal()) { 
       if (cachorros.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
         indexRandomCachorroXMapaBoss = int(random(0, valoresInimigosXTerceiroMapaBoss.length));
         cachorros.add(new Cachorro(valoresInimigosXTerceiroMapaBoss[indexRandomCachorroXMapaBoss], 0));
@@ -56,7 +56,7 @@ void cachorro() {
     }
 
     if (!telaTutorialAndandoAtiva) {
-      if (estadoJogo == "SegundoMapaNormal" && cachorros.size() < 2 && totalInimigos < 6) {
+      if (gameState == GameState.SECONDMAP.ordinal() && cachorros.size() < 2 && totalInimigos < 6) {
         cachorroC = int(random(0, 7));
         cachorroL = int(random(0, 4));
 
@@ -66,7 +66,7 @@ void cachorro() {
         }
       }
 
-      if (estadoJogo == "TerceiroMapaNormal" && cachorros.size() < 2 && totalInimigos < 6) {
+      if (gameState == GameState.THIRDMAP.ordinal() && cachorros.size() < 2 && totalInimigos < 6) {
         cachorroC = int(random(0, 7));
         cachorroL = int(random(0, 4));
 

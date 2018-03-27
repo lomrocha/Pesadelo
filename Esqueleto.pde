@@ -38,7 +38,7 @@ int indexRandomEsqueletoXMapaBoss;
 
 void esqueleto() {
   if (indexInimigos == 0) {
-    if (estadoJogo == "PrimeiroMapaBoss") {
+    if (gameState == GameState.FIRSTBOSS.ordinal()) {
       if (esqueletos.size() == 0 && !coveiro.coveiroMorreu && !coveiroTomouDanoAgua) {
         for (int i = 0; i < 2; i = i + 1) {
           indexRandomEsqueletoXMapaBoss = int(random(0, 2));
@@ -47,7 +47,7 @@ void esqueleto() {
       }
     }
 
-    if (estadoJogo == "TerceiroMapaBoss") { 
+    if (gameState == GameState.THIRDBOSS.ordinal()) { 
       if (esqueletos.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
         indexRandomEsqueletoXMapaBoss = int(random(0, valoresInimigosXTerceiroMapaBoss.length));
         esqueletos.add(new Esqueleto(valoresInimigosXTerceiroMapaBoss[indexRandomEsqueletoXMapaBoss], 0));
@@ -56,7 +56,7 @@ void esqueleto() {
     }
 
     if (!telaTutorialAndandoAtiva) {
-      if (estadoJogo == "PrimeiroMapaNormal" && esqueletos.size() < 2 && totalInimigos < 6) {
+      if (gameState == GameState.FIRSTMAP.ordinal() && esqueletos.size() < 2 && totalInimigos < 6) {
         esqueletoC = int(random(0, 7));
         esqueletoL = int(random(0, 4));
 
@@ -66,7 +66,7 @@ void esqueleto() {
         }
       }
 
-      if (estadoJogo == "SegundoMapaNormal" && esqueletos.size() < 2 && totalInimigos < 6) {
+      if (gameState == GameState.SECONDMAP.ordinal() && esqueletos.size() < 2 && totalInimigos < 6) {
         esqueletoC = int(random(0, 7));
         esqueletoL = int(random(0, 4));
 
@@ -76,7 +76,7 @@ void esqueleto() {
         }
       }
 
-      if (estadoJogo == "TerceiroMapaNormal" && esqueletos.size() < 2 && totalInimigos < 6) {
+      if (gameState == GameState.THIRDMAP.ordinal() && esqueletos.size() < 2 && totalInimigos < 6) {
         esqueletoC = int(random(0, 7));
         esqueletoL = int(random(0, 4));
 

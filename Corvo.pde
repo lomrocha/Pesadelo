@@ -82,7 +82,7 @@ int indexRandomCorvoXMapaBoss;
 
 void corvo() {
   if (indexInimigos == 3) {
-    if (estadoJogo == "TerceiroMapaBoss") {
+    if (gameState == GameState.THIRDBOSS.ordinal()) {
       if (corvos.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
         indexRandomCorvoXMapaBoss = int(random(0, valoresInimigosXTerceiroMapaBoss.length));
         corvos.add(new Corvo(valoresInimigosXTerceiroMapaBoss[indexRandomCorvoXMapaBoss], 0));
@@ -90,11 +90,11 @@ void corvo() {
     }
 
     if (!telaTutorialAndandoAtiva) {
-      if (estadoJogo == "SegundoMapaNormal" && corvos.size() < 1) {
+      if (gameState == GameState.SECONDMAP.ordinal() && corvos.size() < 1) {
         corvos.add(new Corvo());
       }
 
-      if (estadoJogo == "TerceiroMapaNormal" && corvos.size() < 1) {
+      if (gameState == GameState.THIRDMAP.ordinal() && corvos.size() < 1) {
         corvos.add(new Corvo());
       }
     }

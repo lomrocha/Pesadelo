@@ -10,16 +10,16 @@ void inimigosTodos() {
   if (!jLeiteMorreu) {
     if (!telaTutorialAndandoAtiva) {
       if (millis() > tempoGerarInimigo + 250) {
-        if (estadoJogo == "PrimeiroMapaNormal") {
+        if (gameState == GameState.FIRSTMAP.ordinal()) {
           indexInimigos = int(random(0, 2));
         } 
-        if (estadoJogo == "SegundoMapaNormal") {
+        if (gameState == GameState.SECONDMAP.ordinal()) {
           indexInimigos = int(random(0, 4));
         } 
-        if (estadoJogo == "TerceiroMapaNormal") {
+        if (gameState == GameState.THIRDMAP.ordinal()) {
           indexInimigos = int(random(1, 5));
         } 
-        if (estadoJogo == "TerceiroMapaBoss") {
+        if (gameState == GameState.THIRDBOSS.ordinal()) {
           indexInimigos = int(random(0, 5));
           if (!ataqueLevantemAcontecendo) {
             maximoInimigosPadre = 2;

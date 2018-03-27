@@ -1,28 +1,32 @@
 AudioPlayer temaMenu;
 
-PImage backgroundMenu, spriteBackgroundMenu;
+PImage backgroundMenu; 
+PImage spriteBackgroundMenu;
 PImage pesadeloLogo;
-PImage botaoJogar, jogarMao;
-PImage botaoBotoes, botoesMao;
-PImage botaoCreditos, creditosMao, creditos;
-PImage botaoSom, botaoMusica;
+PImage botaoJogar;
+PImage jogarMao;
+PImage botaoBotoes; 
+PImage botoesMao;
+PImage botaoCreditos;
+PImage creditosMao;
+PImage creditos;
+PImage botaoSom;
+PImage botaoMusica;
 PImage botaoX;
 
 PImage imagemControles;
 
-PImage maoApontandoEsquerda, maoPolegar;
+PImage maoApontandoEsquerda;
+PImage maoPolegar;
 
 int stepBackgroundMenu;
 int tempoSpriteBackgroundMenu;
-
-int creditosY, creditos2Y;
-int movimentoCreditosY;
 
 boolean botaoXAparecendoSom;
 boolean botaoXAparecendoMusica;
 
 void menu() {
-  if (estadoJogo == "MenuInicial") {
+  if (gameState == GameState.INITIALMENU.ordinal()) {
     if (millis() > tempoSpriteBackgroundMenu + 140) {
       spriteBackgroundMenu = backgroundMenu.get(stepBackgroundMenu, 0, 800, 600);
       stepBackgroundMenu = stepBackgroundMenu % 6400 + 800;
@@ -39,10 +43,12 @@ void menu() {
       image(jogarMao, 271, 300);
       if (mousePressed) {
         setup();
-        estadoJogo = "PrimeiroMapaNormal";
+        gameState = GameState.FIRSTMAP.ordinal();
         telaTutorialAndandoAtiva = true;
-        cenarios.add(new Cenario(0, 0, 0));
-        cenarios.add(new Cenario(0, -600, 0));
+        cenarios.add(new Cenario(0, 0));
+        cenarios.add(new Cenario(-600, 0));
+        generateItem(5000);
+        generateFood(5000);
         //begone.play();
       }
     } else {
@@ -52,7 +58,7 @@ void menu() {
     if (mouseX > 300 && mouseX < 500 && mouseY > 400 && mouseY < 477) {
       image(botoesMao, 271, 400);
       if (mousePressed) {
-        estadoJogo = "InstruçõesBotões";
+        gameState = GameState.CONTROLSMENU.ordinal();
       }
     } else {
       image(botaoBotoes, 300, 400, 200, 77);
@@ -61,7 +67,8 @@ void menu() {
     if (mouseX > 300 && mouseX < 500 && mouseY > 500 && mouseY < 577) {
       image(creditosMao, 271, 500);
       if (mousePressed) {
-        estadoJogo = "Créditos";
+        gameState = GameState.CREDITSMENU.ordinal();
+        timeToMoveClosingCredit = millis();
       }
     } else {
       image(botaoCreditos, 300, 500, 200, 77);
@@ -80,7 +87,7 @@ void menu() {
   }
 
   //botões.
-  if (estadoJogo == "InstruçõesBotões") {
+  if (gameState == GameState.CONTROLSMENU.ordinal()) {
     background(51);
 
     image(imagemControles, 0, 0);
@@ -109,41 +116,19 @@ void menu() {
     if (stepJLeiteItem == jLeiteItem.width) {
       stepJLeiteItem = 0;
     }
-
-    if (mouseX > 20 && mouseX < 125 && mouseY > 520 && mouseY < 573) {
-      image(maoPolegar, 20, 520);
-      if (mousePressed) {
-        estadoJogo = "MenuInicial";
-      }
-    } else {
-      image(maoApontandoEsquerda, 20, 520);
-    }
   }
 
   //créditos.
-  if (estadoJogo == "Créditos") {
-    creditos2Y = creditos2Y - movimentoCreditosY;
-    creditosY = creditosY - movimentoCreditosY;
-    image(creditos, 0, creditos2Y);
-    image(creditos, 0, creditosY);
-    if (creditosY + 1000 <= 0) {
-      creditosY = 1000;
-    }
-    if (creditos2Y + 1000 <= 0) {
-      creditos2Y = 1000;
-    }
+  if (gameState == GameState.CREDITSMENU.ordinal()) {
+    closingCredit();
 
-    if (mouseX > 20 && mouseX < 125 && mouseY > 520 && mouseY < 573) {
-      image(maoPolegar, 20, 520);
-      if (mousePressed) {
-        estadoJogo = "MenuInicial";
-      }
-    } else {
-      image(maoApontandoEsquerda, 20, 520);
+    if (closingCredits.size() == 0) {
+      closingCredits.add(new ClosingCredit(SECONDCLOSINGCREDITY));
+      closingCredits.add(new ClosingCredit(FIRSTCLOSINGCREDITY));
     }
   }
 
-  if (estadoJogo == "PrimeiroMapaBoss") {
+  if (gameState == GameState.FIRSTBOSS.ordinal()) {
     if (musicasAtivas) {
       temaBoss.play();
     }
@@ -157,7 +142,7 @@ void menu() {
     caixaNumeroItem();
   }
 
-  if (estadoJogo == "SegundoMapaBoss") {
+  if (gameState == GameState.SECONDBOSS.ordinal()) {
     if (musicasAtivas) {
       temaBoss.play();
     }
@@ -170,7 +155,7 @@ void menu() {
     caixaNumeroItem();
   }
 
-  if (estadoJogo == "TerceiroMapaBoss") {
+  if (gameState == GameState.THIRDBOSS.ordinal()) {
     if (musicasAtivas) {
       temaBoss.play();
     }
@@ -184,11 +169,14 @@ void menu() {
     caixaNumeroItem();
     telaGameOver();
   }
+  if (gameState >= GameState.CONTROLSMENU.ordinal() && gameState <= GameState.GAMEOVER.ordinal()) {
+    thumb();
+  }
 }
 
 PImage telaTutorialAndando, telaTutorialPedra, telaTutorialPedraSeta, telaTutorialX;
 
-boolean telaTutorialAndandoAtiva, telaTutorialPedraAtiva;
+boolean telaTutorialAndandoAtiva, weaponTutorialScreenActive;
 
 void telaTutorialAndando() {
   image (telaTutorialAndando, 187.5, 119);
@@ -209,7 +197,7 @@ void telaTutorialAndando() {
   image(telaTutorialX, 584, 139);
 }
 
-void telaTutorialPedra() {
+void weaponTutorialScreen() {
   noLoop();
 
   image(telaTutorialPedra, 236, 169);
@@ -217,39 +205,39 @@ void telaTutorialPedra() {
   image(telaTutorialX, 514, 182);
   image(telaTutorialPedraSeta, 705, 456);
 
-  telaTutorialPedraAtiva = true;
+  weaponTutorialScreenActive = true;
 }
 
 PImage telaVitoria;
 
 void telaVitoria() {
-  if (estadoJogo == "Vitoria") {
+  if (gameState == GameState.WIN.ordinal()) {
     image (telaVitoria, 0, 0);
-
-    if (mouseX > 20 && mouseX < 125 && mouseY > 520 && mouseY < 573) {
-      image(maoPolegar, 20, 520);
-      if (mousePressed) {
-        estadoJogo = "MenuInicial";
-      }
-    } else {
-      image(maoApontandoEsquerda, 20, 520);
-    }
   }
 }
 
 PImage telaGameOver;
 
 void telaGameOver() {
-  if (estadoJogo == "GameOver") {
+  if (gameState == GameState.GAMEOVER.ordinal()) {
     image(telaGameOver, 0, 0);
-
-    if (mouseX > 20 && mouseX < 125 && mouseY > 520 && mouseY < 573) {
-      image(maoPolegar, 20, 520);
-      if (mousePressed) {
-        estadoJogo = "MenuInicial";
-      }
-    } else {
-      image(maoApontandoEsquerda, 20, 520);
-    }
   }
 }
+
+void thumb() {
+  if (mouseX > 20 && mouseX < 125 && mouseY > 520 && mouseY < 573) {
+    image(maoPolegar, 20, 520);
+    if (mousePressed) {
+      gameState = GameState.INITIALMENU.ordinal();
+      if (gameState == GameState.CREDITSMENU.ordinal()) {
+        for (int i = closingCredits.size() - 1; i >= 0; --i) {
+          closingCredits.remove(closingCredits.get(i));
+        }
+      }
+    }
+  } else {
+    image(maoApontandoEsquerda, 20, 520);
+  }
+}
+
+public enum GameState{FIRSTMAP, SECONDMAP, THIRDMAP, FIRSTBOSS, SECONDBOSS, THIRDBOSS, INITIALMENU, CONTROLSMENU, CREDITSMENU, WIN, GAMEOVER}

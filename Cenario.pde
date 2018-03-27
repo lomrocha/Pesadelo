@@ -4,30 +4,29 @@ PImage[] bossSceneryImages =  new PImage [3];
 PImage door;
 PImage fence;
 
-int sceneryMovement = 2;
+final int SCENERYMOVEMENT = 2;
 
 public class Cenario {
-  private int sceneryX;
-  private int sceneryY;
+private PVector scenery = new PVector();
 
   private int sceneryIndex;
 
-  public Cenario(int sceneryX, int sceneryY, int sceneryIndex) {
-    this.sceneryX = sceneryX;
-    this.sceneryY = sceneryY;
+  public Cenario(int y, int sceneryIndex) {
+    this.scenery.x = 0;
+    this.scenery.y = y;
     this.sceneryIndex = sceneryIndex;
   }
 
   void display() {
-    image (sceneryImages[sceneryIndex], sceneryX, sceneryY);
+    image (sceneryImages[sceneryIndex], scenery.x, scenery.y);
   }
 
   void update() {
-    if (sceneryY > height) {
-      sceneryY = -600;
+    if (scenery.y > height) {
+      scenery.y = -600;
     }
     
-    sceneryY = sceneryY + sceneryMovement;
+    scenery.y += SCENERYMOVEMENT;
   }
 }
 

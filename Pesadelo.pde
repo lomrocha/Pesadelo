@@ -7,8 +7,8 @@ AudioPlayer temaIgreja;
 AudioPlayer temaFazenda;
 AudioPlayer temaCidade;
 
-String estadoJogo;
-String ultimoEstado;
+int gameState;
+int lastState;
 
 int enemyPositionsFirstMap  [][];
 int enemyPositionsSecondMap [][];
@@ -326,11 +326,7 @@ void setup() {
   skeletonDogPositions();
   redSkeletonPositions();
 
-  creditosY = 0;
-  creditos2Y = 1000;
-  movimentoCreditosY = 1;
-
-  estadoJogo = "MenuInicial";
+  gameState = GameState.INITIALMENU.ordinal();
 
   totalInimigos = 0;
 
@@ -383,6 +379,7 @@ void setup() {
   padre = new Padre();
 
   cenarios = new ArrayList<Cenario>();
+  closingCredits = new ArrayList<ClosingCredit>();
 
   armas = new ArrayList<Arma>();
   itens = new ArrayList<Item>();
@@ -411,7 +408,7 @@ void setup() {
 }
 
 void draw() {
-  if (estadoJogo == "PrimeiroMapaNormal" || estadoJogo == "SegundoMapaNormal" || estadoJogo == "TerceiroMapaNormal") {
+  if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal()) {
     jogando();
   } else {
     menu();
@@ -422,7 +419,7 @@ void keyPressed() {
   if (key == ESC) {
     key = 0;
     setup();
-    estadoJogo = "MenuInicial";
+    gameState = GameState.INITIALMENU.ordinal();
     if (temaBoss.isPlaying()) {
       temaBoss.pause();
     }
@@ -446,38 +443,38 @@ void keyPressed() {
   }
 
   if (key == ENTER) {
-    if (estadoJogo == "PrimeiroMapaNormal") {
+    if (gameState == GameState.FIRSTMAP.ordinal()) {
       if (telaTutorialAndandoAtiva) {
         telaTutorialAndandoAtiva = false;
       }
     }
-    if (estadoJogo == "SegundoMapaNormal") {
-      if (telaTutorialPedraAtiva) {
+    if (gameState == GameState.FIRSTMAP.ordinal()) {
+      if (weaponTutorialScreenActive) {
         loop();
       }
     }
   }
 
-  if (estadoJogo == "MenuInicial") {
+  if (gameState == GameState.INITIALMENU.ordinal()  ) {
     if (key == '1') {
-      estadoJogo = "PrimeiroMapaNormal";
+      gameState = GameState.FIRSTMAP.ordinal();
     }
     if (key == '2') {
-      estadoJogo = "SegundoMapaNormal";
-      cenarios.add(new Cenario(0, 0, 2));
-      cenarios.add(new Cenario(0, -600, 2));
+      gameState = GameState.SECONDMAP.ordinal();
+      cenarios.add(new Cenario(0, 2));
+      cenarios.add(new Cenario(-600, 2));
     }
     if (key == '3') {
-      estadoJogo = "TerceiroMapaNormal";
+      gameState = GameState.THIRDMAP.ordinal();
     }
     if (key == '4') {
-      estadoJogo = "PrimeiroMapaBoss";
+      gameState = GameState.FIRSTBOSS.ordinal();
     }
     if (key == '5') {
-      estadoJogo = "SegundoMapaBoss";
+      gameState = GameState.SECONDBOSS.ordinal();
     }
     if (key == '6') {
-      estadoJogo = "TerceiroMapaBoss";
+      gameState = GameState.THIRDBOSS.ordinal();
     }
   }
 
@@ -495,7 +492,7 @@ void keyPressed() {
     jLeiteBaixo = true;
   }
 
-  if (estadoJogo != "GameOver") {
+  if (gameState != GameState.GAMEOVER.ordinal()) {
     if (key == ' ' && !ativaBarraEspaco && !jLeiteUsoItemConfirma && !finalMapa) {
       if (item != 0) {
         jLeiteUsoItem = true;
@@ -511,7 +508,7 @@ void keyPressed() {
     }
   } else {
     setup();
-    estadoJogo = ultimoEstado;
+    gameState = lastState;
   }
 
   if (key == 'p' || key == 'P') {
@@ -543,7 +540,7 @@ void keyReleased() {
 }
 
 void mouseClicked() {
-  if (estadoJogo == "MenuInicial") {
+  if (gameState == GameState.INITIALMENU.ordinal()) {
     if (mouseX > 660 && mouseX < 720 && mouseY > 10 && mouseY < 60) {
       if (!botaoXAparecendoSom) {
         botaoXAparecendoSom = true;
@@ -564,7 +561,7 @@ void mouseClicked() {
     }
   }
 
-  if (estadoJogo == "PrimeiroMapaNormal") {
+  if (gameState == GameState.FIRSTMAP.ordinal()) {
     if (telaTutorialAndandoAtiva) {
       if (mouseX > 584 && mouseX < 620 && mouseY > 139 && mouseY < 175) {
         telaTutorialAndandoAtiva = false;
@@ -572,8 +569,8 @@ void mouseClicked() {
     }
   }  
 
-  if (estadoJogo == "SegundoMapaNormal") {
-    if (telaTutorialPedraAtiva) {
+  if (gameState == GameState.FIRSTMAP.ordinal()) {
+    if (weaponTutorialScreenActive) {
       if (mouseX > 514 && mouseX < 550 && mouseY > 182 && mouseY < 218) {
         loop();
       }

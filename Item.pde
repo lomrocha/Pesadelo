@@ -22,7 +22,7 @@ public class Item extends Geral {
 void item() {  
   for (int i = itens.size() - 1; i >= 0; i = i - 1) {
     Item it = itens.get(i);
-    if (estadoJogo.contains("Normal")) {
+    if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal()) {
       it.update();
     }
     it.display();
@@ -44,6 +44,7 @@ void generateItem(int timeAmount) {
   if (itemTotal == 1) {
     itemTotal--;
   }
+  
   hasItemIndexChanged = false;
   timeToGenerateItem = millis();
   intervalToGenerateItem = timeAmount;
@@ -62,7 +63,7 @@ void addItem() {
 }
 
 void addItemBoss() {
-  if (estadoJogo == "PrimeiroMapaBoss") {
+  if (gameState == GameState.FIRSTBOSS.ordinal()) {
     itemRandomMapPositionIndex = int(random(0, valoresXPrimeiroMapaBoss.length));
     if (itemIndex >= 0 && itemIndex <= 4) {
       itens.add(new Pa(valoresXPrimeiroMapaBoss[itemRandomMapPositionIndex], valoresYPrimeiroMapaBoss[itemRandomMapPositionIndex]));
@@ -73,23 +74,23 @@ void addItemBoss() {
     itemTotal++;
   }
 
-  if (estadoJogo == "SegundoMapaBoss") {
+  if (gameState == GameState.SECONDBOSS.ordinal()) {
     itemRandomMapPositionIndex = int(random(0, valoresXSegundoMapaBoss.length));
     if (itemIndex >= 0 && itemIndex <= 4) {
-      itens.add(new Pa(valoresXSegundoMapaBoss[itemRandomMapPositionIndex], valoresXSegundoMapaBoss[itemRandomMapPositionIndex]));
+      itens.add(new Pa(valoresXSegundoMapaBoss[itemRandomMapPositionIndex], valoresYSegundoMapaBoss[itemRandomMapPositionIndex]));
     } else if (itemIndex >= 5 && itemIndex <= 9) {
-      itens.add(new Chicote(valoresXSegundoMapaBoss[itemRandomMapPositionIndex], valoresXSegundoMapaBoss[itemRandomMapPositionIndex]));
+      itens.add(new Chicote(valoresXSegundoMapaBoss[itemRandomMapPositionIndex], valoresYSegundoMapaBoss[itemRandomMapPositionIndex]));
     }
 
     itemTotal++;
   }
 
-  if (estadoJogo == "TerceiroMapaBoss") {
+  if (gameState == GameState.THIRDBOSS.ordinal()) {
     itemRandomMapPositionIndex = int(random(0, valoresXTerceiroMapaBoss.length));
     if (itemIndex >= 0 && itemIndex <= 4) {
-      itens.add(new Pa(valoresXTerceiroMapaBoss[itemRandomMapPositionIndex], valoresXTerceiroMapaBoss[itemRandomMapPositionIndex]));
+      itens.add(new Pa(valoresXTerceiroMapaBoss[itemRandomMapPositionIndex], valoresYTerceiroMapaBoss[itemRandomMapPositionIndex]));
     } else if (itemIndex >= 5 && itemIndex <= 9) {
-      itens.add(new Chicote(valoresXTerceiroMapaBoss[itemRandomMapPositionIndex], valoresXTerceiroMapaBoss[itemRandomMapPositionIndex]));
+      itens.add(new Chicote(valoresXTerceiroMapaBoss[itemRandomMapPositionIndex], valoresYTerceiroMapaBoss[itemRandomMapPositionIndex]));
     }
 
     itemTotal++;

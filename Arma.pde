@@ -19,9 +19,9 @@ void armas() {
   }
 
   if (itemTotal == 0 && hasItemIndexChanged && millis() > timeToGenerateItem + intervalToGenerateItem && itens.size() == 0) {
-    if (estadoJogo.contains("Normal")) {
+    if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal()) {
       addItem();
-    } else if (estadoJogo.contains("Boss")) {
+    } else if (gameState >= GameState.FIRSTBOSS.ordinal() && gameState <= GameState.THIRDBOSS.ordinal()) {
       addItemBoss();
     }
   }
@@ -172,7 +172,7 @@ void arma() {
     if (a.getDeleteObject()) {
       armas.remove(a);
     }
-    if (estadoJogo == "PrimeiroMapaBoss") {
+    if (gameState == GameState.FIRSTMAP.ordinal()) {
       if (a.hasHitCoveiro() && !a.getDamageBoss()) {
         if (sonsAtivos) {
           indexRandomSomCoveiroTomandoDano = int(random(0, sonsCoveiroTomandoDano.length));
@@ -183,7 +183,7 @@ void arma() {
         a.setDamageBoss(true);
       }
     }
-    if (estadoJogo == "SegundoMapaBoss") {
+    if (gameState == GameState.SECONDMAP.ordinal()) {
       if (a.hasHitFazendeiro() && !a.getDamageBoss()) {
         if (sonsAtivos) {
           indexRandomSomFazendeiroTomandoDano = int(random(0, sonsFazendeiroTomandoDano.length));
@@ -194,7 +194,7 @@ void arma() {
         a.setDamageBoss(true);
       }
     }
-    if (estadoJogo == "TerceiroMapaBoss") {
+    if (gameState == GameState.THIRDMAP.ordinal()) {
       if (a.hasHitPadre() && !a.getDamageBoss()) {
         if (vidaPadreAtual > 0) {
           if (sonsAtivos) {

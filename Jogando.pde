@@ -1,32 +1,32 @@
 void jogando() {
-  if (estadoJogo == "PrimeiroMapaNormal") {
+  if (gameState == GameState.FIRSTMAP.ordinal()) {
     if (musicasAtivas) {
       temaIgreja.play();
     }
   }
 
-  if (estadoJogo == "SegundoMapaNormal") {
+  if (gameState == GameState.SECONDMAP.ordinal()) {
     if (musicasAtivas) {
       temaFazenda.play();
     }
   }
 
-  if (estadoJogo == "TerceiroMapaNormal") {
+  if (gameState == GameState.THIRDMAP.ordinal()) {
     if (musicasAtivas) {
       temaCidade.play();
     }
   }
 
   if (millis() > tempoBossMorreu + 3000 && coveiro.coveiroMorreu) {
-    estadoJogo = "SegundoMapaNormal";
+    gameState = GameState.SECONDMAP.ordinal();
   }
 
   if (millis() > tempoBossMorreu + 3000 && fazendeiro.fazendeiroMorreu) {
-    estadoJogo = "TerceiroMapaNormal";
+    gameState = GameState.THIRDMAP.ordinal();
   }
 
   if (millis() > tempoBossMorreu + 7000 && padre.padreMorreu) {
-    estadoJogo = "Vitoria";
+    gameState = GameState.WIN.ordinal();
   }
 
 
