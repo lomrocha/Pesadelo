@@ -3,7 +3,7 @@ PImage skeletonDogShadow;
 
 final int SKELETONDOG = 2;
 
-int[] valoresCachorroXMapaFazendeiro = {70, 382, 695};
+int[] valoresCachorroXSegundoMapaBoss = {70, 382, 695};
 
 public class Cachorro extends Inimigo {
   public Cachorro(int x, int y) {
@@ -38,25 +38,25 @@ int indexRandomCachorroXMapaBoss;
 
 void cachorro() {
   if (indexInimigos == 2) {
-    if (estadoJogo == "MapaFazendeiro") {
+    if (estadoJogo == "SegundoMapaBoss") {
       if (cachorros.size() == 0 && !fazendeiroTomouDanoPneu && !fazendeiro.fazendeiroMorreu) {
         for (int i = 0; i < 2; i = i + 1) {
-          indexRandomCachorroXMapaBoss = int(random(0, valoresCachorroXMapaFazendeiro.length));
-          cachorros.add(new Cachorro(valoresCachorroXMapaFazendeiro[indexRandomCachorroXMapaBoss], 0));
+          indexRandomCachorroXMapaBoss = int(random(0, valoresCachorroXSegundoMapaBoss.length));
+          cachorros.add(new Cachorro(valoresCachorroXSegundoMapaBoss[indexRandomCachorroXMapaBoss], 0));
         }
       }
     }
 
-    if (estadoJogo == "MapaPadre") { 
+    if (estadoJogo == "TerceiroMapaBoss") { 
       if (cachorros.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
-        indexRandomCachorroXMapaBoss = int(random(0, valoresInimigosXMapaPadre.length));
-        cachorros.add(new Cachorro(valoresInimigosXMapaPadre[indexRandomCachorroXMapaBoss], 0));
+        indexRandomCachorroXMapaBoss = int(random(0, valoresInimigosXTerceiroMapaBoss.length));
+        cachorros.add(new Cachorro(valoresInimigosXTerceiroMapaBoss[indexRandomCachorroXMapaBoss], 0));
         totalInimigos = totalInimigos + 1;
       }
     }
 
     if (!telaTutorialAndandoAtiva) {
-      if (estadoJogo == "SegundoMapa" && cachorros.size() < 2 && totalInimigos < 6) {
+      if (estadoJogo == "SegundoMapaNormal" && cachorros.size() < 2 && totalInimigos < 6) {
         cachorroC = int(random(0, 7));
         cachorroL = int(random(0, 4));
 
@@ -66,7 +66,7 @@ void cachorro() {
         }
       }
 
-      if (estadoJogo == "TerceiroMapa" && cachorros.size() < 2 && totalInimigos < 6) {
+      if (estadoJogo == "TerceiroMapaNormal" && cachorros.size() < 2 && totalInimigos < 6) {
         cachorroC = int(random(0, 7));
         cachorroL = int(random(0, 4));
 

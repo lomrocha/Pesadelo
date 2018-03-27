@@ -33,13 +33,13 @@ public class EsqueletoRaiva extends Inimigo {
 
   void updateMovement() {
     if (getX() < 100) {
-      movementX = 4;
+      movementX = 2;
     }
     if (getX() + 30 > 700) {
-      movementX = -4;
+      movementX = -2;
     }
 
-    setMovementY(4);
+    setMovementY(3);
   }
 }
 
@@ -51,16 +51,16 @@ int indexRandomEsqueletoRaivaXMapaBoss;
 
 void esqueletoRaiva() {
   if (indexInimigos == 4) {
-    if (estadoJogo == "MapaPadre") { 
+    if (estadoJogo == "TerceiroMapaBoss") { 
       if (esqueletosRaiva.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
-        indexRandomEsqueletoRaivaXMapaBoss = int(random(0, valoresInimigosXMapaPadre.length));
-        esqueletosRaiva.add(new EsqueletoRaiva(valoresInimigosXMapaPadre[indexRandomEsqueletoRaivaXMapaBoss], 0));
+        indexRandomEsqueletoRaivaXMapaBoss = int(random(0, valoresInimigosXTerceiroMapaBoss.length));
+        esqueletosRaiva.add(new EsqueletoRaiva(valoresInimigosXTerceiroMapaBoss[indexRandomEsqueletoRaivaXMapaBoss], 0));
         totalInimigos = totalInimigos + 1;
       }
     }
 
     if (!telaTutorialAndandoAtiva) {
-      if (estadoJogo == "TerceiroMapa" && esqueletosRaiva.size() < 2 && totalInimigos < 6) {
+      if (estadoJogo == "TerceiroMapaNormal" && esqueletosRaiva.size() < 2 && totalInimigos < 6) {
         esqueletoRaivaC = int(random(0, 7));
         esqueletoRaivaL = int(random(0, 4));
 

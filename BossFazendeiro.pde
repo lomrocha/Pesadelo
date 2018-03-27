@@ -1,34 +1,13 @@
-AudioPlayer somFazendeiroVidaMetade;
-
 PImage vidaFazendeiroLayout;
 
-int vidaFazendeiroAtual;
-int vidaFazendeiroMin;
+int fazendeiroHitpointsCurrent;
+int fazendeiroHitpointsMinimum;
 
-int vidaFazendeiroBarraX;
-
-int indexVidaFazendeiroOsso;
+int fazendeiroBonesIndex;
 
 void vidaFazendeiro() {
-  image(bossHitpointsLayoutBackground, 0, 0);
-
-  vidaFazendeiroMin = 0;
-  vidaFazendeiroBarraX = 230;
-  while (vidaFazendeiroMin < vidaFazendeiroAtual) {
-    image(bossHitpointsBar, vidaFazendeiroBarraX, 23);
-    vidaFazendeiroBarraX = vidaFazendeiroBarraX + 11;
-    vidaFazendeiroMin = vidaFazendeiroMin + 1;
-  }
-
-  image(vidaFazendeiroLayout, 0, 0);
-  image(bossBonesLayout[indexVidaFazendeiroOsso], 84, 54);
-
-  if (vidaFazendeiroAtual == 20) {
-    if (sonsAtivos) {
-      somFazendeiroVidaMetade.rewind();
-      somFazendeiroVidaMetade.play();
-    }
-  }
+  genericHitpointsLayout(bossHitpointsLayoutBackground, bossHitpointsLayoutBackgroundX, bossHitpointsLayoutBackgroundY, fazendeiroHitpointsMinimum, bossHitpointsBarX, bossHitpointsBarXStart, fazendeiroHitpointsCurrent, bossHitpointsBar, bossHitpointsBarY, bossHitpointsInterval, vidaFazendeiroLayout, bossHitpointsLayoutX, bossHitpointsLayoutY);
+  image(bossBonesLayout[fazendeiroBonesIndex], 84, 54);
 }
 
 AudioPlayer[] sonsFazendeiroIdle = new AudioPlayer [3];
@@ -417,7 +396,7 @@ public class Fazendeiro {
   }
 
   void fazendeiroMorte() {
-    if ((vidaFazendeiroAtual <= 0 || indexVidaFazendeiroOsso == 0) && !fazendeiroMorreu) {
+    if ((fazendeiroHitpointsCurrent <= 0 || fazendeiroBonesIndex == 0) && !fazendeiroMorreu) {
       fazendeiroMorreu = true;
       fazendeiroMorrendo = true;
       if (sonsAtivos) {
@@ -720,8 +699,8 @@ public class Pneu {
 
   boolean acertouFazendeiro() {
     if (pneuX + 116 > fazendeiroX && pneuX < fazendeiroX + 188 && pneuY + 84 > fazendeiroY && pneuY < fazendeiroY + 125 && acertarFazendeiro) {
-      if (indexVidaFazendeiroOsso >= 1) {
-        indexVidaFazendeiroOsso = indexVidaFazendeiroOsso - 1;
+      if (fazendeiroBonesIndex >= 1) {
+        fazendeiroBonesIndex = fazendeiroBonesIndex - 1;
       }
       tempoSpriteFazendeiroTomouDanoPneu = millis();
       fazendeiroTomouDanoPneu = true;

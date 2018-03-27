@@ -28,7 +28,6 @@ public class Corvo extends Geral {
     setSpriteInterval(75);
     setSpriteWidth(121);
     setSpriteHeight(86);
-    setMovementY(3);
   }
 
   void display() {
@@ -44,8 +43,14 @@ public class Corvo extends Geral {
   }
 
   void updateMovement() {
-    if (getX() != target.x) movementX = (getX() < target.x) ? 3 : -3;
-    else movementX = 0;
+    if (getX() != target.x) {
+      movementX = (getX() < target.x) ? 3 : -3;
+    }
+    else {
+      movementX = 0;
+    }
+    
+    setMovementY(3);
   }
 
   void updateTarget() {
@@ -77,19 +82,19 @@ int indexRandomCorvoXMapaBoss;
 
 void corvo() {
   if (indexInimigos == 3) {
-    if (estadoJogo == "MapaPadre") {
+    if (estadoJogo == "TerceiroMapaBoss") {
       if (corvos.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
-        indexRandomCorvoXMapaBoss = int(random(0, valoresInimigosXMapaPadre.length));
-        corvos.add(new Corvo(valoresInimigosXMapaPadre[indexRandomCorvoXMapaBoss], 0));
+        indexRandomCorvoXMapaBoss = int(random(0, valoresInimigosXTerceiroMapaBoss.length));
+        corvos.add(new Corvo(valoresInimigosXTerceiroMapaBoss[indexRandomCorvoXMapaBoss], 0));
       }
     }
 
     if (!telaTutorialAndandoAtiva) {
-      if (estadoJogo == "SegundoMapa" && corvos.size() < 1) {
+      if (estadoJogo == "SegundoMapaNormal" && corvos.size() < 1) {
         corvos.add(new Corvo());
       }
 
-      if (estadoJogo == "TerceiroMapa" && corvos.size() < 1) {
+      if (estadoJogo == "TerceiroMapaNormal" && corvos.size() < 1) {
         corvos.add(new Corvo());
       }
     }

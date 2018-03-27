@@ -22,13 +22,13 @@ public class Item extends Geral {
 void item() {  
   for (int i = itens.size() - 1; i >= 0; i = i - 1) {
     Item it = itens.get(i);
-    if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
+    if (estadoJogo.contains("Normal")) {
       it.update();
     }
     it.display();
     if (it.hasExitScreen() || it.hasCollided()) {
       itens.remove(it);
-      
+
       if (it.hasExitScreen()) {
         generateItem(2500);
       }
@@ -50,46 +50,48 @@ void generateItem(int timeAmount) {
 }
 
 void addItem() {
-  if (estadoJogo == "PrimeiroMapa" || (estadoJogo == "SegundoMapa") || estadoJogo == "TerceiroMapa") {
-    if (!telaTutorialAndandoAtiva) {
-      if (itemIndex >= 0 && itemIndex <= 4) {
-        itens.add(new Pa());
-      } else if (itemIndex >= 5 && itemIndex <= 9) {
-        itens.add(new Chicote());
-      }
-      itemTotal++;
+  if (!telaTutorialAndandoAtiva) {
+    if (itemIndex >= 0 && itemIndex <= 4) {
+      itens.add(new Pa());
+    } else if (itemIndex >= 5 && itemIndex <= 9) {
+      itens.add(new Chicote());
     }
+
+    itemTotal++;
   }
 }
 
 void addItemBoss() {
-  if (estadoJogo == "MapaCoveiro") {
-    itemRandomMapPositionIndex = int(random(0, valoresXMapaCoveiro.length));
+  if (estadoJogo == "PrimeiroMapaBoss") {
+    itemRandomMapPositionIndex = int(random(0, valoresXPrimeiroMapaBoss.length));
     if (itemIndex >= 0 && itemIndex <= 4) {
-      itens.add(new Pa(valoresXMapaCoveiro[itemRandomMapPositionIndex], valoresYMapaCoveiro[itemRandomMapPositionIndex]));
+      itens.add(new Pa(valoresXPrimeiroMapaBoss[itemRandomMapPositionIndex], valoresYPrimeiroMapaBoss[itemRandomMapPositionIndex]));
     } else if (itemIndex >= 5 && itemIndex <= 9) {
-      itens.add(new Chicote(valoresXMapaCoveiro[itemRandomMapPositionIndex], valoresYMapaCoveiro[itemRandomMapPositionIndex]));
+      itens.add(new Chicote(valoresXPrimeiroMapaBoss[itemRandomMapPositionIndex], valoresYPrimeiroMapaBoss[itemRandomMapPositionIndex]));
     }
+
     itemTotal++;
   }
 
-  if (estadoJogo == "MapaFazendeiro") {
-    itemRandomMapPositionIndex = int(random(0, valoresXMapaFazendeiro.length));
+  if (estadoJogo == "SegundoMapaBoss") {
+    itemRandomMapPositionIndex = int(random(0, valoresXSegundoMapaBoss.length));
     if (itemIndex >= 0 && itemIndex <= 4) {
-      itens.add(new Pa(valoresXMapaCoveiro[itemRandomMapPositionIndex], valoresYMapaCoveiro[itemRandomMapPositionIndex]));
+      itens.add(new Pa(valoresXSegundoMapaBoss[itemRandomMapPositionIndex], valoresXSegundoMapaBoss[itemRandomMapPositionIndex]));
     } else if (itemIndex >= 5 && itemIndex <= 9) {
-      itens.add(new Chicote(valoresXMapaCoveiro[itemRandomMapPositionIndex], valoresYMapaCoveiro[itemRandomMapPositionIndex]));
+      itens.add(new Chicote(valoresXSegundoMapaBoss[itemRandomMapPositionIndex], valoresXSegundoMapaBoss[itemRandomMapPositionIndex]));
     }
+
     itemTotal++;
   }
 
-  if (estadoJogo == "MapaPadre") {
-    itemRandomMapPositionIndex = int(random(0, valoresXMapaPadre.length));
+  if (estadoJogo == "TerceiroMapaBoss") {
+    itemRandomMapPositionIndex = int(random(0, valoresXTerceiroMapaBoss.length));
     if (itemIndex >= 0 && itemIndex <= 4) {
-      itens.add(new Pa(valoresXMapaCoveiro[itemRandomMapPositionIndex], valoresYMapaCoveiro[itemRandomMapPositionIndex]));
+      itens.add(new Pa(valoresXTerceiroMapaBoss[itemRandomMapPositionIndex], valoresXTerceiroMapaBoss[itemRandomMapPositionIndex]));
     } else if (itemIndex >= 5 && itemIndex <= 9) {
-      itens.add(new Chicote(valoresXMapaCoveiro[itemRandomMapPositionIndex], valoresYMapaCoveiro[itemRandomMapPositionIndex]));
+      itens.add(new Chicote(valoresXTerceiroMapaBoss[itemRandomMapPositionIndex], valoresXTerceiroMapaBoss[itemRandomMapPositionIndex]));
     }
+
     itemTotal++;
   }
 }

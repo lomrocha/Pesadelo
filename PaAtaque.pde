@@ -24,15 +24,3 @@ public class PaAtaque extends Arma {
     setY(jLeiteY - 44);
   }
 }
-
-boolean umaPa;
-
-void paAtaque() {
-  if (jLeiteUsoItem) {
-    if (armas.size() == 0 && item == SHOVEL && weaponTotal > 0 && !umaPa) {
-      armas.add(new PaAtaque());
-      weaponTotal--;
-      umaPa = true;
-    }
-  }
-}

@@ -48,20 +48,20 @@ void jLeite() {
 
   if (finalMapa) {
     if (jLeiteY + 126 < - 50) {
-      if (estadoJogo == "PrimeiroMapa") {
-        estadoJogo = ("MapaCoveiro");
+      if (estadoJogo == "PrimeiroMapaNormal") {
+        estadoJogo = ("PrimeiroMapaBoss");
         if (temaIgreja.isPlaying()) {
           temaIgreja.pause();
         }
       }
-      if (estadoJogo == "SegundoMapa") {
-        estadoJogo = ("MapaFazendeiro");
+      if (estadoJogo == "SegundoMapaNormal") {
+        estadoJogo = ("SegundoMapaBoss");
         if (temaFazenda.isPlaying()) {
           temaFazenda.pause();
         }
       }
-      if (estadoJogo == "TerceiroMapa") {
-        estadoJogo = ("MapaPadre");
+      if (estadoJogo == "TerceiroMapaNormal") {
+        estadoJogo = ("TerceiroMapaBoss");
         if (temaCidade.isPlaying()) {
           temaCidade.pause();
         }
@@ -85,19 +85,19 @@ void jLeite() {
     if (temaCidade.isPlaying()) {
       temaCidade.pause();
     }
-    if (estadoJogo == "MapaCoveiro") {
+    if (estadoJogo == "PrimeiroMapaBoss") {
       if (sonsAtivos) {
         sonsMorteJLeite[0].rewind();
         sonsMorteJLeite[0].play();
       }
     }
-    if (estadoJogo == "MapaFazendeiro") {
+    if (estadoJogo == "SegundoMapaBoss") {
       if (sonsAtivos) {
         sonsMorteJLeite[1].rewind();
         sonsMorteJLeite[1].play();
       }
     }
-    if (estadoJogo == "MapaPadre") {
+    if (estadoJogo == "TerceiroMapaBoss") {
       if (!padre.padreMudouForma) {
         if (sonsAtivos) {
           sonsMorteJLeite[2].rewind();
@@ -113,10 +113,10 @@ void jLeite() {
   }
 
   if (jLeiteMorreu && millis() > tempoMorto + 2500) {
-    if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
+    if (estadoJogo == "PrimeiroMapaNormal" || estadoJogo == "SegundoMapaNormal" || estadoJogo == "TerceiroMapaNormal") {
       setup();
       estadoJogo = "MenuInicial";
-    } else if (estadoJogo == "MapaCoveiro" || estadoJogo == "MapaFazendeiro" || estadoJogo == "MapaPadre") {
+    } else if (estadoJogo == "PrimeiroMapaBoss" || estadoJogo == "SegundoMapaBoss" || estadoJogo == "TerceiroMapaBoss") {
       ultimoEstado = estadoJogo;
       estadoJogo = "GameOver";
     }
@@ -127,7 +127,7 @@ void jLeite() {
   }
 
   if (!jLeiteMorreu) {
-    if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
+    if (estadoJogo == "PrimeiroMapaNormal" || estadoJogo == "SegundoMapaNormal" || estadoJogo == "TerceiroMapaNormal") {
       if (jLeiteDireita && jLeiteX < width - 163) { 
         jLeiteX = jLeiteX + 3;
       }
@@ -150,7 +150,7 @@ void jLeite() {
       }
     }
 
-    if (estadoJogo == "MapaCoveiro" || estadoJogo == "MapaFazendeiro"|| estadoJogo == "MapaPadre") {
+    if (estadoJogo == "PrimeiroMapaBoss" || estadoJogo == "SegundoMapaBoss"|| estadoJogo == "TerceiroMapaBoss") {
       if (!jLeiteLentidao) {
         if (jLeiteDireita && jLeiteX < width - 88) { 
           jLeiteX = jLeiteX + 3;
@@ -188,7 +188,7 @@ void jLeite() {
 
     image(sombraJLeite, jLeiteX + 7, jLeiteY + 112);
 
-    if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
+    if (estadoJogo == "PrimeiroMapaNormal" || estadoJogo == "SegundoMapaNormal" || estadoJogo == "TerceiroMapaNormal") {
       if (!jLeiteUsoItem && !jLeiteImune) {
         if (millis() > tempoSpriteJLeiteMovimento + 75) { 
           spriteJLeiteMovimento = jLeiteMovimento.get(stepJLeiteMovimento, 0, 63, 126); 

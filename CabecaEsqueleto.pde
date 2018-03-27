@@ -14,7 +14,7 @@ public class CabecaEsqueleto extends Inimigo {
     startingX = x;
     setSpriteWidth(36);
     setSpriteHeight(89);
-    
+
     setDamage(2);
     setIsHead(true);
   }
@@ -30,7 +30,12 @@ public class CabecaEsqueleto extends Inimigo {
   }
 
   void updateMovement() {
-    movementX = (startingX > target.x) ? -9 : 9;
+    if (startingX != target.x) {
+      movementX = (startingX > target.x) ? -9 : 9;
+    } else {
+      movementX = 0;
+    }
+    
     setMovementY(12);
   }
 }

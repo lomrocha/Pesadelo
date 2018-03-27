@@ -14,14 +14,14 @@ int enemyPositionsFirstMap  [][];
 int enemyPositionsSecondMap [][];
 int enemyPositionsThirdMap  [][];
 
-int[] valoresXMapaCoveiro = {50, 720};
-int[] valoresYMapaCoveiro = {380, 380};
+int[] valoresXPrimeiroMapaBoss = {50, 720};
+int[] valoresYPrimeiroMapaBoss = {380, 380};
 
-int[] valoresXMapaFazendeiro = {45, 45, 735, 735};
-int[] valoresYMapaFazendeiro = {200, 358, 200, 358};
+int[] valoresXSegundoMapaBoss = {45, 45, 735, 735};
+int[] valoresYSegundoMapaBoss = {200, 358, 200, 358};
 
-int[] valoresXMapaPadre = {62, 62, 710, 710};
-int[] valoresYMapaPadre = {249, 401, 249, 401};
+int[] valoresXTerceiroMapaBoss = {62, 62, 710, 710};
+int[] valoresYTerceiroMapaBoss = {249, 401, 249, 401};
 
 boolean ativaBarraEspaco;
 
@@ -65,8 +65,6 @@ void setup() {
   for (int i = 0; i < sonsFazendeiroTomandoDano.length; i = i + 1) {
     sonsFazendeiroTomandoDano[i] =  minim.loadFile ("fazendeiroDano" + i + ".mp3");
   }
-
-  somFazendeiroVidaMetade = minim.loadFile ("fazendeiroLasquera.mp3");
 
   for (int i = 0; i < sonsFazendeiroSoltandoMimosa.length; i = i + 1) {
     sonsFazendeiroSoltandoMimosa[i] =  minim.loadFile ("fazendeiroMimosa" + i + ".mp3");
@@ -321,6 +319,7 @@ void setup() {
   enemyPositionsFirstMap = new int [7][4];
   enemyPositionsSecondMap  = new int [7][4];
   enemyPositionsThirdMap = new int [7][4];
+  kickingSkeletonPositions = new int [8][12];
 
   skeletonPositions();
   kickingSkeletonPositions();
@@ -346,13 +345,11 @@ void setup() {
 
   coveiroHitpointsCurrent = 40;
   coveiroHitpointsMinimum = 0;
-
   coveiroBonesIndex = 3;
 
-  vidaFazendeiroAtual = 40;
-  vidaFazendeiroMin = 0;
-
-  indexVidaFazendeiroOsso = 3;
+  fazendeiroHitpointsCurrent = 40;
+  fazendeiroHitpointsMinimum = 0;
+  fazendeiroBonesIndex = 3;
 
   vidaPadreAtual = 40;
   vidaPadreMin = 0;
@@ -414,7 +411,7 @@ void setup() {
 }
 
 void draw() {
-  if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
+  if (estadoJogo == "PrimeiroMapaNormal" || estadoJogo == "SegundoMapaNormal" || estadoJogo == "TerceiroMapaNormal") {
     jogando();
   } else {
     menu();
@@ -449,12 +446,12 @@ void keyPressed() {
   }
 
   if (key == ENTER) {
-    if (estadoJogo == "PrimeiroMapa") {
+    if (estadoJogo == "PrimeiroMapaNormal") {
       if (telaTutorialAndandoAtiva) {
         telaTutorialAndandoAtiva = false;
       }
     }
-    if (estadoJogo == "SegundoMapa") {
+    if (estadoJogo == "SegundoMapaNormal") {
       if (telaTutorialPedraAtiva) {
         loop();
       }
@@ -463,24 +460,24 @@ void keyPressed() {
 
   if (estadoJogo == "MenuInicial") {
     if (key == '1') {
-      estadoJogo = "PrimeiroMapa";
+      estadoJogo = "PrimeiroMapaNormal";
     }
     if (key == '2') {
-      estadoJogo = "SegundoMapa";
+      estadoJogo = "SegundoMapaNormal";
       cenarios.add(new Cenario(0, 0, 2));
       cenarios.add(new Cenario(0, -600, 2));
     }
     if (key == '3') {
-      estadoJogo = "TerceiroMapa";
+      estadoJogo = "TerceiroMapaNormal";
     }
     if (key == '4') {
-      estadoJogo = "MapaCoveiro";
+      estadoJogo = "PrimeiroMapaBoss";
     }
     if (key == '5') {
-      estadoJogo = "MapaFazendeiro";
+      estadoJogo = "SegundoMapaBoss";
     }
     if (key == '6') {
-      estadoJogo = "MapaPadre";
+      estadoJogo = "TerceiroMapaBoss";
     }
   }
 
@@ -506,11 +503,7 @@ void keyPressed() {
         tempoItemAtivo = millis();
         ativaBarraEspaco = true;
         jLeiteUsoItemConfirma = true;
-        if (item == SHOVEL) {
-          umaPa = false;
-        } else if (item == WHIP) {
-          umChicote = false;
-        }
+        oneWeapon = false;
         if (weaponTotal == 1) {
           generateItem(15000);
         }
@@ -571,7 +564,7 @@ void mouseClicked() {
     }
   }
 
-  if (estadoJogo == "PrimeiroMapa") {
+  if (estadoJogo == "PrimeiroMapaNormal") {
     if (telaTutorialAndandoAtiva) {
       if (mouseX > 584 && mouseX < 620 && mouseY > 139 && mouseY < 175) {
         telaTutorialAndandoAtiva = false;
@@ -579,7 +572,7 @@ void mouseClicked() {
     }
   }  
 
-  if (estadoJogo == "SegundoMapa") {
+  if (estadoJogo == "SegundoMapaNormal") {
     if (telaTutorialPedraAtiva) {
       if (mouseX > 514 && mouseX < 550 && mouseY > 182 && mouseY < 218) {
         loop();

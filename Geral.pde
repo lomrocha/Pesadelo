@@ -18,7 +18,6 @@ public class MaisGeral {
   public PImage getSprite() {
     return sprite;
   }
-
   protected void setSprite(PImage sprite) {
     this.sprite = sprite;
   }
@@ -26,7 +25,6 @@ public class MaisGeral {
   public PImage getSpriteImage() {
     return spriteImage;
   }
-
   protected void setSpriteImage(PImage enemy) {
     this.spriteImage = enemy;
   }
@@ -34,7 +32,6 @@ public class MaisGeral {
   public int getX() {
     return x;
   }
-
   protected void setX(int x) {
     this.x = x;
   }
@@ -42,7 +39,6 @@ public class MaisGeral {
   public int getY() {
     return y;
   }
-
   protected void setY(int y) {
     this.y = y;
   }
@@ -50,56 +46,49 @@ public class MaisGeral {
   public int getMovementY() {
     return movementY;
   }
-
-  public void setMovementY(int movementY) {
+  protected void setMovementY(int movementY) {
     this.movementY = movementY;
   }
 
   public int getStep() {
     return step;
   }
-
-  public void setStep(int step) {
+  protected void setStep(int step) {
     this.step = step;
   }
 
   public int getSpriteTime() {
     return spriteTime;
   }
-
-  public void setSpriteTime(int spriteTime) {
+  protected void setSpriteTime(int spriteTime) {
     this.spriteTime = spriteTime;
   }
 
   public int getSpriteInterval() {
     return spriteInterval;
   }
-
-  public void setSpriteInterval(int spriteInterval) {
+  protected void setSpriteInterval(int spriteInterval) {
     this.spriteInterval = spriteInterval;
   }
 
   public int getSpriteWidth() {
     return spriteWidth;
   }
-
-  public void setSpriteWidth(int spriteWidth) {
+  protected void setSpriteWidth(int spriteWidth) {
     this.spriteWidth = spriteWidth;
   }
 
   public int getSpriteHeight() {
     return spriteHeight;
   }
-
-  public void setSpriteHeight(int spriteHeight) {
+  protected void setSpriteHeight(int spriteHeight) {
     this.spriteHeight = spriteHeight;
   }
 
   public boolean getDeleteObject() {
     return deleteObject;
   }
-
-  public void setDeleteObject(boolean deleteObject) {
+  protected void setDeleteObject(boolean deleteObject) {
     this.deleteObject = deleteObject;
   }
 

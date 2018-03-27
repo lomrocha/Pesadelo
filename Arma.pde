@@ -17,20 +17,24 @@ void armas() {
     item = 0;
     itemTotal = 0;
   }
+
   if (itemTotal == 0 && hasItemIndexChanged && millis() > timeToGenerateItem + intervalToGenerateItem && itens.size() == 0) {
-    if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
+    if (estadoJogo.contains("Normal")) {
       addItem();
-    } else if (estadoJogo == "MapaCoveiro" || estadoJogo == "MapaFazendeiro" || estadoJogo == "MapaPadre") {
+    } else if (estadoJogo.contains("Boss")) {
       addItemBoss();
     }
   }
+
   generateItemIndex();
   item();
   if (armas.size() > 0) {
     arma();
   }
-  paAtaque();
-  chicoteAtaque();
+
+  if (jLeiteUsoItem && armas.size() == 0 && weaponTotal > 0) {
+    weapon();
+  }
 }
 
 void generateItemIndex() {
@@ -144,6 +148,22 @@ public abstract class Arma extends MaisGeral {
   }
 }
 
+boolean oneWeapon;
+
+void weapon() {
+  if (!oneWeapon) {
+    if (item == WHIP) {
+      armas.add(new ChicoteAtaque());
+    }
+    if (item == SHOVEL) {
+      armas.add(new PaAtaque());
+    }
+    
+    weaponTotal--;
+    oneWeapon = true;
+  }
+}
+
 void arma() {
   for (int i = armas.size() - 1; i >= 0; i = i - 1) {
     Arma a = armas.get(i);
@@ -152,7 +172,7 @@ void arma() {
     if (a.getDeleteObject()) {
       armas.remove(a);
     }
-    if (estadoJogo == "MapaCoveiro") {
+    if (estadoJogo == "PrimeiroMapaBoss") {
       if (a.hasHitCoveiro() && !a.getDamageBoss()) {
         if (sonsAtivos) {
           indexRandomSomCoveiroTomandoDano = int(random(0, sonsCoveiroTomandoDano.length));
@@ -163,18 +183,18 @@ void arma() {
         a.setDamageBoss(true);
       }
     }
-    if (estadoJogo == "MapaFazendeiro") {
+    if (estadoJogo == "SegundoMapaBoss") {
       if (a.hasHitFazendeiro() && !a.getDamageBoss()) {
         if (sonsAtivos) {
           indexRandomSomFazendeiroTomandoDano = int(random(0, sonsFazendeiroTomandoDano.length));
           sonsFazendeiroTomandoDano[indexRandomSomFazendeiroTomandoDano].rewind();
           sonsFazendeiroTomandoDano[indexRandomSomFazendeiroTomandoDano].play();
         }
-        vidaFazendeiroAtual -= 2;
+        fazendeiroHitpointsCurrent -= 2;
         a.setDamageBoss(true);
       }
     }
-    if (estadoJogo == "MapaPadre") {
+    if (estadoJogo == "TerceiroMapaBoss") {
       if (a.hasHitPadre() && !a.getDamageBoss()) {
         if (vidaPadreAtual > 0) {
           if (sonsAtivos) {

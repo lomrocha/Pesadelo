@@ -32,7 +32,7 @@ final int playerHitpointsInterval = 12;
 final int playerHitpointsLayoutX = 8;
 final int playerHitpointsLayoutY = 490;
 
-void vida() {
+void playerHitpoints() {
   genericHitpointsLayout(playerHitpointsLayoutBackground, playerHitpointsLayoutBackgroundX, playerHitpointsLayoutBackgroundY, playerHitpointsMinimum, playerHitpointsBarX, playerHitpointsBarXStart, playerHitpointsCurrent, playerHitpointsBar, playerHitpointsBarY, playerHitpointsInterval, playerHitpointsLayout, playerHitpointsLayoutX, playerHitpointsLayoutY);
 }
 

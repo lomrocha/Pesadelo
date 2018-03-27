@@ -3,7 +3,7 @@ PImage skeletonShadow;
 
 final int SKELETON = 0;
 
-int[] valoresEsqueletoXMapaCoveiro = {200, 520};
+int[] valoresEsqueletoXPrimeiroMapaBoss = {200, 520};
 
 public class Esqueleto extends Inimigo {
   public Esqueleto(int x, int y) {
@@ -38,25 +38,25 @@ int indexRandomEsqueletoXMapaBoss;
 
 void esqueleto() {
   if (indexInimigos == 0) {
-    if (estadoJogo == "MapaCoveiro") {
+    if (estadoJogo == "PrimeiroMapaBoss") {
       if (esqueletos.size() == 0 && !coveiro.coveiroMorreu && !coveiroTomouDanoAgua) {
         for (int i = 0; i < 2; i = i + 1) {
           indexRandomEsqueletoXMapaBoss = int(random(0, 2));
-          esqueletos.add(new Esqueleto(valoresEsqueletoXMapaCoveiro[indexRandomEsqueletoXMapaBoss], 0));
+          esqueletos.add(new Esqueleto(valoresEsqueletoXPrimeiroMapaBoss[indexRandomEsqueletoXMapaBoss], 0));
         }
       }
     }
 
-    if (estadoJogo == "MapaPadre") { 
+    if (estadoJogo == "TerceiroMapaBoss") { 
       if (esqueletos.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
-        indexRandomEsqueletoXMapaBoss = int(random(0, valoresInimigosXMapaPadre.length));
-        esqueletos.add(new Esqueleto(valoresInimigosXMapaPadre[indexRandomEsqueletoXMapaBoss], 0));
+        indexRandomEsqueletoXMapaBoss = int(random(0, valoresInimigosXTerceiroMapaBoss.length));
+        esqueletos.add(new Esqueleto(valoresInimigosXTerceiroMapaBoss[indexRandomEsqueletoXMapaBoss], 0));
         totalInimigos = totalInimigos + 1;
       }
     }
 
     if (!telaTutorialAndandoAtiva) {
-      if (estadoJogo == "PrimeiroMapa" && esqueletos.size() < 2 && totalInimigos < 6) {
+      if (estadoJogo == "PrimeiroMapaNormal" && esqueletos.size() < 2 && totalInimigos < 6) {
         esqueletoC = int(random(0, 7));
         esqueletoL = int(random(0, 4));
 
@@ -66,7 +66,7 @@ void esqueleto() {
         }
       }
 
-      if (estadoJogo == "SegundoMapa" && esqueletos.size() < 2 && totalInimigos < 6) {
+      if (estadoJogo == "SegundoMapaNormal" && esqueletos.size() < 2 && totalInimigos < 6) {
         esqueletoC = int(random(0, 7));
         esqueletoL = int(random(0, 4));
 
@@ -76,7 +76,7 @@ void esqueleto() {
         }
       }
 
-      if (estadoJogo == "TerceiroMapa" && esqueletos.size() < 2 && totalInimigos < 6) {
+      if (estadoJogo == "TerceiroMapaNormal" && esqueletos.size() < 2 && totalInimigos < 6) {
         esqueletoC = int(random(0, 7));
         esqueletoL = int(random(0, 4));
 

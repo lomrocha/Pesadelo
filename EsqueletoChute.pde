@@ -9,6 +9,8 @@ public class EsqueletoChute extends Geral {
 
   private int movementX;
 
+  private PVector target = new PVector(jLeiteX, jLeiteY);
+
   private int changeDirectionDelay;
 
   private int kickingSkeletonStep;
@@ -66,10 +68,14 @@ public class EsqueletoChute extends Geral {
 
   void updateMovement() {
     if (!hasLostHead) {
-      setMovementY(int(sceneryMovement));
-      movementX = 0;
+      setMovementY(1);
+      if (getX() != target.x) { 
+        movementX = (getX() < target.x) ? 3 : -3;
+      } else {
+        movementX = 0;
+      }
     } else {
-      setMovementY(int(sceneryMovement) + 1);
+      setMovementY(sceneryMovement + 1);
       if (millis() > changeDirectionDelay + 250) {
         movementX = int(random(-5, 5));
         changeDirectionDelay = millis();
@@ -86,45 +92,27 @@ int indexRandomEsqueletoChuteXMapaBoss;
 
 void esqueletoChute() {
   if (indexInimigos == 1) {
-    if (estadoJogo == "MapaPadre") { 
+    if (estadoJogo == "TerceiroMapaBoss") { 
       if (esqueletosChute.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
-        indexRandomEsqueletoChuteXMapaBoss = int(random(0, valoresInimigosXMapaPadre.length));
-        esqueletosChute.add(new EsqueletoChute(valoresInimigosXMapaPadre[indexRandomEsqueletoChuteXMapaBoss], 0));
+        indexRandomEsqueletoChuteXMapaBoss = int(random(0, valoresInimigosXTerceiroMapaBoss.length));
+        esqueletosChute.add(new EsqueletoChute(valoresInimigosXTerceiroMapaBoss[indexRandomEsqueletoChuteXMapaBoss], 0));
         totalInimigos = totalInimigos + 1;
       }
     }
 
     if (!telaTutorialAndandoAtiva) {
-      if (estadoJogo == "PrimeiroMapa" && esqueletosChute.size() < 2 && totalInimigos < 6) {
-        esqueletoChuteC = int(random(0, 7));
-        esqueletoChuteL = int(random(0, 4));
+      if ((estadoJogo == "PrimeiroMapaNormal" || estadoJogo == "SegundoMapaNormal" || estadoJogo == "TerceiroMapaNormal") && esqueletosChute.size() < 2 && totalInimigos < 6) {
+        esqueletoChuteC = int(random(0, 8));
+        esqueletoChuteL = int(random(0, 12));
 
-        if (enemyPositionsFirstMap[esqueletoChuteC][esqueletoChuteL] == KICKINGSKELETON) {
-          esqueletosChute.add(new EsqueletoChute(100 + (esqueletoChuteC * (600 / 7)), -150 - (esqueletoChuteL * 150)));
-          totalInimigos = totalInimigos + 1;
-        }
-      }
-      if (estadoJogo == "SegundoMapa" && esqueletosChute.size() < 2 && totalInimigos < 6) {
-        esqueletoChuteC = int(random(0, 7));
-        esqueletoChuteL = int(random(0, 4));
-
-        if (enemyPositionsSecondMap[esqueletoChuteC][esqueletoChuteL] == KICKINGSKELETON) {
-          esqueletosChute.add(new EsqueletoChute(100 + (esqueletoChuteC * (600 / 7)), -150 - (esqueletoChuteL * 150)));
-          totalInimigos = totalInimigos + 1;
-        }
-      }
-      if (estadoJogo == "TerceiroMapa" && esqueletosChute.size() < 2 && totalInimigos < 6) {
-        esqueletoChuteC = int(random(0, 7));
-        esqueletoChuteL = int(random(0, 4));
-
-        if (enemyPositionsThirdMap[esqueletoChuteC][esqueletoChuteL] == KICKINGSKELETON) {
-          esqueletosChute.add(new EsqueletoChute(100 + (esqueletoChuteC * (600 / 7)), -150 - (esqueletoChuteL * 150)));
+        if (kickingSkeletonPositions[esqueletoChuteC][esqueletoChuteL] == KICKINGSKELETON) {
+          esqueletosChute.add(new EsqueletoChute(120 + (esqueletoChuteC * 50), -150 - (esqueletoChuteL * 75)));
           totalInimigos = totalInimigos + 1;
         }
       }
     }
   }
-  
+
   if (esqueletosChute.size() > 0) {
     for (int i = esqueletosChute.size() - 1; i >= 0; i = i - 1) {
       EsqueletoChute e = esqueletosChute.get(i);
@@ -143,7 +131,7 @@ void esqueletoChute() {
         damage(2);
       }
     }
-    
+
     deleteEnemy(esqueletosChute);
   }
 
@@ -152,26 +140,19 @@ void esqueletoChute() {
   }
 }
 
+int kickingSkeletonPositions[][];
+
 void kickingSkeletonPositions() {
-  enemyPositionsFirstMap  [0][2] = KICKINGSKELETON;
-  enemyPositionsFirstMap  [1][0] = KICKINGSKELETON;
-  enemyPositionsFirstMap  [2][2] = KICKINGSKELETON;
-  enemyPositionsFirstMap  [3][0] = KICKINGSKELETON;
-  enemyPositionsFirstMap  [4][2] = KICKINGSKELETON;
-  enemyPositionsFirstMap  [5][0] = KICKINGSKELETON;
-  enemyPositionsFirstMap  [6][2] = KICKINGSKELETON;
-
-  enemyPositionsSecondMap [0][2] = KICKINGSKELETON;
-  enemyPositionsSecondMap [1][0] = KICKINGSKELETON;
-  enemyPositionsSecondMap [2][3] = KICKINGSKELETON;
-  enemyPositionsSecondMap [3][3] = KICKINGSKELETON;
-  enemyPositionsSecondMap [4][2] = KICKINGSKELETON;
-  enemyPositionsSecondMap [5][3] = KICKINGSKELETON;
-  enemyPositionsSecondMap [6][3] = KICKINGSKELETON;
-
-  enemyPositionsThirdMap  [0][2] = KICKINGSKELETON;
-  enemyPositionsThirdMap  [1][3] = KICKINGSKELETON;
-  enemyPositionsThirdMap  [2][1] = KICKINGSKELETON;
-  enemyPositionsThirdMap  [4][3] = KICKINGSKELETON;
-  enemyPositionsThirdMap  [5][1] = KICKINGSKELETON;
+  kickingSkeletonPositions [0][0] = KICKINGSKELETON;
+  kickingSkeletonPositions [0][3] = KICKINGSKELETON;
+  kickingSkeletonPositions [0][6] = KICKINGSKELETON;
+  kickingSkeletonPositions [0][9] = KICKINGSKELETON;
+  kickingSkeletonPositions [3][0] = KICKINGSKELETON;
+  kickingSkeletonPositions [3][3] = KICKINGSKELETON;
+  kickingSkeletonPositions [3][6] = KICKINGSKELETON;
+  kickingSkeletonPositions [3][9] = KICKINGSKELETON;
+  kickingSkeletonPositions [6][0] = KICKINGSKELETON;
+  kickingSkeletonPositions [6][3] = KICKINGSKELETON;
+  kickingSkeletonPositions [6][6] = KICKINGSKELETON;
+  kickingSkeletonPositions [6][9] = KICKINGSKELETON;
 }

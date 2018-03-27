@@ -4,22 +4,22 @@ int indexInimigos;
 int totalInimigos;
 int maximoInimigosPadre = 2;
 
-int[] valoresInimigosXMapaPadre = {25, 350, 679};
+int[] valoresInimigosXTerceiroMapaBoss = {25, 350, 679};
 
 void inimigosTodos() {
   if (!jLeiteMorreu) {
     if (!telaTutorialAndandoAtiva) {
       if (millis() > tempoGerarInimigo + 250) {
-        if (estadoJogo == "PrimeiroMapa") {
+        if (estadoJogo == "PrimeiroMapaNormal") {
           indexInimigos = int(random(0, 2));
         } 
-        if (estadoJogo == "SegundoMapa") {
+        if (estadoJogo == "SegundoMapaNormal") {
           indexInimigos = int(random(0, 4));
         } 
-        if (estadoJogo == "TerceiroMapa") {
+        if (estadoJogo == "TerceiroMapaNormal") {
           indexInimigos = int(random(1, 5));
         } 
-        if (estadoJogo == "MapaPadre") {
+        if (estadoJogo == "TerceiroMapaBoss") {
           indexInimigos = int(random(0, 5));
           if (!ataqueLevantemAcontecendo) {
             maximoInimigosPadre = 2;
@@ -79,10 +79,10 @@ void damage(int amount) {
     enemy.update();
     enemy.display();
     if (enemy.hasExitScreen()) {
+      inimigos.remove(enemy);
       if (!enemy.getIsHead()) {
         totalInimigos--;
       }
-      inimigos.remove(enemy);
     }
     if (enemy.hasCollided()) {
       damage(enemy.getDamage());
