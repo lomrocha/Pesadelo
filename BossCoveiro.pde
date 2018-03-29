@@ -97,7 +97,7 @@ public class Coveiro {
 
       if (!andando && !ataquePa && !novoAtaqueFenda && !carregandoNovoAtaqueLapide && !novoAtaqueLapide && !coveiroTomouDanoAgua) {
         if (!somCoveiroIdleTocando) {
-          if (sonsAtivos) {
+          if (isSoundActive) {
             indexRandomSomCoveiroIdle = int(random(0, sonsCoveiroIdle.length));
             sonsCoveiroIdle[indexRandomSomCoveiroIdle].rewind();
             sonsCoveiroIdle[indexRandomSomCoveiroIdle].play();
@@ -162,7 +162,7 @@ public class Coveiro {
         }
 
         if (stepCoveiroPaFenda == 1452) {
-          if (sonsAtivos) {
+          if (isSoundActive) {
             somCoveiroFenda.rewind();
             somCoveiroFenda.play();
           }
@@ -193,7 +193,7 @@ public class Coveiro {
 
       if (novoAtaqueLapide && !coveiroTomouDanoAgua) {
         if (stepCoveiroLapide == 760) {
-          if (sonsAtivos) {
+          if (isSoundActive) {
             indexRandomSomCoveiroEsmaga = int(random(0, sonsCoveiroEsmaga.length));
             sonsCoveiroEsmaga[indexRandomSomCoveiroEsmaga].rewind();
             sonsCoveiroEsmaga[indexRandomSomCoveiroEsmaga].play();
@@ -370,7 +370,7 @@ public class Coveiro {
     if ((coveiroHitpointsCurrent <= 0 || coveiroBonesIndex == 0) && !coveiroMorreu) {
       coveiroMorreu = true;
       coveiroMorrendo = true;
-      if (sonsAtivos) {
+      if (isSoundActive) {
         somCoveiroMorreu.rewind();
         somCoveiroMorreu.play();
       }

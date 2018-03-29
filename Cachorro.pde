@@ -3,7 +3,7 @@ PImage skeletonDogShadow;
 
 final int SKELETONDOG = 2;
 
-int[] skeletonDogSpawnPointsSecondBoss = {70, 382, 695};
+final int[] skeletonDogSpawnPointsSecondBoss = {70, 382, 695};
 
 public class Cachorro extends Inimigo {
   public Cachorro(int x, int y) {
@@ -55,7 +55,7 @@ void cachorro() {
       }
     }
 
-    if (!telaTutorialAndandoAtiva) {
+    if (!movementTutorialScreenActive) {
       if (gameState == GameState.SECONDMAP.ordinal() && cachorros.size() < 2 && totalInimigos < 6) {
         cachorroC = int(random(0, 7));
         cachorroL = int(random(0, 4));

@@ -13,7 +13,7 @@ boolean hasFoodIndexChanged;
 
 void foodAll() {
   generateFoodIndex();
-  
+
   if (foodTotal == 0 && hasFoodIndexChanged && millis() > timeToGenerateFood + intervalToGenerateFood && comidas.size() == 0) {
     if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal()) {
       addFood();
@@ -28,7 +28,7 @@ void foodAll() {
 }
 
 void generateFoodIndex() {
-  if (!telaTutorialAndandoAtiva) {
+  if (!movementTutorialScreenActive) {
     if (!hasFoodIndexChanged) {
       foodIndex = int(random(0, 10));
       hasFoodIndexChanged = true;
@@ -68,7 +68,7 @@ void generateFood(int timeAmount) {
 }
 
 void addFood() {
-  if (!telaTutorialAndandoAtiva) {
+  if (!movementTutorialScreenActive) {
     if (foodIndex >= 0 && foodIndex <= 4) {
       comidas.add(new Brigadeiro());
     } else if (foodIndex >= 5 && foodIndex <=7) {
@@ -76,7 +76,8 @@ void addFood() {
     } else if (foodIndex >= 8 && foodIndex <= 9) { 
       comidas.add(new Coxinha());
     }
-    foodTotal += 1;
+
+    foodTotal++;
   }
 }
 
@@ -90,7 +91,8 @@ void addFoodBoss() {
     } else if (foodIndex >= 8 && foodIndex <= 9) { 
       comidas.add(new Coxinha(valoresXPrimeiroMapaBoss[foodRandomMapPositionIndex], valoresYPrimeiroMapaBoss[foodRandomMapPositionIndex]));
     }
-    foodTotal += 1;
+
+    foodTotal++;
   }
 
   if (gameState == GameState.SECONDBOSS.ordinal()) {
@@ -102,7 +104,8 @@ void addFoodBoss() {
     } else if (foodIndex >= 8 && foodIndex <= 9) { 
       comidas.add(new Coxinha(valoresXSegundoMapaBoss[foodRandomMapPositionIndex], valoresYSegundoMapaBoss[foodRandomMapPositionIndex]));
     }
-    foodTotal += 1;
+    
+    foodTotal++;
   }
 
   if (gameState == GameState.THIRDBOSS.ordinal()) {
@@ -114,7 +117,7 @@ void addFoodBoss() {
     } else if (foodIndex >= 8 && foodIndex <= 9) { 
       comidas.add(new Coxinha(valoresXTerceiroMapaBoss[foodRandomMapPositionIndex], valoresYTerceiroMapaBoss[foodRandomMapPositionIndex]));
     }
-    foodTotal += 1;
+    foodTotal++;
   }
 }
 

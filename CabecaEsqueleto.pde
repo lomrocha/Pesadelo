@@ -30,13 +30,14 @@ public class CabecaEsqueleto extends Inimigo {
   }
 
   void updateMovement() {
+    setMovementY(12);
     if (startingX != target.x) {
       movementX = (startingX > target.x) ? -9 : 9;
-    } else {
-      movementX = 0;
+
+      return;
     }
-    
-    setMovementY(12);
+
+    movementX = 0;
   }
 }
 

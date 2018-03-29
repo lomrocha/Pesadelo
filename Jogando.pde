@@ -1,18 +1,28 @@
+boolean isFirstMapSet;
+
 void jogando() {
   if (gameState == GameState.FIRSTMAP.ordinal()) {
-    if (musicasAtivas) {
+    if (!isFirstMapSet) {
+      movementTutorialScreenActive = true;
+      cenarios.add(new Cenario(0, 0));
+      cenarios.add(new Cenario(-600, 0));
+      generateItem(5000);
+      generateFood(5000);
+      isFirstMapSet = true;
+    }
+    if (isMusicActive) {
       temaIgreja.play();
     }
   }
 
   if (gameState == GameState.SECONDMAP.ordinal()) {
-    if (musicasAtivas) {
+    if (isMusicActive) {
       temaFazenda.play();
     }
   }
 
   if (gameState == GameState.THIRDMAP.ordinal()) {
-    if (musicasAtivas) {
+    if (isMusicActive) {
       temaCidade.play();
     }
   }
@@ -36,7 +46,7 @@ void jogando() {
   foodAll();
   playerHitpoints();
   caixaNumeroItem();
-  if (telaTutorialAndandoAtiva) {
+  if (movementTutorialScreenActive) {
     telaTutorialAndando();
   }
 }

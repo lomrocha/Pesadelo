@@ -86,25 +86,25 @@ void jLeite() {
       temaCidade.pause();
     }
     if (gameState == GameState.FIRSTBOSS.ordinal()) {
-      if (sonsAtivos) {
+      if (isSoundActive) {
         sonsMorteJLeite[0].rewind();
         sonsMorteJLeite[0].play();
       }
     }
     if (gameState == GameState.SECONDBOSS.ordinal()) {
-      if (sonsAtivos) {
+      if (isSoundActive) {
         sonsMorteJLeite[1].rewind();
         sonsMorteJLeite[1].play();
       }
     }
     if (gameState == GameState.THIRDBOSS.ordinal()) {
       if (!padre.padreMudouForma) {
-        if (sonsAtivos) {
+        if (isSoundActive) {
           sonsMorteJLeite[2].rewind();
           sonsMorteJLeite[2].play();
         }
       } else {
-        if (sonsAtivos) {
+        if (isSoundActive) {
           sonsMorteJLeite[3].rewind();
           sonsMorteJLeite[3].play();
         }
@@ -115,7 +115,7 @@ void jLeite() {
   if (jLeiteMorreu && millis() > tempoMorto + 2500) {
     if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal()) {
       setup();
-      gameState = GameState.INITIALMENU.ordinal();
+      gameState = GameState.MAINMENU.ordinal();
     } else if (gameState >= GameState.FIRSTBOSS.ordinal() && gameState <= GameState.THIRDBOSS.ordinal()) {
       lastState = gameState;
       gameState = GameState.GAMEOVER.ordinal();

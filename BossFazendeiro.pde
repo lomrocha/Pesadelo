@@ -112,7 +112,7 @@ public class Fazendeiro {
     if (!fazendeiroMorreu) {
       if (!andando && !ataqueFoice && !novoAtaqueMimosa && !ataqueMimosaAcontecendo && !novoAtaquePneu && !ataquePneuAcontecendo && !fazendeiroTomouDanoPneu) {
         if (!somFazendeiroIdleTocando) {
-          if (sonsAtivos) {
+          if (isSoundActive) {
             indexRandomSomFazendeiroIdle = int(random(0, sonsFazendeiroIdle.length));
             sonsFazendeiroIdle[indexRandomSomFazendeiroIdle].rewind();
             sonsFazendeiroIdle[indexRandomSomFazendeiroIdle].play();
@@ -168,7 +168,7 @@ public class Fazendeiro {
 
       if (novoAtaqueMimosa && !ataqueMimosaAcontecendo && !novoAtaquePneu && !ataquePneuAcontecendo && !fazendeiroTomouDanoPneu) {
         if (stepFazendeiroMimosa == 0) {
-          if (sonsAtivos) {
+          if (isSoundActive) {
             indexRandomSomFazendeiroMimosa = int(random(0, sonsFazendeiroSoltandoMimosa.length));
             sonsFazendeiroSoltandoMimosa[indexRandomSomFazendeiroMimosa].rewind();
             sonsFazendeiroSoltandoMimosa[indexRandomSomFazendeiroMimosa].play();
@@ -208,7 +208,7 @@ public class Fazendeiro {
 
       if (novoAtaquePneu && !ataquePneuAcontecendo && !ataqueMimosaAcontecendo && !fazendeiroTomouDanoPneu) {
         if (stepFazendeiroPneu == 0) {
-          if (sonsAtivos) {
+          if (isSoundActive) {
             somSoltandoPneu.rewind();
             somSoltandoPneu.play();
           }
@@ -399,7 +399,7 @@ public class Fazendeiro {
     if ((fazendeiroHitpointsCurrent <= 0 || fazendeiroBonesIndex == 0) && !fazendeiroMorreu) {
       fazendeiroMorreu = true;
       fazendeiroMorrendo = true;
-      if (sonsAtivos) {
+      if (isSoundActive) {
         somFazendeiroMorreu.rewind();
         somFazendeiroMorreu.play();
       }
@@ -534,7 +534,7 @@ void mimosa() {
     if (m.saiuDaTela()) {
       mimosas.remove(m);
       if (!m.acertouJLeite) {
-        if (sonsAtivos) {
+        if (isSoundActive) {
           somMimosaErra.rewind();
           somMimosaErra.play();
         }
@@ -545,7 +545,7 @@ void mimosa() {
       playerHitpointsCurrent -= 2;
       jLeiteImune = true;
       tempoImune = millis();
-      if (sonsAtivos) {
+      if (isSoundActive) {
         sonsMimosaHit[int(random(0, 2))].rewind();
         sonsMimosaHit[int(random(0, 2))].play();
       }
@@ -732,7 +732,7 @@ void pneu() {
       pneus.remove(p);
     }
     if (p.acertouJoaoLeite() && !jLeiteImune) {
-      if (sonsAtivos) {
+      if (isSoundActive) {
         somAcertouPneuJLeite.rewind();
         somAcertouPneuJLeite.play();
       }
@@ -741,7 +741,7 @@ void pneu() {
       tempoImune = millis();
     }
     if (p.acertouFazendeiro()) {
-      if (sonsAtivos) {
+      if (isSoundActive) {
         somAcertouPneuFazendeiro.rewind();
         somAcertouPneuFazendeiro.play();
       }

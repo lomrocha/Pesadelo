@@ -174,7 +174,7 @@ public class Padre {
     if (!padreMudouForma) {
       if (!ataqueCruz && !novoAtaqueLevantem && !novoAtaqueCaveira && !caveiraApareceu && !padreCaveiraCaiuCabeca && !padreTomouDanoCaveira) {
         if (!somPadreIdleTocando) {
-          if (sonsAtivos) {
+          if (isSoundActive) {
             indexRandomSomPadreIdle = int(random(0, sonsPadreIdle.length));
             sonsPadreIdle[indexRandomSomPadreIdle].rewind();
             sonsPadreIdle[indexRandomSomPadreIdle].play();
@@ -216,7 +216,7 @@ public class Padre {
 
       if (novoAtaqueLevantem && !novoAtaqueCaveira && !caveiraApareceu && !padreCaveiraCaiuCabeca && !padreTomouDanoCaveira) {
         if (stepPadreLevantem == 0) {
-          if (sonsAtivos) {
+          if (isSoundActive) {
             sonsPadreLevantem[0].rewind();
             sonsPadreLevantem[0].play();
           }
@@ -261,7 +261,7 @@ public class Padre {
 
       if (caveiraApareceu && !padreCaveiraCaiuCabeca && !padreTomouDanoCaveira) {
         if (stepPadreCaveira == 0) {
-          if (sonsAtivos) {
+          if (isSoundActive) {
             sonsPadreCaveira[0].rewind();
             sonsPadreCaveira[0].play();
           }
@@ -310,7 +310,7 @@ public class Padre {
       if (!padreMorreu) {
         if (!ataqueCruz && !novoAtaqueLevantem && !novoAtaqueCaveira && !caveiraApareceu && !padreCaveiraCaiuCabeca && !padreTomouDanoCaveira && !padreCarregandoNovoAtaqueRaio) {
           if (!somPadreIdleTocando) {
-            if (sonsAtivos) {
+            if (isSoundActive) {
               indexRandomSomPadreIdle = int(random(0, sonsPadreRaivaIdle.length));
               sonsPadreRaivaIdle[indexRandomSomPadreIdle].rewind();
               sonsPadreRaivaIdle[indexRandomSomPadreIdle].play();
@@ -352,7 +352,7 @@ public class Padre {
 
         if (novoAtaqueLevantem && !novoAtaqueCaveira && !caveiraApareceu && !padreCaveiraCaiuCabeca && !padreTomouDanoCaveira && !padreCarregandoNovoAtaqueRaio) {
           if (stepPadreRaivaLevantem == 0) {
-            if (sonsAtivos) {
+            if (isSoundActive) {
               sonsPadreLevantem[0].rewind();
               sonsPadreLevantem[0].play();
             }
@@ -403,7 +403,7 @@ public class Padre {
 
         if (caveiraApareceu && !padreCaveiraCaiuCabeca && !padreTomouDanoCaveira && !padreCarregandoNovoAtaqueRaio) {
           if (stepPadreRaivaCaveira == 0) {
-            if (sonsAtivos) {
+            if (isSoundActive) {
               sonsPadreCaveira[1].rewind();
               sonsPadreCaveira[1].play();
             }
@@ -478,7 +478,7 @@ public class Padre {
             padreCarregandoNovoAtaqueRaio = false;
             padreParouCarregarRaio = true;
             gatilhoNovoAtaqueRaio = false;
-            if (sonsAtivos) {
+            if (isSoundActive) {
               somPadreRaio.rewind();
               somPadreRaio.play();
             }
@@ -640,7 +640,7 @@ public class Padre {
     if ((vidaPadreRaivaAtual <= 0 || indexVidaPadreOsso == 0) && !padreMorreu) {
       padreMorreu = true;
       padreMorrendo = true;
-      if (sonsAtivos) {
+      if (isSoundActive) {
         somPadreMorreu.rewind();
         somPadreMorreu.play();
       }
@@ -890,12 +890,12 @@ void caveiraPadre() {
         padreCaveiraCaiuCabeca = true;
         if (indexVidaPadreOsso >= 1 && umOsso) {
           if (!padre.padreMudouForma) {
-            if (sonsAtivos) {
+            if (isSoundActive) {
               sonsPadreImpossivel[0].rewind();
               sonsPadreImpossivel[0].play();
             }
           } else {
-            if (sonsAtivos) {
+            if (isSoundActive) {
               sonsPadreImpossivel[1].rewind();
               sonsPadreImpossivel[1].play();
             }

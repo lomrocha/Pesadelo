@@ -7,14 +7,16 @@ AudioPlayer temaIgreja;
 AudioPlayer temaFazenda;
 AudioPlayer temaCidade;
 
-public enum GameState{FIRSTMAP, SECONDMAP, THIRDMAP, FIRSTBOSS, SECONDBOSS, THIRDBOSS, INITIALMENU, CONTROLSMENU, CREDITSMENU, WIN, GAMEOVER}
+public enum GameState {
+  FIRSTMAP, SECONDMAP, THIRDMAP, FIRSTBOSS, SECONDBOSS, THIRDBOSS, MAINMENU, CONTROLSMENU, CREDITSMENU, WIN, GAMEOVER
+}
 
 int gameState;
 int lastState;
 
-final int enemyPositionsFirstMap  [][] = new int [7][4];
-final int enemyPositionsSecondMap [][] = new int [7][4];
-final int enemyPositionsThirdMap  [][] = new int [7][4];
+final int[][] enemyPositionsFirstMap = new int [7][4];
+final int[][] enemyPositionsSecondMap = new int [7][4];
+final int[][] enemyPositionsThirdMap  = new int [7][4];
 
 int[] valoresXPrimeiroMapaBoss = {50, 720};
 int[] valoresYPrimeiroMapaBoss = {380, 380};
@@ -27,8 +29,10 @@ int[] valoresYTerceiroMapaBoss = {249, 401, 249, 401};
 
 boolean ativaBarraEspaco;
 
-boolean musicasAtivas = true;
-boolean sonsAtivos = true;
+boolean isMusicActive = true;
+boolean isSoundActive = true;
+
+MainMenu mm;
 
 void setup() {
   size(800, 600);
@@ -134,15 +138,15 @@ void setup() {
 
   pesadeloLogo = loadImage ("pesadeloLogo.png");
 
-  botaoJogar = loadImage ("jogar.png");
-  botaoBotoes = loadImage ("botoes.png");
-  botaoCreditos = loadImage ("creditos.png");
-  jogarMao = loadImage ("jogarMao.png");
-  botoesMao = loadImage ("botoesMao.png");
-  creditosMao = loadImage ("creditosMao.png");
+  playButton = loadImage ("jogar.png");
+  controlsButton = loadImage ("botoes.png");
+  creditsButton = loadImage ("creditos.png");
+  playHands = loadImage ("jogarMao.png");
+  controlsHands = loadImage ("botoesMao.png");
+  creditsHands = loadImage ("creditosMao.png");
 
-  botaoSom = loadImage ("botaoSom.png");
-  botaoMusica = loadImage ("botaoMusica.png");
+  soundButton = loadImage ("botaoSom.png");
+  musicButton = loadImage ("botaoMusica.png");
   botaoX = loadImage ("botaoX.png");
 
   imagemControles = loadImage ("controles.png");
@@ -323,7 +327,7 @@ void setup() {
   skeletonDogPositions();
   redSkeletonPositions();
 
-  gameState = GameState.INITIALMENU.ordinal();
+  gameState = GameState.MAINMENU.ordinal();
 
   totalInimigos = 0;
 
@@ -356,11 +360,9 @@ void setup() {
 
   weaponTotal = 0;
 
-  botaoXAparecendoSom = false;
-  sonsAtivos = true;
+  isSoundActive = true;
 
-  botaoXAparecendoMusica = false;
-  musicasAtivas = true;
+  isMusicActive = true;
 
   jLeiteMorreu = false;
   jLeiteMorrendo = false;
@@ -374,9 +376,12 @@ void setup() {
   coveiro = new Coveiro();
   fazendeiro = new Fazendeiro();
   padre = new Padre();
+  
+  mm = new MainMenu();
 }
 
 void draw() {
+  println(buttons.size());
   if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal()) {
     jogando();
   } else {
@@ -388,7 +393,7 @@ void keyPressed() {
   if (key == ESC) {
     key = 0;
     setup();
-    gameState = GameState.INITIALMENU.ordinal();
+    gameState = GameState.MAINMENU.ordinal();
     if (temaBoss.isPlaying()) {
       temaBoss.pause();
     }
@@ -413,8 +418,8 @@ void keyPressed() {
 
   if (key == ENTER) {
     if (gameState == GameState.FIRSTMAP.ordinal()) {
-      if (telaTutorialAndandoAtiva) {
-        telaTutorialAndandoAtiva = false;
+      if (movementTutorialScreenActive) {
+        movementTutorialScreenActive = false;
       }
     }
     if (gameState == GameState.FIRSTMAP.ordinal()) {
@@ -424,29 +429,28 @@ void keyPressed() {
     }
   }
 
-  if (gameState == GameState.INITIALMENU.ordinal()  ) {
-    if (key == '1') {
+  if (gameState == GameState.MAINMENU.ordinal()) {
+    switch(key) {
+    case '1':
       gameState = GameState.FIRSTMAP.ordinal();
-    }
-    if (key == '2') {
+      break;
+    case '2':
       gameState = GameState.SECONDMAP.ordinal();
-      cenarios.add(new Cenario(0, 2));
-      cenarios.add(new Cenario(-600, 2));
-    }
-    if (key == '3') {
+      break;
+    case '3':
       gameState = GameState.THIRDMAP.ordinal();
-    }
-    if (key == '4') {
+      break;
+    case '4':
       gameState = GameState.FIRSTBOSS.ordinal();
-    }
-    if (key == '5') {
+      break;
+    case '5':
       gameState = GameState.SECONDBOSS.ordinal();
-    }
-    if (key == '6') {
+      break;
+    case '6':
       gameState = GameState.THIRDBOSS.ordinal();
+      break;
     }
   }
-
 
   if (keyCode == RIGHT || key == 'd' || key == 'D') { 
     jLeiteDireita = true;
@@ -483,11 +487,22 @@ void keyPressed() {
   if (key == 'p' || key == 'P') {
     if (looping) {
       noLoop();
+      timeRemainingFood = (timeToGenerateFood + intervalToGenerateFood) - millis();
+      timeRemainingItem = (timeToGenerateItem + intervalToGenerateItem) - millis();
     } else {
       loop();
+      if (comidas.size() == 0) {
+        generateFood(timeRemainingFood);
+      }
+      if (itens.size() == 0 && item == 0) {
+        generateItem(timeRemainingItem);
+      }
     }
   }
 }
+
+int timeRemainingFood;
+int timeRemainingItem;
 
 void keyReleased() {
   if (keyCode == RIGHT || key == 'd' || key == 'D') {
@@ -509,40 +524,21 @@ void keyReleased() {
 }
 
 void mouseClicked() {
-  if (gameState == GameState.INITIALMENU.ordinal()) {
-    if (mouseX > 660 && mouseX < 720 && mouseY > 10 && mouseY < 60) {
-      if (!botaoXAparecendoSom) {
-        botaoXAparecendoSom = true;
-        sonsAtivos = false;
-      } else {
-        botaoXAparecendoSom = false;
-        sonsAtivos = true;
-      }
-    }
-    if (mouseX > 730 && mouseX < 790 && mouseY > 10 && mouseY < 60) {
-      if (!botaoXAparecendoMusica) {
-        botaoXAparecendoMusica = true;
-        musicasAtivas = false;
-      } else {
-        botaoXAparecendoMusica = false;
-        musicasAtivas = true;
-      }
-    }
-  }
-
   if (gameState == GameState.FIRSTMAP.ordinal()) {
-    if (telaTutorialAndandoAtiva) {
+    if (movementTutorialScreenActive) {
       if (mouseX > 584 && mouseX < 620 && mouseY > 139 && mouseY < 175) {
-        telaTutorialAndandoAtiva = false;
+        movementTutorialScreenActive = false;
       }
     }
-  }  
 
-  if (gameState == GameState.FIRSTMAP.ordinal()) {
     if (weaponTutorialScreenActive) {
       if (mouseX > 514 && mouseX < 550 && mouseY > 182 && mouseY < 218) {
         loop();
       }
     }
   }
+}
+
+void mouseReleased() {
+  hasClickedOnce = false;
 }

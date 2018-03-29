@@ -51,7 +51,7 @@ void generateItem(int timeAmount) {
 }
 
 void addItem() {
-  if (!telaTutorialAndandoAtiva) {
+  if (!movementTutorialScreenActive) {
     if (itemIndex >= 0 && itemIndex <= 4) {
       itens.add(new Pa());
     } else if (itemIndex >= 5 && itemIndex <= 9) {

@@ -8,7 +8,7 @@ int[] valoresInimigosXTerceiroMapaBoss = {25, 350, 679};
 
 void inimigosTodos() {
   if (!jLeiteMorreu) {
-    if (!telaTutorialAndandoAtiva) {
+    if (!movementTutorialScreenActive) {
       if (millis() > tempoGerarInimigo + 250) {
         if (gameState == GameState.FIRSTMAP.ordinal()) {
           indexInimigos = int(random(0, 2));

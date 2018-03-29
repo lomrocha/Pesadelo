@@ -55,9 +55,11 @@ public class EsqueletoChute extends Geral {
         hasLostHead = true;
         kickingSkeletonStep = 0;
       }
-    } else {
-      super.display();
+
+      return;
     }
+
+    super.display();
   }
 
   void update() {
@@ -68,12 +70,16 @@ public class EsqueletoChute extends Geral {
 
   void updateMovement() {
     if (!hasLostHead) {
-      setMovementY(1);
+      setMovementY(SCENERYMOVEMENT / 2);
       if (getX() != target.x) { 
         movementX = (getX() < target.x) ? 3 : -3;
-      } else {
-        movementX = 0;
+
+        return;
       }
+
+      movementX = 0;
+
+      return;
     } else {
       setMovementY(SCENERYMOVEMENT + 1);
       if (millis() > changeDirectionDelay + 250) {
@@ -100,7 +106,7 @@ void esqueletoChute() {
       }
     }
 
-    if (!telaTutorialAndandoAtiva) {
+    if (!movementTutorialScreenActive) {
       if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal() && esqueletosChute.size() < 2 && totalInimigos < 6) {
         esqueletoChuteC = int(random(0, 8));
         esqueletoChuteL = int(random(0, 12));
@@ -140,7 +146,7 @@ void esqueletoChute() {
   }
 }
 
-int kickingSkeletonPositions[][] = new int [8][12];
+final int[][] kickingSkeletonPositions = new int [8][12];
 
 void kickingSkeletonPositions() {
   kickingSkeletonPositions [0][0] = KICKINGSKELETON;

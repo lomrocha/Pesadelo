@@ -6,6 +6,7 @@ int timeToMoveClosingCredit;
 
 public class ClosingCredit {
   private PVector closingCredit = new PVector();
+  private int movementY;
 
   ClosingCredit(int y) {
     this.closingCredit.x = 0;
@@ -21,9 +22,11 @@ public class ClosingCredit {
       closingCredit.y = 1000;
     }
 
-    if (millis() > timeToMoveClosingCredit + 500) {
-      closingCredit.y -= CLOSINGCREDITMOVEMENT;
-    }
+    closingCredit.y -= movementY;
+  }
+
+  void updateMovement() {
+    movementY = (millis() > timeToMoveClosingCredit + 500) ? CLOSINGCREDITMOVEMENT : 0;
   }
 }
 
@@ -31,6 +34,7 @@ ArrayList<ClosingCredit> closingCredits = new ArrayList<ClosingCredit>();
 
 void closingCredit() {
   for (ClosingCredit cc : closingCredits) {
+    cc.updateMovement();
     cc.update();
     cc.display();
   }

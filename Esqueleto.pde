@@ -3,7 +3,7 @@ PImage skeletonShadow;
 
 final int SKELETON = 0;
 
-int[] valoresEsqueletoXPrimeiroMapaBoss = {200, 520};
+final int[] valoresEsqueletoXPrimeiroMapaBoss = {200, 520};
 
 public class Esqueleto extends Inimigo {
   public Esqueleto(int x, int y) {
@@ -55,7 +55,7 @@ void esqueleto() {
       }
     }
 
-    if (!telaTutorialAndandoAtiva) {
+    if (!movementTutorialScreenActive) {
       if (gameState == GameState.FIRSTMAP.ordinal() && esqueletos.size() < 2 && totalInimigos < 6) {
         esqueletoC = int(random(0, 7));
         esqueletoL = int(random(0, 4));

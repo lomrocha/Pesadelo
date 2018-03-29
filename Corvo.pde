@@ -1,22 +1,23 @@
 PImage skeletonCrow;
 PImage skeletonCrowShadow;
 
-public class Corvo extends Geral {
+class Corvo extends Geral {
   private PVector target = new PVector(jLeiteX, jLeiteY);
+  
   private int movementX;
 
   private int newTargetInterval;
 
   private boolean hasNewTarget;
 
-  public Corvo() {
-    setX(360);
-    setY(int(random(-300, -1000)));
+  Corvo() {
+    this.setX(360);
+    this.setY(int(random(-300, -1000)));
 
     setValues();
   }
 
-  public Corvo(int x, int y) {
+  Corvo(int x, int y) {
     this.setX(x);
     this.setY(y);
 
@@ -43,14 +44,13 @@ public class Corvo extends Geral {
   }
 
   void updateMovement() {
+    setMovementY(3);
     if (getX() != target.x) {
       movementX = (getX() < target.x) ? 3 : -3;
+      return;
     }
-    else {
-      movementX = 0;
-    }
-    
-    setMovementY(3);
+
+    movementX = 0;
   }
 
   void updateTarget() {
@@ -70,9 +70,9 @@ public class Corvo extends Geral {
   boolean hasCollided() {
     if (getX() + 95 > jLeiteX && getX() + 25 < jLeiteX + 63 && getY() + 86 > jLeiteY && getY() < jLeiteY + 126) {
       return true;
-    } else {
-      return false;
     }
+
+    return false;
   }
 }
 
@@ -89,7 +89,7 @@ void corvo() {
       }
     }
 
-    if (!telaTutorialAndandoAtiva) {
+    if (!movementTutorialScreenActive) {
       if (gameState == GameState.SECONDMAP.ordinal() && corvos.size() < 1) {
         corvos.add(new Corvo());
       }

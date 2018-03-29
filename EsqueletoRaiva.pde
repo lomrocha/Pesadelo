@@ -59,7 +59,7 @@ void esqueletoRaiva() {
       }
     }
 
-    if (!telaTutorialAndandoAtiva) {
+    if (!movementTutorialScreenActive) {
       if (gameState == GameState.THIRDMAP.ordinal() && esqueletosRaiva.size() < 2 && totalInimigos < 6) {
         esqueletoRaivaC = int(random(0, 7));
         esqueletoRaivaL = int(random(0, 4));

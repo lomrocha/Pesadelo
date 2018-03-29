@@ -38,7 +38,7 @@ void armas() {
 }
 
 void generateItemIndex() {
-  if (!telaTutorialAndandoAtiva) {
+  if (!movementTutorialScreenActive) {
     if (!hasItemIndexChanged) {
       itemIndex = int(random(0, 10));
       hasItemIndexChanged = true;
@@ -152,13 +152,15 @@ boolean oneWeapon;
 
 void weapon() {
   if (!oneWeapon) {
-    if (item == WHIP) {
+    switch(item) {
+    case WHIP: 
       armas.add(new ChicoteAtaque());
-    }
-    if (item == SHOVEL) {
+      break;
+    case SHOVEL:
       armas.add(new PaAtaque());
+      break;
     }
-    
+
     weaponTotal--;
     oneWeapon = true;
   }
@@ -174,7 +176,7 @@ void arma() {
     }
     if (gameState == GameState.FIRSTBOSS.ordinal()) {
       if (a.hasHitCoveiro() && !a.getDamageBoss()) {
-        if (sonsAtivos) {
+        if (isSoundActive) {
           indexRandomSomCoveiroTomandoDano = int(random(0, sonsCoveiroTomandoDano.length));
           sonsCoveiroTomandoDano[indexRandomSomCoveiroTomandoDano].rewind();
           sonsCoveiroTomandoDano[indexRandomSomCoveiroTomandoDano].play();
@@ -185,7 +187,7 @@ void arma() {
     }
     if (gameState == GameState.SECONDBOSS.ordinal()) {
       if (a.hasHitFazendeiro() && !a.getDamageBoss()) {
-        if (sonsAtivos) {
+        if (isSoundActive) {
           indexRandomSomFazendeiroTomandoDano = int(random(0, sonsFazendeiroTomandoDano.length));
           sonsFazendeiroTomandoDano[indexRandomSomFazendeiroTomandoDano].rewind();
           sonsFazendeiroTomandoDano[indexRandomSomFazendeiroTomandoDano].play();
@@ -197,7 +199,7 @@ void arma() {
     if (gameState == GameState.THIRDBOSS.ordinal()) {
       if (a.hasHitPadre() && !a.getDamageBoss()) {
         if (vidaPadreAtual > 0) {
-          if (sonsAtivos) {
+          if (isSoundActive) {
             indexRandomSomPadreTomandoDano = int(random(0, sonsPadreTomandoDano.length));
             sonsPadreTomandoDano[indexRandomSomPadreTomandoDano].rewind();
             sonsPadreTomandoDano[indexRandomSomPadreTomandoDano].play();
@@ -205,7 +207,7 @@ void arma() {
           vidaPadreAtual -= 2;
           a.setDamageBoss(true);
         } else {
-          if (sonsAtivos) {
+          if (isSoundActive) {
             indexRandomSomPadreTomandoDano = int(random(0, sonsPadreRaivaTomandoDano.length));
             sonsPadreRaivaTomandoDano[indexRandomSomPadreTomandoDano].rewind();
             sonsPadreRaivaTomandoDano[indexRandomSomPadreTomandoDano].play();

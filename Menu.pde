@@ -1,17 +1,18 @@
 AudioPlayer temaMenu;
 
-PImage backgroundMenu; 
-PImage spriteBackgroundMenu;
-PImage pesadeloLogo;
-PImage botaoJogar;
-PImage jogarMao;
-PImage botaoBotoes; 
-PImage botoesMao;
-PImage botaoCreditos;
-PImage creditosMao;
+PImage playButton;
+PImage playHands;
+
+PImage controlsButton; 
+PImage controlsHands;
+
+PImage creditsButton;
+PImage creditsHands;
+
 PImage creditos;
-PImage botaoSom;
-PImage botaoMusica;
+
+PImage soundButton;
+PImage musicButton;
 PImage botaoX;
 
 PImage imagemControles;
@@ -22,72 +23,23 @@ PImage menuThumbsUp;
 PImage telaVitoria;
 PImage telaGameOver;
 
-int stepBackgroundMenu;
-int tempoSpriteBackgroundMenu;
-
-boolean botaoXAparecendoSom;
-boolean botaoXAparecendoMusica;
-
 void menu() {
   winLose();
-  if (gameState == GameState.INITIALMENU.ordinal()) {
-    if (millis() > tempoSpriteBackgroundMenu + 140) {
-      spriteBackgroundMenu = backgroundMenu.get(stepBackgroundMenu, 0, 800, 600);
-      stepBackgroundMenu = stepBackgroundMenu % 6400 + 800;
-      tempoSpriteBackgroundMenu = millis();
-    }
-    if (stepBackgroundMenu == backgroundMenu.width) {
-      stepBackgroundMenu = 0;
-    }
-
-    background(spriteBackgroundMenu);
-    image(pesadeloLogo, 231, 40);
-
-    if (mouseX > 300 && mouseX < 500 && mouseY > 300 && mouseY < 377) {
-      image(jogarMao, 271, 300);
-      if (mousePressed) {
-        setup();
-        gameState = GameState.FIRSTMAP.ordinal();
-        telaTutorialAndandoAtiva = true;
-        cenarios.add(new Cenario(0, 0));
-        cenarios.add(new Cenario(-600, 0));
-        generateItem(5000);
-        generateFood(5000);
-        //begone.play();
-      }
+  if (gameState == GameState.MAINMENU.ordinal()) {
+    if (mm == null) {
+      mm = new MainMenu();
     } else {
-      image(botaoJogar, 300, 300, 200, 77);
-    }
-
-    if (mouseX > 300 && mouseX < 500 && mouseY > 400 && mouseY < 477) {
-      image(botoesMao, 271, 400);
-      if (mousePressed) {
-        gameState = GameState.CONTROLSMENU.ordinal();
+      if (buttons.size() == 0) {
+        mm.addButtons();
       }
-    } else {
-      image(botaoBotoes, 300, 400, 200, 77);
+      mm.display();
+      mm.update();
     }
-
-    if (mouseX > 300 && mouseX < 500 && mouseY > 500 && mouseY < 577) {
-      image(creditosMao, 271, 500);
-      if (mousePressed) {
-        gameState = GameState.CREDITSMENU.ordinal();
-        timeToMoveClosingCredit = millis();
-      }
-    } else {
-      image(botaoCreditos, 300, 500, 200, 77);
+  } else {
+    if (buttons.size() != 0) {
+      mm.destroyComponents();
     }
-
-    image(botaoSom, 660, 10);
-    image(botaoMusica, 730, 10);
-
-    //MOSTRA O X SOBRE OS BOTÕES DEPOIS QUE O JOGADOR CLICA SOBRE ELES.
-    if (botaoXAparecendoSom) {
-      image(botaoX, 660, 10);
-    }
-    if (botaoXAparecendoMusica) {
-      image(botaoX, 730, 10);
-    }
+    mm = null;
   }
 
   // Botões.
@@ -95,18 +47,8 @@ void menu() {
     background(51);
 
     image(imagemControles, 0, 0);
-    if (millis() > tempoSpriteJLeiteMovimento + 75) { 
-      spriteJLeiteMovimento = jLeiteMovimento.get(stepJLeiteMovimento, 0, 63, 126); 
-      stepJLeiteMovimento = stepJLeiteMovimento % 378 + 63;
-      image(spriteJLeiteMovimento, 250, 90); 
-      tempoSpriteJLeiteMovimento = millis();
-    } else {
-      image(spriteJLeiteMovimento, 250, 90);
-    }
 
-    if (stepJLeiteMovimento == jLeiteMovimento.width) {
-      stepJLeiteMovimento = 0;
-    }
+    playerWalkingSprite(250, 90);
 
     if (millis() > tempoSpriteJLeiteItem + 150) { 
       spriteJLeiteItem = jLeiteItem.get(stepJLeiteItem, 0, 94, 126); 
@@ -127,13 +69,15 @@ void menu() {
     closingCredit();
 
     if (closingCredits.size() == 0) {
+      timeToMoveClosingCredit = millis();
       closingCredits.add(new ClosingCredit(SECONDCLOSINGCREDITY));
       closingCredits.add(new ClosingCredit(FIRSTCLOSINGCREDITY));
     }
   }
 
+  // Bosses
   if (gameState == GameState.FIRSTBOSS.ordinal()) {
-    if (musicasAtivas) {
+    if (isMusicActive) {
       temaBoss.play();
     }
 
@@ -147,7 +91,7 @@ void menu() {
   }
 
   if (gameState == GameState.SECONDBOSS.ordinal()) {
-    if (musicasAtivas) {
+    if (isMusicActive) {
       temaBoss.play();
     }
     background(bossSceneryImages[1]);
@@ -160,7 +104,7 @@ void menu() {
   }
 
   if (gameState == GameState.THIRDBOSS.ordinal()) {
-    if (musicasAtivas) {
+    if (isMusicActive) {
       temaBoss.play();
     }
 
@@ -180,25 +124,29 @@ void menu() {
 
 PImage telaTutorialAndando, telaTutorialPedra, telaTutorialPedraSeta, telaTutorialX;
 
-boolean telaTutorialAndandoAtiva, weaponTutorialScreenActive;
+boolean movementTutorialScreenActive, weaponTutorialScreenActive;
 
 void telaTutorialAndando() {
   image (telaTutorialAndando, 187.5, 119);
 
+  playerWalkingSprite(470, 260);
+
+  image(telaTutorialX, 584, 139);
+}
+
+void playerWalkingSprite(int spriteX, int spriteY) {
   if (millis() > tempoSpriteJLeiteMovimento + 75) { 
     spriteJLeiteMovimento = jLeiteMovimento.get(stepJLeiteMovimento, 0, 63, 126); 
     stepJLeiteMovimento = stepJLeiteMovimento % 378 + 63;
-    image(spriteJLeiteMovimento, 470, 260); 
+    image(spriteJLeiteMovimento, spriteX, spriteY); 
     tempoSpriteJLeiteMovimento = millis();
   } else {
-    image(spriteJLeiteMovimento, 470, 260);
+    image(spriteJLeiteMovimento, spriteX, spriteY);
   }
 
   if (stepJLeiteMovimento == jLeiteMovimento.width) {
     stepJLeiteMovimento = 0;
   }
-
-  image(telaTutorialX, 584, 139);
 }
 
 void weaponTutorialScreen() {
@@ -222,7 +170,7 @@ void menuHand() {
         }
       }
 
-      gameState = GameState.INITIALMENU.ordinal();
+      gameState = GameState.MAINMENU.ordinal();
     }
   } else {
     image(menuPointingBack, 20, 520);

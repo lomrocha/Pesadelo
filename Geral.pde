@@ -96,16 +96,15 @@ public class MaisGeral {
     if (millis() > spriteTime + spriteInterval) {
       sprite = spriteImage.get(step, 0, spriteWidth, spriteHeight);
       step = step % spriteImage.width + spriteWidth;
-      image(sprite, x, y);
       spriteTime = millis();
-    } else {
-      image(sprite, x, y);
     }
 
     if (step == spriteImage.width) {
       step = 0;
       deleteObject = true;
     }
+
+    image(sprite, x, y);
   }
 }
 
