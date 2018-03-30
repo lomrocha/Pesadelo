@@ -6,7 +6,7 @@ int coveiroHitpointsMinimum;
 int coveiroBonesIndex;
 
 void vidaCoveiro() {
-  genericHitpointsLayout(bossHitpointsLayoutBackground, bossHitpointsLayoutBackgroundX, bossHitpointsLayoutBackgroundY, coveiroHitpointsMinimum, bossHitpointsBarX, bossHitpointsBarXStart, coveiroHitpointsCurrent, bossHitpointsBar, bossHitpointsBarY, bossHitpointsInterval, vidaCoveiroLayout, bossHitpointsLayoutX, bossHitpointsLayoutY);
+  handler.hitpointsLayoutHandler(bossHitpointsLayoutBackground, bossHPBackgroundX, bossHPBackgroundY, coveiroHitpointsMinimum, bossHPBarx, bossHPBarXStart, coveiroHitpointsCurrent, bossHitpointsBar, bossHPBarY, bossHPInterval, vidaCoveiroLayout, bossHPLayoutX, bossHPLayoutY);
   image(bossBonesLayout[coveiroBonesIndex], 84, 54);
 }
 
@@ -318,7 +318,7 @@ public class Coveiro {
       if (ataquePaAcontecendo && dist(coveiroX, coveiroY, jLeiteX, jLeiteY) < 200) {
         if (millis() > tempoDanoPa + 775) {
           if (!jLeiteImune) {
-            playerHitpointsCurrent -= 5;
+            playerHPCurrent -= 5;
             jLeiteImune = true;
             tempoImune = millis();
           }
@@ -470,7 +470,7 @@ public class Fenda {
   void colisao() {
     if (jLeiteX + 63 > fendaX + 40 && jLeiteX < fendaX + 220 && jLeiteY > fendaY - 50) {
       if (causouDanoJLeite && !jLeiteImune) {
-        playerHitpointsCurrent -= 4;
+        playerHPCurrent -= 4;
         jLeiteImune = true;
         tempoImune = millis();
       }
@@ -575,7 +575,7 @@ void lapideAtaque() {
     }
 
     if (l.acertouJLeite() && !jLeiteImune) {
-      playerHitpointsCurrent -= 5;
+      playerHPCurrent -= 5;
       jLeiteImune = true;
       tempoImune = millis();
     }

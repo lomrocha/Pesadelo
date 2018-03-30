@@ -29,13 +29,3 @@ public class ClosingCredit {
     movementY = (millis() > timeToMoveClosingCredit + 500) ? CLOSINGCREDITMOVEMENT : 0;
   }
 }
-
-ArrayList<ClosingCredit> closingCredits = new ArrayList<ClosingCredit>();
-
-void closingCredit() {
-  for (ClosingCredit cc : closingCredits) {
-    cc.updateMovement();
-    cc.update();
-    cc.display();
-  }
-}

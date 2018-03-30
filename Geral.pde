@@ -4,7 +4,6 @@ public class MaisGeral {
 
   private int x;
   private int y;
-  private int movementY;
 
   private int step;
   private int spriteTime;
@@ -12,8 +11,6 @@ public class MaisGeral {
 
   private int spriteWidth;
   private int spriteHeight;
-
-  private boolean deleteObject;
 
   public PImage getSprite() {
     return sprite;
@@ -41,13 +38,6 @@ public class MaisGeral {
   }
   protected void setY(int y) {
     this.y = y;
-  }
-
-  public int getMovementY() {
-    return movementY;
-  }
-  protected void setMovementY(int movementY) {
-    this.movementY = movementY;
   }
 
   public int getStep() {
@@ -85,30 +75,26 @@ public class MaisGeral {
     this.spriteHeight = spriteHeight;
   }
 
-  public boolean getDeleteObject() {
-    return deleteObject;
-  }
-  protected void setDeleteObject(boolean deleteObject) {
-    this.deleteObject = deleteObject;
-  }
-
   void display() {
-    if (millis() > spriteTime + spriteInterval) {
-      sprite = spriteImage.get(step, 0, spriteWidth, spriteHeight);
-      step = step % spriteImage.width + spriteWidth;
-      spriteTime = millis();
-    }
+    handler.spriteHandler(this);
+    stepHandler();
+  }
 
-    if (step == spriteImage.width) {
-      step = 0;
-      deleteObject = true;
-    }
-
-    image(sprite, x, y);
+  void stepHandler() {
+    handler.stepHandler(this);
   }
 }
 
 public class Geral extends MaisGeral {
+  private int movementY;
+
+  public int getMovementY() {
+    return movementY;
+  }
+  protected void setMovementY(int movementY) {
+    this.movementY = movementY;
+  }
+
   void update() {
     setY(getY() + getMovementY());
   }

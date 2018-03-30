@@ -73,5 +73,3 @@ public abstract class Button {
     return false;
   }
 }
-
-ArrayList<Button> buttons = new ArrayList<Button>();

@@ -10,7 +10,7 @@ public class PaAtaque extends Arma {
     setSpriteWidth(234);
     setSpriteHeight(173);
 
-    setDeleteObject(false);
+    setDeleteWeapon(false);
     setDamageBoss(false);
 
     setFirstCollisionX(jLeiteX + 160);

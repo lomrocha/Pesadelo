@@ -29,49 +29,30 @@ void menu() {
     if (mm == null) {
       mm = new MainMenu();
     } else {
-      if (buttons.size() == 0) {
-        mm.addButtons();
-      }
-      mm.display();
-      mm.update();
+      mm.images();
+      mm.buttons();
     }
-  } else {
-    if (buttons.size() != 0) {
-      mm.destroyComponents();
-    }
-    mm = null;
   }
 
   // Botões.
   if (gameState == GameState.CONTROLSMENU.ordinal()) {
-    background(51);
-
-    image(imagemControles, 0, 0);
-
-    playerWalkingSprite(250, 90);
-
-    if (millis() > tempoSpriteJLeiteItem + 150) { 
-      spriteJLeiteItem = jLeiteItem.get(stepJLeiteItem, 0, 94, 126); 
-      stepJLeiteItem = stepJLeiteItem % 282 + 94;
-      image(spriteJLeiteItem, 540, 60); 
-      tempoSpriteJLeiteItem = millis();
+    if (ctrl == null) {
+      ctrl = new Controls();
     } else {
-      image(spriteJLeiteItem, 540, 60);
-    }
-
-    if (stepJLeiteItem == jLeiteItem.width) {
-      stepJLeiteItem = 0;
+      background(51);
+      ctrl.images();
+      ctrl.sprites();
+      ctrl.button();
     }
   }
 
   // Créditos
   if (gameState == GameState.CREDITSMENU.ordinal()) {
-    closingCredit();
-
-    if (closingCredits.size() == 0) {
-      timeToMoveClosingCredit = millis();
-      closingCredits.add(new ClosingCredit(SECONDCLOSINGCREDITY));
-      closingCredits.add(new ClosingCredit(FIRSTCLOSINGCREDITY));
+    if (credits == null) {
+      credits = new Credits();
+    } else {
+      credits.credits();
+      credits.button();
     }
   }
 
@@ -117,7 +98,7 @@ void menu() {
     caixaNumeroItem();
   }
 
-  if (gameState >= GameState.CONTROLSMENU.ordinal() && gameState <= GameState.GAMEOVER.ordinal()) {
+  if (gameState >= GameState.WIN.ordinal() && gameState <= GameState.GAMEOVER.ordinal()) {
     menuHand();
   }
 }
@@ -137,16 +118,15 @@ void telaTutorialAndando() {
 void playerWalkingSprite(int spriteX, int spriteY) {
   if (millis() > tempoSpriteJLeiteMovimento + 75) { 
     spriteJLeiteMovimento = jLeiteMovimento.get(stepJLeiteMovimento, 0, 63, 126); 
-    stepJLeiteMovimento = stepJLeiteMovimento % 378 + 63;
-    image(spriteJLeiteMovimento, spriteX, spriteY); 
+    stepJLeiteMovimento = stepJLeiteMovimento % 378 + 63; 
     tempoSpriteJLeiteMovimento = millis();
-  } else {
-    image(spriteJLeiteMovimento, spriteX, spriteY);
   }
 
   if (stepJLeiteMovimento == jLeiteMovimento.width) {
     stepJLeiteMovimento = 0;
   }
+
+  image(spriteJLeiteMovimento, spriteX, spriteY);
 }
 
 void weaponTutorialScreen() {
@@ -164,12 +144,6 @@ void menuHand() {
   if (mouseX > 20 && mouseX < 125 && mouseY > 520 && mouseY < 573) {
     image(menuThumbsUp, 20, 520);
     if (mousePressed) {
-      if (gameState == GameState.CREDITSMENU.ordinal()) {
-        for (int i = closingCredits.size() - 1; i >= 0; --i) {
-          closingCredits.remove(closingCredits.get(i));
-        }
-      }
-
       gameState = GameState.MAINMENU.ordinal();
     }
   } else {

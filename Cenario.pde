@@ -6,12 +6,13 @@ PImage fence;
 
 final int SCENERYMOVEMENT = 2;
 
-public class Cenario {
-private PVector scenery = new PVector();
+public class Scenery {
+  private PVector scenery = new PVector();
+  private int movementY;
 
   private int sceneryIndex;
 
-  public Cenario(int y, int sceneryIndex) {
+  public Scenery(int y, int sceneryIndex) {
     this.scenery.x = 0;
     this.scenery.y = y;
     this.sceneryIndex = sceneryIndex;
@@ -25,15 +26,19 @@ private PVector scenery = new PVector();
     if (scenery.y > height) {
       scenery.y = -600;
     }
-    
-    scenery.y += SCENERYMOVEMENT;
+
+    scenery.y += movementY;
+  }
+  
+  void updateMovement(){
+    movementY = SCENERYMOVEMENT;
   }
 }
 
-ArrayList<Cenario> cenarios = new ArrayList<Cenario>();
+ArrayList<Scenery> cenarios = new ArrayList<Scenery>();
 
 void cenario() {
-  for (Cenario c : cenarios) {
+  for (Scenery c : cenarios) {
     c.update();
     c.display();
   }

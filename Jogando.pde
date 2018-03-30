@@ -4,8 +4,8 @@ void jogando() {
   if (gameState == GameState.FIRSTMAP.ordinal()) {
     if (!isFirstMapSet) {
       movementTutorialScreenActive = true;
-      cenarios.add(new Cenario(0, 0));
-      cenarios.add(new Cenario(-600, 0));
+      cenarios.add(new Scenery(0, 0));
+      cenarios.add(new Scenery(-600, 0));
       generateItem(5000);
       generateFood(5000);
       isFirstMapSet = true;

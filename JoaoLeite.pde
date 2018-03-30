@@ -12,9 +12,9 @@ PImage sombraJLeite;
 float tempoItem;
 float tempoItemAtivo;
 
-int playerHitpointsCurrent;
-int prayerHitpointsMaximum;
-int playerHitpointsMinimum;
+int playerHPCurrent;
+int prayerHPMaximum;
+int playerHPMinimum;
 
 int jLeiteX, jLeiteY; 
 
@@ -43,7 +43,7 @@ boolean imortalidade;
 
 void jLeite() {
   if (imortalidade) {
-    playerHitpointsCurrent = 15;
+    playerHPCurrent = 15;
   }
 
   if (finalMapa) {

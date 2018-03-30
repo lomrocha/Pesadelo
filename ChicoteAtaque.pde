@@ -10,7 +10,7 @@ public class ChicoteAtaque extends Arma {
     setSpriteWidth(234);
     setSpriteHeight(278);
 
-    setDeleteObject(false);
+    setDeleteWeapon(false);
     setDamageBoss(false);
 
     setFirstCollisionX(jLeiteX + 86);

@@ -143,8 +143,8 @@ void foods() {
 }
 
 void heal(int amount, Comida c) {
-  while (playerHitpointsCurrent < prayerHitpointsMaximum && c.amountRecovered < amount) {
+  while (playerHPCurrent < prayerHPMaximum && c.amountRecovered < amount) {
     c.amountRecovered++;
-    playerHitpointsCurrent++;
+    playerHPCurrent++;
   }
 }

@@ -49,19 +49,13 @@ void generateItemIndex() {
 ArrayList<Arma> armas = new ArrayList<Arma>();
 
 public abstract class Arma extends MaisGeral {
-  private boolean damageBoss;
-
   private int firstCollisionX;
   private int secondCollisionX;
   private int firstCollisionY;
   private int secondCollisionY;
 
-  public boolean getDamageBoss() {
-    return damageBoss;
-  }
-  protected void setDamageBoss(boolean damageBoss) {
-    this.damageBoss = damageBoss;
-  }
+  private boolean deleteWeapon;
+  private boolean damageBoss;
 
   public int getFirstCollisionX() {
     return firstCollisionX;
@@ -89,6 +83,30 @@ public abstract class Arma extends MaisGeral {
   }
   protected void setSecondCollisionY(int secondCollisionY) {
     this.secondCollisionY = secondCollisionY;
+  }
+
+  public boolean getDeleteWeapon() {
+    return deleteWeapon;
+  } 
+  protected void setDeleteWeapon(boolean deleteWeapon) {
+    this.deleteWeapon = deleteWeapon;
+  }
+
+  public boolean getDamageBoss() {
+    return damageBoss;
+  }
+  protected void setDamageBoss(boolean damageBoss) {
+    this.damageBoss = damageBoss;
+  }
+
+  void display() {    
+    super.display();
+  }
+
+  void stepHandler() {
+    if (getStep() == getSpriteImage().width) {
+      this.deleteWeapon = true;
+    }
   }
 
   abstract void update();
@@ -171,7 +189,8 @@ void arma() {
     Arma a = armas.get(i);
     a.update();
     a.display();
-    if (a.getDeleteObject()) {
+    println("Step: " + a.getStep() + "\nDeleteWeapon: " + a.getDeleteWeapon());
+    if (a.getDeleteWeapon()) {
       armas.remove(a);
     }
     if (gameState == GameState.FIRSTBOSS.ordinal()) {

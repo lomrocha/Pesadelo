@@ -6,7 +6,7 @@ int fazendeiroHitpointsMinimum;
 int fazendeiroBonesIndex;
 
 void vidaFazendeiro() {
-  genericHitpointsLayout(bossHitpointsLayoutBackground, bossHitpointsLayoutBackgroundX, bossHitpointsLayoutBackgroundY, fazendeiroHitpointsMinimum, bossHitpointsBarX, bossHitpointsBarXStart, fazendeiroHitpointsCurrent, bossHitpointsBar, bossHitpointsBarY, bossHitpointsInterval, vidaFazendeiroLayout, bossHitpointsLayoutX, bossHitpointsLayoutY);
+  handler.hitpointsLayoutHandler(bossHitpointsLayoutBackground, bossHPBackgroundX, bossHPBackgroundY, fazendeiroHitpointsMinimum, bossHPBarx, bossHPBarXStart, fazendeiroHitpointsCurrent, bossHitpointsBar, bossHPBarY, bossHPInterval, vidaFazendeiroLayout, bossHPLayoutX, bossHPLayoutY);
   image(bossBonesLayout[fazendeiroBonesIndex], 84, 54);
 }
 
@@ -359,7 +359,7 @@ public class Fazendeiro {
     if (ataqueFoiceAcontecendo && dist(fazendeiroX, fazendeiroY, jLeiteX, jLeiteY) < 100) {
       if (millis() > tempoDanoFoice + 310) {
         if (!jLeiteImune) {
-          playerHitpointsCurrent -= 3;
+          playerHPCurrent -= 3;
           jLeiteImune = true;
           tempoImune = millis();
         }
@@ -542,7 +542,7 @@ void mimosa() {
     }
 
     if (m.acertouJLeite() && !jLeiteImune) {
-      playerHitpointsCurrent -= 2;
+      playerHPCurrent -= 2;
       jLeiteImune = true;
       tempoImune = millis();
       if (isSoundActive) {
@@ -736,7 +736,7 @@ void pneu() {
         somAcertouPneuJLeite.rewind();
         somAcertouPneuJLeite.play();
       }
-      playerHitpointsCurrent -= 5;
+      playerHPCurrent -= 5;
       jLeiteImune = true;
       tempoImune = millis();
     }
