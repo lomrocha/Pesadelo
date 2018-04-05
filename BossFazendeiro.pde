@@ -1,12 +1,13 @@
-PImage vidaFazendeiroLayout;
+PImage fazendeiroHPLayout;
 
-int fazendeiroHitpointsCurrent;
+int fazendeiroCurrentHP;
 int fazendeiroHitpointsMinimum;
 
 int fazendeiroBonesIndex;
 
 void vidaFazendeiro() {
-  handler.hitpointsLayoutHandler(bossHitpointsLayoutBackground, bossHPBackgroundX, bossHPBackgroundY, fazendeiroHitpointsMinimum, bossHPBarx, bossHPBarXStart, fazendeiroHitpointsCurrent, bossHitpointsBar, bossHPBarY, bossHPInterval, vidaFazendeiroLayout, bossHPLayoutX, bossHPLayoutY);
+  fazendeiroHP.update();
+  fazendeiroHP.display();
   image(bossBonesLayout[fazendeiroBonesIndex], 84, 54);
 }
 
@@ -359,7 +360,7 @@ public class Fazendeiro {
     if (ataqueFoiceAcontecendo && dist(fazendeiroX, fazendeiroY, jLeiteX, jLeiteY) < 100) {
       if (millis() > tempoDanoFoice + 310) {
         if (!jLeiteImune) {
-          playerHPCurrent -= 3;
+          playerCurrentHP -= 3;
           jLeiteImune = true;
           tempoImune = millis();
         }
@@ -396,7 +397,7 @@ public class Fazendeiro {
   }
 
   void fazendeiroMorte() {
-    if ((fazendeiroHitpointsCurrent <= 0 || fazendeiroBonesIndex == 0) && !fazendeiroMorreu) {
+    if ((fazendeiroCurrentHP <= 0 || fazendeiroBonesIndex == 0) && !fazendeiroMorreu) {
       fazendeiroMorreu = true;
       fazendeiroMorrendo = true;
       if (isSoundActive) {
@@ -542,7 +543,7 @@ void mimosa() {
     }
 
     if (m.acertouJLeite() && !jLeiteImune) {
-      playerHPCurrent -= 2;
+      playerCurrentHP -= 2;
       jLeiteImune = true;
       tempoImune = millis();
       if (isSoundActive) {
@@ -736,7 +737,7 @@ void pneu() {
         somAcertouPneuJLeite.rewind();
         somAcertouPneuJLeite.play();
       }
-      playerHPCurrent -= 5;
+      playerCurrentHP -= 5;
       jLeiteImune = true;
       tempoImune = millis();
     }

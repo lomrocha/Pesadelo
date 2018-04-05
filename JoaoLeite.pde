@@ -12,7 +12,7 @@ PImage sombraJLeite;
 float tempoItem;
 float tempoItemAtivo;
 
-int playerHPCurrent;
+int playerCurrentHP;
 int prayerHPMaximum;
 int playerHPMinimum;
 
@@ -43,7 +43,7 @@ boolean imortalidade;
 
 void jLeite() {
   if (imortalidade) {
-    playerHPCurrent = 15;
+    playerCurrentHP = 15;
   }
 
   if (finalMapa) {
@@ -69,7 +69,7 @@ void jLeite() {
     }
   }
 
-  if (playerHitpointsCurrent < 0 && !jLeiteMorreu) {
+  if (playerCurrentHP < 0 && !jLeiteMorreu) {
     jLeiteMorreu = true;
     jLeiteMorrendo = true;
     tempoMorto = millis();
@@ -114,7 +114,7 @@ void jLeite() {
 
   if (jLeiteMorreu && millis() > tempoMorto + 2500) {
     if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal()) {
-      setup();
+      variablesPreLoad();
       gameState = GameState.MAINMENU.ordinal();
     } else if (gameState >= GameState.FIRSTBOSS.ordinal() && gameState <= GameState.THIRDBOSS.ordinal()) {
       lastState = gameState;

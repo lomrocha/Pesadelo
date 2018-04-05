@@ -99,10 +99,6 @@ public abstract class Arma extends MaisGeral {
     this.damageBoss = damageBoss;
   }
 
-  void display() {    
-    super.display();
-  }
-
   void stepHandler() {
     if (getStep() == getSpriteImage().width) {
       this.deleteWeapon = true;
@@ -189,7 +185,6 @@ void arma() {
     Arma a = armas.get(i);
     a.update();
     a.display();
-    println("Step: " + a.getStep() + "\nDeleteWeapon: " + a.getDeleteWeapon());
     if (a.getDeleteWeapon()) {
       armas.remove(a);
     }
@@ -200,7 +195,7 @@ void arma() {
           sonsCoveiroTomandoDano[indexRandomSomCoveiroTomandoDano].rewind();
           sonsCoveiroTomandoDano[indexRandomSomCoveiroTomandoDano].play();
         }
-        coveiroHitpointsCurrent -= 2;
+        coveiroCurrentHP -= 2;
         a.setDamageBoss(true);
       }
     }
@@ -211,19 +206,19 @@ void arma() {
           sonsFazendeiroTomandoDano[indexRandomSomFazendeiroTomandoDano].rewind();
           sonsFazendeiroTomandoDano[indexRandomSomFazendeiroTomandoDano].play();
         }
-        fazendeiroHitpointsCurrent -= 2;
+        fazendeiroCurrentHP -= 2;
         a.setDamageBoss(true);
       }
     }
     if (gameState == GameState.THIRDBOSS.ordinal()) {
       if (a.hasHitPadre() && !a.getDamageBoss()) {
-        if (vidaPadreAtual > 0) {
+        if (padreCurrentHP > 0) {
           if (isSoundActive) {
             indexRandomSomPadreTomandoDano = int(random(0, sonsPadreTomandoDano.length));
             sonsPadreTomandoDano[indexRandomSomPadreTomandoDano].rewind();
             sonsPadreTomandoDano[indexRandomSomPadreTomandoDano].play();
           }
-          vidaPadreAtual -= 2;
+          padreCurrentHP -= 2;
           a.setDamageBoss(true);
         } else {
           if (isSoundActive) {
@@ -231,7 +226,7 @@ void arma() {
             sonsPadreRaivaTomandoDano[indexRandomSomPadreTomandoDano].rewind();
             sonsPadreRaivaTomandoDano[indexRandomSomPadreTomandoDano].play();
           }
-          vidaPadreRaivaAtual -= 2;
+          madPadreCurrentHP -= 2;
           a.setDamageBoss(true);
         }
       }

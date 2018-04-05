@@ -45,7 +45,8 @@ void jogando() {
   jLeite(); 
   foodAll();
   playerHitpoints();
-  caixaNumeroItem();
+  ib.updateItemImage();
+  ib.display();
   if (movementTutorialScreenActive) {
     telaTutorialAndando();
   }

@@ -174,14 +174,14 @@ void imagesPreLoad() {
 
   hitInimigos = loadImage ("hitInimigos.png");
 
-  bossHitpointsLayoutBackground = loadImage ("vidaBossesLayoutBackground.png");
-  bossHitpointsBar = loadImage ("vidaBossesBarra.png");
+  bossHPBackground = loadImage ("vidaBossesLayoutBackground.png");
+  bossHPBar = loadImage ("vidaBossesBarra.png");
 
   for (int i = 0; i < bossBonesLayout.length; i = i + 1) {
     bossBonesLayout[i] = loadImage ("vidaBossesLayoutOsso" + i + ".png");
   }
 
-  vidaCoveiroLayout = loadImage ("vidaCoveiroLayout.png");
+  coveiroHPLayout = loadImage ("vidaCoveiroLayout.png");
 
   coveiroIdle = loadImage ("coveiroIdle.png");
   coveiroMovimento = loadImage ("coveiroMovimento.png");
@@ -215,7 +215,7 @@ void imagesPreLoad() {
     imagensPocaCenarioVazia[i] = loadImage("pocaVazia" + i + ".png");
   }
 
-  vidaFazendeiroLayout = loadImage ("vidaFazendeiroLayout.png");
+  fazendeiroHPLayout = loadImage ("vidaFazendeiroLayout.png");
 
   fazendeiroIdle = loadImage ("fazendeiroIdle.png");
   fazendeiroMovimento = loadImage ("fazendeiroMovimento.png");
@@ -238,14 +238,14 @@ void imagesPreLoad() {
   pneuDireitaDesce = loadImage ("pneuDireitaDesce.png");
   pneuDireitaSobe = loadImage ("pneuDireitaSobe.png");
 
-  vidaPadreLayout = loadImage ("vidaPadreLayout.png");
-  vidaPadreRaivaLayout = loadImage ("vidaPadreRaivaLayout.png");
+  padreHPLayout = loadImage ("vidaPadreLayout.png");
+  madPadreHPLayout = loadImage ("vidaPadreRaivaLayout.png");
 
   for (int i = 0; i < vidaPadreLayoutOsso.length; i = i + 1) {
     vidaPadreLayoutOsso[i] = loadImage ("vidaPadreLayoutOsso" + i + ".png");
   }
 
-  vidaPadreRaivaBarra = loadImage ("vidaPadreRaivaBarra.png");
+  madPadreHPBar = loadImage ("vidaPadreRaivaBarra.png");
 
   padreMovimentoIdle = loadImage ("padreMovimentoIdle.png");
   padreCruz = loadImage ("padreCruz.png");
@@ -298,24 +298,24 @@ void variablesPreLoad() {
   jLeiteX = 360;
   jLeiteY = 345; 
 
-  playerHitpointsCurrent = 15;
+  playerCurrentHP = 15;
   prayerHPMaximum = 15; 
   playerHPMinimum = 0;
 
   foodIndex = 10;
 
-  coveiroHitpointsCurrent = 40;
+  coveiroCurrentHP = 40;
   coveiroHitpointsMinimum = 0;
   coveiroBonesIndex = 3;
 
-  fazendeiroHitpointsCurrent = 40;
+  fazendeiroCurrentHP = 40;
   fazendeiroHitpointsMinimum = 0;
   fazendeiroBonesIndex = 3;
 
-  vidaPadreAtual = 40;
+  padreCurrentHP = 40;
   vidaPadreMin = 0;
 
-  vidaPadreRaivaAtual = 40;
+  madPadreCurrentHP = 40;
   vidaPadreRaivaMin = 0;
 
   indexVidaPadreOsso = 4;

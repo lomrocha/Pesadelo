@@ -35,7 +35,15 @@ boolean isSoundActive = true;
 Handler handler;
 MainMenu mm;
 Controls ctrl;
-Credits credits;
+Credits cre;
+
+HitpointsLayout playerHP;
+HitpointsLayout coveiroHP;
+HitpointsLayout fazendeiroHP;
+HitpointsLayout padreHP;
+HitpointsLayout madPadreHP;
+
+ItemBox ib;
 
 void setup() {
   size(800, 600);
@@ -44,10 +52,18 @@ void setup() {
 
   audioPreLoad();
   imagesPreLoad();
-  
+
   variablesPreLoad();
 
   handler = new Handler();
+
+  playerHP = new HitpointsLayout(0);
+  coveiroHP = new HitpointsLayout(1);
+  fazendeiroHP = new HitpointsLayout(2);
+  padreHP = new HitpointsLayout(3);
+  madPadreHP = new HitpointsLayout(4);
+
+  ib = new ItemBox();
 
   coveiro = new Coveiro();
   fazendeiro = new Fazendeiro();
@@ -59,16 +75,18 @@ void draw() {
     jogando();
     if (!movementTutorialScreenActive) {
       noCursor();
+      //weaponTutorialScreen();
     }
   } else {
     menu();
+    cursor(HAND);
   }
 }
 
 void keyPressed() {
   if (key == ESC) {
     key = 0;
-    setup();
+    variablesPreLoad();
     gameState = GameState.MAINMENU.ordinal();
     if (temaBoss.isPlaying()) {
       temaBoss.pause();
@@ -156,7 +174,7 @@ void keyPressed() {
       }
     }
   } else {
-    setup();
+    variablesPreLoad();
     gameState = lastState;
   }
 

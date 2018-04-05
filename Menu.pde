@@ -48,11 +48,11 @@ void menu() {
 
   // Créditos
   if (gameState == GameState.CREDITSMENU.ordinal()) {
-    if (credits == null) {
-      credits = new Credits();
+    if (cre == null) {
+      cre = new Credits();
     } else {
-      credits.credits();
-      credits.button();
+      cre.credits();
+      cre.button();
     }
   }
 
@@ -68,7 +68,8 @@ void menu() {
     jLeite();
     playerHitpoints();
     foodAll();
-    caixaNumeroItem();
+    ib.updateItemImage();
+    ib.display();
   }
 
   if (gameState == GameState.SECONDBOSS.ordinal()) {
@@ -81,7 +82,8 @@ void menu() {
     jLeite();
     playerHitpoints();
     foodAll();
-    caixaNumeroItem();
+    ib.updateItemImage();
+    ib.display();
   }
 
   if (gameState == GameState.THIRDBOSS.ordinal()) {
@@ -95,7 +97,8 @@ void menu() {
     jLeite();
     playerHitpoints();
     foodAll();
-    caixaNumeroItem();
+    ib.updateItemImage();
+    ib.display();
   }
 
   if (gameState >= GameState.WIN.ordinal() && gameState <= GameState.GAMEOVER.ordinal()) {

@@ -66,7 +66,7 @@ public abstract class Inimigo extends Geral {
 
 void damage(int amount) {
   if (!jLeiteImune) {
-    playerHitpointsCurrent -= amount;
+    playerCurrentHP -= amount;
     jLeiteImune = true;
     tempoImune = millis();
   }

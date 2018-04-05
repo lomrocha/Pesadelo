@@ -1,5 +1,5 @@
-PImage bossHitpointsLayoutBackground;
-PImage bossHitpointsBar;
+PImage bossHPBackground;
+PImage bossHPBar;
 PImage[] bossBonesLayout = new PImage [4];
 
 final int bossHPBackgroundX = 0;

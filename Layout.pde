@@ -4,49 +4,81 @@ PImage[] itemNumbers = new PImage [15];
 PImage shovelBox;
 PImage whipBox;
 
-void caixaNumeroItem() {
-  image(itemBox, 705, 510);
-  if (weaponTotal - 1 >= 0) {
-    switch(item) {
-    case SHOVEL:
-      image(shovelBox, 705, 510);
-      break;
-    case WHIP:
-      image(whipBox, 705, 510);
-      break;
+public class FirstMap {
+  Scenery firstScenery;
+  Scenery secondScenery;
+
+  TransitionGate door;
+
+  HUD hud;
+
+  Player player;
+
+  SpawnManager spawnManager;
+
+  TutorialScreen movement;
+  TutorialScreen attack;
+}
+
+public class SpawnManager {
+}
+
+public class TutorialScreen {
+}
+
+public class Player {
+}
+
+public class ItemBox {
+  private PImage itemImage;
+
+  void display() {
+    image(itemBox, 705, 510);
+
+    if (hasItem()) {
+      image(itemImage, 705, 510);
+      image(itemNumbers[weaponTotal - 1], 725, 552);
+    }
+  }
+
+  void updateItemImage() {
+    itemImage = (item == SHOVEL) ? shovelBox : whipBox;
+  }
+
+  boolean hasItem() {
+    if (weaponTotal - 1 >= 0) {
+      return true;
     }
 
-    image(itemNumbers[weaponTotal - 1], 725, 552);
+    return false;
   }
 }
 
-public class FirstMap{
-  Scenery firstScenery;
-  Scenery secondScenery;
-  
-  TransitionGate door;
-  
-  HUDOne hud;
-  
-  Player player;
-  
-  SpawnManager spawnManager;
-  
-  TutorialScreen movement;
-  TutorialScreen attack;  
-}
+public class HUD {
+  private HitpointsLayout p;
 
-public class SpawnManager{}
+  void display() {
+    switch(gameState) {
+    case 3:
+      coveiroHP.update();
+      coveiroHP.display();
+      break;
+    case 4:
+      fazendeiroHP.update();
+      fazendeiroHP.display();
+      break;
+    case 5:
+      p = (padre.padreMudouForma) ? madPadreHP : padreHP;
+      p.update();
+      p.display();
+      break;
+    }
 
-public class TutorialScreen{}
-
-public class Player{}
-
-public class ItemBox{}
-
-public class HUDOne {
-  HitpointsLayout player;
-  ItemBox itemBox;  
+    playerHP.update();
+    playerHP.display();
+    ib.updateItemImage();
+    ib.display();
+  }
 }
 
 public class HitpointsLayout {
@@ -61,70 +93,103 @@ public class HitpointsLayout {
   private int barXStart;
   private int interval;
 
-  private int hitpointsMininum;
-  private int hitpointsCurrent;
+  private int minimumHP;
+  private int currentHP;
 
   private int index;
+
+  HitpointsLayout(int index) {
+    this.index = index;
+
+    this.minimumHP = 0;
+
+    if (index == 0) {
+      player();
+    } else {
+      switch (index) {
+      case 1:
+        this.hitpointsLayout = coveiroHPLayout;
+
+        this.currentHP = coveiroCurrentHP;
+        break;
+      case 2:
+        this.hitpointsLayout = fazendeiroHPLayout;
+
+        this.currentHP = fazendeiroCurrentHP;
+        break;
+      case 3:
+        this.hitpointsLayout = padreHPLayout;
+
+        this.currentHP = padreCurrentHP;
+        break;
+      case 4:
+        this.hitpointsLayout = madPadreHPLayout;
+
+        this.currentHP = madPadreCurrentHP;
+        break;
+      }
+      bosses();
+    }
+  }
+
+  void player() {
+    this.layoutBackground = playerHPBackground;
+    this.hitpointsLayout = playerHPLayout;
+    this.hitpointsBar = playerHPBar;
+
+    this.background = new PVector(playerHPBackgroundX, playerHPBackgroundY);
+    this.layout = new PVector(playerHPLayoutX, playerHPLayoutY);
+    this.bar = new PVector(playerHPBarX, playerHPBarY);
+
+    this.barXStart = playerHPBarXStart;
+    this.interval = playerHPInterval;
+
+    this.currentHP = playerCurrentHP;
+  }
+
+  void bosses() {
+    this.layoutBackground = bossHPBackground;
+    this.hitpointsBar  = (index != 4) ? bossHPBar : madPadreHPBar;
+
+    this.background = new PVector(bossHPBackgroundX, bossHPBackgroundY);
+    this.layout = new PVector(bossHPLayoutX, bossHPLayoutY);
+    this.bar = new PVector(bossHPBarx, bossHPBarY);
+
+    this.barXStart = bossHPBarXStart;
+    this.interval = bossHPInterval;
+  }
+
+  void display() {
+    image(layoutBackground, background.x, background.y);
+
+    minimumHP = 0;
+    bar.x = barXStart;
+    while (minimumHP < currentHP) {
+      image (hitpointsBar, bar.x, bar.y);
+      bar.x += interval;
+      minimumHP++;
+    }
+
+    image (hitpointsLayout, layout.x, layout.y);
+  }
 
   void update() {
     switch(index) {
     case 0:
-      hitpointsCurrent = playerHPCurrent;
+      currentHP = playerCurrentHP;
       break;
     case 1:
+      this.currentHP = coveiroCurrentHP;
       break;
     case 2:
+      this.currentHP = fazendeiroCurrentHP;
       break;
     case 3:
+      this.currentHP = padreCurrentHP;
       break;
     case 4:
+      this.currentHP = madPadreCurrentHP;
       break;
-    }
-  }
-
-  HitpointsLayout(int index) {
-    this.index = index;
-    
-    this.hitpointsMininum = 0;
-    if (index == 0) {
-      this.layoutBackground = playerHPBackground;
-      this.hitpointsLayout = playerHPLayout;
-      this.hitpointsBar = playerHPBar;
-
-      this.background = new PVector(playerHPBackgroundX, playerHPBackgroundY);
-      this.layout = new PVector(playerHPLayoutX, playerHPLayoutY);
-      this.bar = new PVector(playerHPBarX, playerHPBarY);
-
-      this.barXStart = playerHPBarXStart;
-      this.interval = playerHPInterval;
-
-      this.hitpointsCurrent = playerHPCurrent;
-    } else {
-      switch (index) {
-      case 1:
-        this.hitpointsLayout = vidaCoveiroLayout;
-
-        this.hitpointsCurrent = coveiroHitpointsCurrent;
-        break;
-      case 2:
-        this.hitpointsLayout = vidaFazendeiroLayout;
-
-        this.hitpointsCurrent = fazendeiroHitpointsCurrent;
-        break;
-      case 3:
-        break;
-      case 4:
-        break;
-      }
-      this.layoutBackground = bossHitpointsLayoutBackground;
-      this.hitpointsBar = bossHitpointsBar;
-      
-      this.background = new PVector(bossHPBackgroundX, bossHPBackgroundY);
-      this.layout = new PVector(bossHPLayoutX, bossHPLayoutY);
-      this.bar = new PVector(bossHPBarx, bossHPBarY);
-      
-      this.barXStart = bossHPBarXStart;
-      this.interval = bossHPInterval;
     }
   }
 }
@@ -146,5 +211,6 @@ final int playerHPLayoutX = 8;
 final int playerHPLayoutY = 490;
 
 void playerHitpoints() {
-  handler.hitpointsLayoutHandler(playerHPBackground, playerHPBackgroundX, playerHPBackgroundY, playerHPMinimum, playerHPBarX, playerHPBarXStart, playerHPCurrent, playerHPBar, playerHPBarY, playerHPInterval, playerHPLayout, playerHPLayoutX, playerHPLayoutY);
+  playerHP.update();
+  playerHP.display();
 }

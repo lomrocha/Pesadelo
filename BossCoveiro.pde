@@ -1,12 +1,13 @@
-PImage vidaCoveiroLayout;
+PImage coveiroHPLayout;
 
-int coveiroHitpointsCurrent;
+int coveiroCurrentHP;
 int coveiroHitpointsMinimum;
 
 int coveiroBonesIndex;
 
 void vidaCoveiro() {
-  handler.hitpointsLayoutHandler(bossHitpointsLayoutBackground, bossHPBackgroundX, bossHPBackgroundY, coveiroHitpointsMinimum, bossHPBarx, bossHPBarXStart, coveiroHitpointsCurrent, bossHitpointsBar, bossHPBarY, bossHPInterval, vidaCoveiroLayout, bossHPLayoutX, bossHPLayoutY);
+  coveiroHP.update();
+  coveiroHP.display();
   image(bossBonesLayout[coveiroBonesIndex], 84, 54);
 }
 
@@ -318,7 +319,7 @@ public class Coveiro {
       if (ataquePaAcontecendo && dist(coveiroX, coveiroY, jLeiteX, jLeiteY) < 200) {
         if (millis() > tempoDanoPa + 775) {
           if (!jLeiteImune) {
-            playerHPCurrent -= 5;
+            playerCurrentHP -= 5;
             jLeiteImune = true;
             tempoImune = millis();
           }
@@ -367,7 +368,7 @@ public class Coveiro {
   }
 
   void coveiroMorte() {
-    if ((coveiroHitpointsCurrent <= 0 || coveiroBonesIndex == 0) && !coveiroMorreu) {
+    if ((coveiroCurrentHP <= 0 || coveiroBonesIndex == 0) && !coveiroMorreu) {
       coveiroMorreu = true;
       coveiroMorrendo = true;
       if (isSoundActive) {
@@ -470,7 +471,7 @@ public class Fenda {
   void colisao() {
     if (jLeiteX + 63 > fendaX + 40 && jLeiteX < fendaX + 220 && jLeiteY > fendaY - 50) {
       if (causouDanoJLeite && !jLeiteImune) {
-        playerHPCurrent -= 4;
+        playerCurrentHP -= 4;
         jLeiteImune = true;
         tempoImune = millis();
       }
@@ -575,7 +576,7 @@ void lapideAtaque() {
     }
 
     if (l.acertouJLeite() && !jLeiteImune) {
-      playerHPCurrent -= 5;
+      playerCurrentHP -= 5;
       jLeiteImune = true;
       tempoImune = millis();
     }

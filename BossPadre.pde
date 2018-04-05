@@ -1,11 +1,11 @@
-PImage vidaPadreLayout;
-PImage vidaPadreRaivaLayout;
+PImage padreHPLayout;
+PImage madPadreHPLayout;
 
 PImage[] vidaPadreLayoutOsso = new PImage [5];
 
-PImage vidaPadreRaivaBarra;
+PImage madPadreHPBar;
 
-int vidaPadreAtual, vidaPadreRaivaAtual;
+int padreCurrentHP, madPadreCurrentHP;
 int vidaPadreMin, vidaPadreRaivaMin;
 
 int vidaPadreBarraX;
@@ -14,29 +14,12 @@ int vidaPadreRaivaBarraX;
 int indexVidaPadreOsso;
 
 void vidaPadre() {
-  image(bossHitpointsLayoutBackground, 0, 0);
+  image(bossHPBackground, 0, 0);
 
-  vidaPadreRaivaMin = 0;
-  vidaPadreRaivaBarraX = 230;
-  while (vidaPadreRaivaMin < vidaPadreRaivaAtual) {
-    image(vidaPadreRaivaBarra, vidaPadreRaivaBarraX, 23);
-    vidaPadreRaivaBarraX = vidaPadreRaivaBarraX + 11;
-    vidaPadreRaivaMin = vidaPadreRaivaMin + 1;
-  }
-
-  vidaPadreMin = 0;
-  vidaPadreBarraX = 230;
-  while (vidaPadreMin < vidaPadreAtual) {
-    image(bossHitpointsBar, vidaPadreBarraX, 23);
-    vidaPadreBarraX = vidaPadreBarraX + 11;
-    vidaPadreMin = vidaPadreMin + 1;
-  }
-
-  if (!padre.padreMudouForma) {
-    image(vidaPadreLayout, 0, 0);
-  } else {
-    image(vidaPadreRaivaLayout, 0, 0);
-  }
+  HitpointsLayout p;
+  p = (padre.padreMudouForma) ? madPadreHP : padreHP;
+  p.update();
+  p.display();
   image(vidaPadreLayoutOsso[indexVidaPadreOsso], 84, 54);
 }
 
@@ -359,9 +342,9 @@ public class Padre {
           }
 
           if (!padreRaivaCurou) {
-            while (vidaPadreRaivaAtual < 40 && amountRecoveredLevantem < 3) {
+            while (madPadreCurrentHP < 40 && amountRecoveredLevantem < 3) {
               amountRecoveredLevantem = amountRecoveredLevantem + 1;
-              vidaPadreRaivaAtual = vidaPadreRaivaAtual + 1;
+              madPadreCurrentHP = madPadreCurrentHP + 1;
             }
             padreRaivaCurou = true;
           }
@@ -558,7 +541,7 @@ public class Padre {
             if (!jLeiteImune) {
               hitHitCruzMostrando = true;
               hitCruz(jLeiteX - 30, jLeiteY);
-              playerHitpointsCurrent -= 2;
+              playerCurrentHP -= 2;
               jLeiteImune = true;
               tempoImune = millis();
             }
@@ -568,7 +551,7 @@ public class Padre {
             if (!jLeiteImune) {
               hitHitCruzMostrando = true;
               hitCruz(jLeiteX - 30, jLeiteY);
-              playerHitpointsCurrent -= 3;
+              playerCurrentHP -= 3;
               jLeiteImune = true;
               tempoImune = millis();
             }
@@ -614,7 +597,7 @@ public class Padre {
   }
 
   void padreMudarForma() {
-    if ((vidaPadreAtual <= 0 || indexVidaPadreOsso == 2) && !padreFormaMudada) {
+    if ((padreCurrentHP <= 0 || indexVidaPadreOsso == 2) && !padreFormaMudada) {
       padreMudouForma = true;
       padreFormaMudada = true;
     }
@@ -637,7 +620,7 @@ public class Padre {
   }
 
   void padreMorte() {
-    if ((vidaPadreRaivaAtual <= 0 || indexVidaPadreOsso == 0) && !padreMorreu) {
+    if ((madPadreCurrentHP <= 0 || indexVidaPadreOsso == 0) && !padreMorreu) {
       padreMorreu = true;
       padreMorrendo = true;
       if (isSoundActive) {
@@ -909,7 +892,7 @@ void caveiraPadre() {
     }
 
     if (c.acertouJLeite() && !jLeiteImune) {
-      playerHitpointsCurrent -= 4;
+      playerCurrentHP -= 4;
       jLeiteImune = true;
       tempoImune = millis();
       ataqueCaveiraAcontecendo = false;
@@ -986,7 +969,7 @@ void raio() {
     Raio r = raios.get(i);
     r.display();
     if (r.acertouJLeite() && !imortalidade) {
-      playerHitpointsCurrent -= 9999999;
+      playerCurrentHP -= 9999999;
     }
     if (r.deletarRaio) {
       raios.remove(r);

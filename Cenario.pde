@@ -29,8 +29,8 @@ public class Scenery {
 
     scenery.y += movementY;
   }
-  
-  void updateMovement(){
+
+  void updateMovement() {
     movementY = SCENERYMOVEMENT;
   }
 }
@@ -39,6 +39,7 @@ ArrayList<Scenery> cenarios = new ArrayList<Scenery>();
 
 void cenario() {
   for (Scenery c : cenarios) {
+    c.updateMovement();
     c.update();
     c.display();
   }
