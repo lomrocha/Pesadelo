@@ -34,7 +34,8 @@ void inimigosTodos() {
     indexInimigos = 6;
   }
 
-
+  firstMapEnemiesSpawnManager.setVariables();
+  firstMapEnemiesSpawnManager.states();
   esqueleto();
   esqueletoChute();
   cachorro();
@@ -42,10 +43,13 @@ void inimigosTodos() {
   esqueletoRaiva();
 }
 
+enum TypeOfEnemy {
+  SKELETON, KICKING_SKELETON, SKELETON_HEAD, SKELETON_DOG, SKELETON_CROW, RED_SKELETON
+}
+
 public abstract class Inimigo extends Geral {
   private int damage;
-
-  private boolean isHead;
+  private int type;
 
   public int getDamage() {
     return damage;
@@ -54,34 +58,43 @@ public abstract class Inimigo extends Geral {
     this.damage = damage;
   }
 
-  public boolean getIsHead() {
-    return isHead;
-  } 
-  protected void setIsHead(boolean isHead) {
-    this.isHead = isHead;
+  public int getType() {
+    return type;
+  }
+  protected void setType(int type) {
+    this.type = type;
   }
 
   abstract void updateMovement();
+
+  abstract void updateTarget();
 }
 
 void damage(int amount) {
-  if (!jLeiteImune) {
+  if (!isPlayerImmune) {
     playerCurrentHP -= amount;
-    jLeiteImune = true;
-    tempoImune = millis();
+    isPlayerImmune = true;
+    timeImmune = millis();
   }
 }
 
-<Enemy extends Inimigo> void computeEnemy(ArrayList<Enemy> inimigos) {
+<Enemy extends Inimigo, KickingSkeleton extends EsqueletoChute> void computeEnemy(ArrayList<Enemy> inimigos) {
   for (int i = inimigos.size() - 1; i >= 0; i = i - 1) {
     Enemy enemy = inimigos.get(i);
+    enemy.updateTarget();
     enemy.updateMovement();
     enemy.update();
     enemy.display();
     if (enemy.hasExitScreen()) {
       inimigos.remove(enemy);
-      if (!enemy.getIsHead()) {
-        totalInimigos--;
+      if (enemy.getType() != TypeOfEnemy.SKELETON_HEAD.ordinal()) {
+        if (enemy.getType() == TypeOfEnemy.SKELETON.ordinal()) {
+          firstMapEnemiesSpawnManager.skeletonTotal--;
+        }
+        if (enemy.getType() == TypeOfEnemy.KICKING_SKELETON.ordinal()) {
+          firstMapEnemiesSpawnManager.kickingSkeletonTotal--;
+        }
+        firstMapEnemiesSpawnManager.setEnemiesTotal(firstMapEnemiesSpawnManager.getEnemiesTotal() - 1);
       }
     }
     if (enemy.hasCollided()) {
@@ -90,7 +103,7 @@ void damage(int amount) {
   }
 }
 
-<Enemy extends Geral> void deleteEnemy(ArrayList<Enemy> inimigos) {
+<Enemy extends Inimigo> void deleteEnemy(ArrayList<Enemy> inimigos) {
   for (int i = inimigos.size() - 1; i >= 0; i--) {
     Enemy enemy = inimigos.get(i);
     for (int j = armas.size() - 1; j >= 0; j--) {

@@ -4,7 +4,9 @@ PImage[] bossSceneryImages =  new PImage [3];
 PImage door;
 PImage fence;
 
-final int SCENERYMOVEMENT = 2;
+final int SCENERY_MOVEMENT = 2;
+
+int numberOfSceneries;
 
 public class Scenery {
   private PVector scenery = new PVector();
@@ -25,13 +27,14 @@ public class Scenery {
   void update() {
     if (scenery.y > height) {
       scenery.y = -600;
+      numberOfSceneries++;
     }
 
     scenery.y += movementY;
   }
 
   void updateMovement() {
-    movementY = SCENERYMOVEMENT;
+    movementY = (numberOfSceneries < 35) ? SCENERY_MOVEMENT : 0;
   }
 }
 

@@ -523,7 +523,7 @@ public class Padre {
 
   void ataqueCruz() {
     if (!novoAtaqueLevantem && !ataqueLevantemAcontecendo && !ataqueCaveiraAcontecendo && !padreCaveiraCaiuCabeca && !padreTomouDanoCaveira && !padreCarregandoNovoAtaqueRaio && !padreMorreu) {
-      if (dist(padreX, padreY, jLeiteX, jLeiteY) < 100 && !ataqueCruzLigado && millis() > tempoNovoAtaqueCruz + 1500) {
+      if (dist(padreX, padreY, playerX, playerY) < 100 && !ataqueCruzLigado && millis() > tempoNovoAtaqueCruz + 1500) {
         tempoNovoAtaqueCruz = millis();
         tempoDanoCruz = millis();
         ataqueCruz = true;
@@ -538,22 +538,22 @@ public class Padre {
       if (ataqueCruzAcontecendo) {
         if (!padreMudouForma) {
           if (millis() > tempoDanoCruz + 750) {
-            if (!jLeiteImune) {
+            if (!isPlayerImmune) {
               hitHitCruzMostrando = true;
-              hitCruz(jLeiteX - 30, jLeiteY);
+              hitCruz(playerX - 30, playerY);
               playerCurrentHP -= 2;
-              jLeiteImune = true;
-              tempoImune = millis();
+              isPlayerImmune = true;
+              timeImmune = millis();
             }
           }
         } else {
           if (millis() > tempoDanoCruz + 300) {
-            if (!jLeiteImune) {
+            if (!isPlayerImmune) {
               hitHitCruzMostrando = true;
-              hitCruz(jLeiteX - 30, jLeiteY);
+              hitCruz(playerX - 30, playerY);
               playerCurrentHP -= 3;
-              jLeiteImune = true;
-              tempoImune = millis();
+              isPlayerImmune = true;
+              timeImmune = millis();
             }
           }
         }
@@ -772,7 +772,7 @@ public class CaveiraPadre {
   void update() {
     if (indexCaveiraPadre == randomIndexCaveiraPadre && padre.caveiraApareceu) {
       if (!novoDestinoCaveiraPadreX) {
-        destinoCaveiraPadreX = jLeiteX;
+        destinoCaveiraPadreX = playerX;
         novoDestinoCaveiraPadreX = true;
       }
 
@@ -810,7 +810,7 @@ public class CaveiraPadre {
   }
 
   boolean acertouJLeite() {
-    if (caveiraPadreX + 48 > jLeiteX && caveiraPadreX < jLeiteX + 63 && caveiraPadreY + 70 > jLeiteY && caveiraPadreY < jLeiteY + 126) {
+    if (caveiraPadreX + 48 > playerX && caveiraPadreX < playerX + 63 && caveiraPadreY + 70 > playerY && caveiraPadreY < playerY + 126) {
       return true;
     } else {
       return false;
@@ -891,10 +891,10 @@ void caveiraPadre() {
       caveirasPadre.remove(c);
     }
 
-    if (c.acertouJLeite() && !jLeiteImune) {
+    if (c.acertouJLeite() && !isPlayerImmune) {
       playerCurrentHP -= 4;
-      jLeiteImune = true;
-      tempoImune = millis();
+      isPlayerImmune = true;
+      timeImmune = millis();
       ataqueCaveiraAcontecendo = false;
       padre.caveiraApareceu = false;
     }
@@ -947,7 +947,7 @@ public class Raio {
 
   boolean acertouJLeite() {
     if (danoJLeite) {
-      if (jLeiteX + 63 > raioX && jLeiteX < raioX + 509 && jLeiteY + 126 > raioY + 550 && jLeiteY < raioY + 720) {
+      if (playerX + 63 > raioX && playerX < raioX + 509 && playerY + 126 > raioY + 550 && playerY < raioY + 720) {
         return true;
       } else {
         return false;

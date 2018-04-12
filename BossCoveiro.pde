@@ -286,10 +286,10 @@ public class Coveiro {
         }
       } else {
         if (carregandoNovoAtaqueLapide) {
-          if (coveiroX < jLeiteX - 38) {
+          if (coveiroX < playerX - 38) {
             coveiroX = coveiroX + 3;
           }
-          if (coveiroX > jLeiteX - 38) {
+          if (coveiroX > playerX - 38) {
             coveiroX = coveiroX - 3;
           }
           if (coveiroY < 184) {
@@ -302,7 +302,7 @@ public class Coveiro {
 
   void ataquePa() {
     if (!novoAtaqueFenda && !carregandoNovoAtaqueLapide && !novoAtaqueLapide && !coveiroDelayTomouDanoAgua && !coveiroTomouDanoAgua && !coveiroMorreu) {
-      if (dist(coveiroX, coveiroY, jLeiteX, jLeiteY) < 200 && !ataquePaLigado && millis() > tempoNovoAtaquePa + 1500) {
+      if (dist(coveiroX, coveiroY, playerX, playerY) < 200 && !ataquePaLigado && millis() > tempoNovoAtaquePa + 1500) {
         tempoNovoAtaquePa = millis();
         tempoDanoPa = millis();
         ataquePa = true;
@@ -316,12 +316,12 @@ public class Coveiro {
 
   void colisaoPa() {
     if (!novoAtaqueFenda && !carregandoNovoAtaqueLapide && !novoAtaqueLapide && !coveiroDelayTomouDanoAgua && !coveiroTomouDanoAgua && !coveiroMorreu) {
-      if (ataquePaAcontecendo && dist(coveiroX, coveiroY, jLeiteX, jLeiteY) < 200) {
+      if (ataquePaAcontecendo && dist(coveiroX, coveiroY, playerX, playerY) < 200) {
         if (millis() > tempoDanoPa + 775) {
-          if (!jLeiteImune) {
+          if (!isPlayerImmune) {
             playerCurrentHP -= 5;
-            jLeiteImune = true;
-            tempoImune = millis();
+            isPlayerImmune = true;
+            timeImmune = millis();
           }
         }
       }
@@ -469,11 +469,11 @@ public class Fenda {
   }
 
   void colisao() {
-    if (jLeiteX + 63 > fendaX + 40 && jLeiteX < fendaX + 220 && jLeiteY > fendaY - 50) {
-      if (causouDanoJLeite && !jLeiteImune) {
+    if (playerX + 63 > fendaX + 40 && playerX < fendaX + 220 && playerY > fendaY - 50) {
+      if (causouDanoJLeite && !isPlayerImmune) {
         playerCurrentHP -= 4;
-        jLeiteImune = true;
-        tempoImune = millis();
+        isPlayerImmune = true;
+        timeImmune = millis();
       }
       jLeiteLentidao = true;
     } else {
@@ -510,10 +510,10 @@ public class LapideAtaque {
   private PImage spriteLapideAtaque;
 
   private int lapideX = coveiroX;
-  private int lapideY = jLeiteY;
+  private int lapideY = playerY;
 
   private int destinoX = coveiroX;
-  private int destinoY = jLeiteY - 40;
+  private int destinoY = playerY - 40;
 
   private int stepLapideAtaque;
   private int tempoSpriteLapideAtaque;
@@ -538,7 +538,7 @@ public class LapideAtaque {
 
   void update() {
     destinoX = coveiroX;
-    destinoY = jLeiteY - 40;
+    destinoY = playerY - 40;
 
     lapideX = destinoX;
     lapideY = destinoY;
@@ -546,7 +546,7 @@ public class LapideAtaque {
 
   boolean acertouJLeite() {
     if (millis() > coveiro.tempoGatilhoNovoAtaqueLapide + 4375) {
-      if (lapideX + 94 > jLeiteX && lapideX + 50 < jLeiteX + 63 && lapideY < jLeiteY + 126 && lapideY + 188 > jLeiteY) {
+      if (lapideX + 94 > playerX && lapideX + 50 < playerX + 63 && lapideY < playerY + 126 && lapideY + 188 > playerY) {
         return true;
       } else {
         return false;
@@ -575,10 +575,10 @@ void lapideAtaque() {
       lapidesAtaque.remove(l);
     }
 
-    if (l.acertouJLeite() && !jLeiteImune) {
+    if (l.acertouJLeite() && !isPlayerImmune) {
       playerCurrentHP -= 5;
-      jLeiteImune = true;
-      tempoImune = millis();
+      isPlayerImmune = true;
+      timeImmune = millis();
     }
   }
 }

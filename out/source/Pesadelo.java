@@ -25,453 +25,95 @@ AudioPlayer temaIgreja;
 AudioPlayer temaFazenda;
 AudioPlayer temaCidade;
 
-PImage vidaBossesLayoutBackground, vidaBossesBarra;
-PImage[] vidaBossesLayoutOsso = new PImage [4];
+enum GameState {
+  FIRSTMAP, SECONDMAP, THIRDMAP, FIRSTBOSS, SECONDBOSS, THIRDBOSS, MAINMENU, CONTROLSMENU, CREDITSMENU, WIN, GAMEOVER
+}
 
-String estadoJogo;
-String ultimoEstado;
+int gameState;
+int lastState;
 
-int enemyPositionsFirstMap  [][];
-int enemyPositionsSecondMap [][];
-int enemyPositionsThirdMap  [][];
+final int[][] ENEMY_POSITIONS_FIRST_MAP = new int [7][4];
+final int[][] ENEMY_POSITIONS_SECOND_MAP = new int [7][4];
+final int[][] ENEMY_POSITIONS_THIRD_MAP  = new int [7][4];
 
-int[] valoresXMapaCoveiro = {50, 720};
-int[] valoresYMapaCoveiro = {380, 380};
+final int[] ENEMY_MAXIMUM_FIRST_MAP = {2, 2, 3, 4, 5, 0};
+final int[] ENEMY_MAXIMUM_SECOND_MAP = {};
+final int[] ENEMY_MAXIMUM_THIRD_MAP = {};
 
-int[] valoresXMapaFazendeiro = {45, 45, 735, 735};
-int[] valoresYMapaFazendeiro = {200, 358, 200, 358};
+final int[] X_VALUES_FIRST_BOSS = {50, 720};
+final int[] Y_VALUES_FIRST_BOSS = {380, 380};
 
-int[] valoresXMapaPadre = {62, 62, 710, 710};
-int[] valoresYMapaPadre = {249, 401, 249, 401};
+final int[] X_VALUES_SECOND_BOSS = {45, 45, 735, 735};
+final int[] Y_VALUES_SECOND_BOSS = {200, 358, 200, 358};
+
+final int[] X_VALUES_THIRD_BOSS = {62, 62, 710, 710};
+final int[] Y_VALUES_THIRD_BOSS = {249, 401, 249, 401};
 
 boolean ativaBarraEspaco;
 
-boolean musicasAtivas = true;
-boolean sonsAtivos = true;
+boolean isMusicActive = true;
+boolean isSoundActive = true;
+
+Handler handler;
+MainMenu mm;
+Controls ctrl;
+Credits cre;
+
+HitpointsLayout playerHP;
+HitpointsLayout coveiroHP;
+HitpointsLayout fazendeiroHP;
+HitpointsLayout padreHP;
+HitpointsLayout madPadreHP;
+
+ItemBox ib;
+
+FirstMapEnemiesSpawnManager firstMapEnemiesSpawnManager;
 
 public void setup() {
   
 
   minim = new Minim (this);
 
-  temaBoss = minim.loadFile ("temaBoss.mp3");
-  temaIgreja = minim.loadFile ("temaIgreja.mp3");
-  temaFazenda = minim.loadFile ("temaFazenda.mp3");
-  temaCidade = minim.loadFile ("temaCidade.mp3");
+  audioPreLoad();
+  imagesPreLoad();
 
-  for (int i = 0; i < sonsMorteJLeite.length; i = i + 1) {
-    sonsMorteJLeite[i] =  minim.loadFile ("morteJLeite" + i + ".mp3");
-  }
+  variablesPreLoad();
 
-  for (int i = 0; i < sonsCoveiroIdle.length; i = i + 1) {
-    sonsCoveiroIdle[i] =  minim.loadFile ("coveiroIdle" + i + ".mp3");
-  }
+  handler = new Handler();
 
-  for (int i = 0; i < sonsCoveiroTomandoDano.length; i = i + 1) {
-    sonsCoveiroTomandoDano[i] =  minim.loadFile ("coveiroDano" + i + ".mp3");
-  }
+  playerHP = new HitpointsLayout(0);
+  coveiroHP = new HitpointsLayout(1);
+  fazendeiroHP = new HitpointsLayout(2);
+  padreHP = new HitpointsLayout(3);
+  madPadreHP = new HitpointsLayout(4);
 
-  somCoveiroFenda = minim.loadFile ("coveiroFenda.mp3");
+  ib = new ItemBox();
 
-  for (int i = 0; i < sonsCoveiroEsmaga.length; i = i + 1) {
-    sonsCoveiroEsmaga[i] =  minim.loadFile ("coveiroEsmaga" + i + ".mp3");
-  }
-
-  somCoveiroMorreu = minim.loadFile ("coveiroMorreu.mp3");
-
-  for (int i = 0; i < sonsFazendeiroIdle.length; i = i + 1) {
-    sonsFazendeiroIdle[i] =  minim.loadFile ("fazendeiroIdle" + i + ".mp3");
-  }
-
-  for (int i = 0; i < sonsFazendeiroTomandoDano.length; i = i + 1) {
-    sonsFazendeiroTomandoDano[i] =  minim.loadFile ("fazendeiroDano" + i + ".mp3");
-  }
-
-  somFazendeiroVidaMetade = minim.loadFile ("fazendeiroLasquera.mp3");
-
-  for (int i = 0; i < sonsFazendeiroSoltandoMimosa.length; i = i + 1) {
-    sonsFazendeiroSoltandoMimosa[i] =  minim.loadFile ("fazendeiroMimosa" + i + ".mp3");
-  }
-
-  for (int i = 0; i < sonsMimosaHit.length; i = i + 1) {
-    sonsMimosaHit[i] =  minim.loadFile ("fazendeiroMimosaHit" + i + ".mp3");
-  }
-
-  somMimosaErra =  minim.loadFile ("fazendeiroMimosaErra.mp3");
-
-  somSoltandoPneu = minim.loadFile ("fazendeiroSoltandoPneu.mp3");
-
-  somAcertouPneuJLeite = minim.loadFile ("fazendeiroAcertouPneuJLeite.mp3");
-
-  somAcertouPneuFazendeiro = minim.loadFile ("fazendeiroAcertouPneuFazendeiro.mp3");
-
-  somFazendeiroMorreu = minim.loadFile ("fazendeiroMorreu.mp3");
-
-
-  for (int i = 0; i < sonsPadreIdle.length; i = i + 1) {
-    sonsPadreIdle[i] =  minim.loadFile ("padreIdle" + i + ".mp3");
-  }
-
-  for (int i = 0; i < sonsPadreRaivaIdle.length; i = i + 1) {
-    sonsPadreRaivaIdle[i] =  minim.loadFile ("padreRaivaIdle" + i + ".mp3");
-  }
-
-  for (int i = 0; i < sonsPadreCaveira.length; i = i + 1) {
-    sonsPadreCaveira[i] =  minim.loadFile ("padreCaveira" + i + ".mp3");
-  }
-
-  for (int i = 0; i < sonsPadreTomandoDano.length; i = i + 1) {
-    sonsPadreTomandoDano[i] =  minim.loadFile ("padreDano" + i + ".mp3");
-  }
-
-  for (int i = 0; i < sonsPadreRaivaTomandoDano.length; i = i + 1) {
-    sonsPadreRaivaTomandoDano[i] =  minim.loadFile ("padreRaivaDano" + i + ".mp3");
-  }
-
-  for (int i = 0; i < sonsPadreLevantem.length; i = i + 1) {
-    sonsPadreLevantem[i] =  minim.loadFile ("padreLevantem" + i + ".mp3");
-  }
-
-  for (int i = 0; i < sonsPadreImpossivel.length; i = i + 1) {
-    sonsPadreImpossivel[i] =  minim.loadFile ("padreImpossivel" + i + ".mp3");
-  }
-
-  somPadreRaio = minim.loadFile ("padreRaio.mp3");
-
-  somPadreMorreu = minim.loadFile ("padreMorreu.mp3");
-
-  backgroundMenu = loadImage ("backgroundMenu.png");
-
-  for (int i = 0; i < sceneryImages.length; i = i + 1) {
-    sceneryImages[i] = loadImage("mapa" + i + ".png");
-  }
-
-  door = loadImage ("porta.png");
-  fence = loadImage ("cerca.png");
-
-  for (int i = 0; i < bossSceneryImages.length; i = i + 1) {
-    bossSceneryImages[i] = loadImage("mapaBoss" + i + ".png");
-  }
-
-  pesadeloLogo = loadImage ("pesadeloLogo.png");
-
-  botaoJogar = loadImage ("jogar.png");
-  botaoBotoes = loadImage ("botoes.png");
-  botaoCreditos = loadImage ("creditos.png");
-  jogarMao = loadImage ("jogarMao.png");
-  botoesMao = loadImage ("botoesMao.png");
-  creditosMao = loadImage ("creditosMao.png");
-
-  botaoSom = loadImage ("botaoSom.png");
-  botaoMusica = loadImage ("botaoMusica.png");
-  botaoX = loadImage ("botaoX.png");
-
-  imagemControles = loadImage ("controles.png");
-
-  creditos = loadImage ("creditosJogo.png");
-
-  telaTutorialAndando = loadImage ("telaTutorialAndando.png");
-  telaTutorialPedra = loadImage ("telaTutorialPedra.png");
-  telaTutorialPedraSeta = loadImage ("telaTutorialPedraSeta.png");
-  telaTutorialX = loadImage ("telaTutorialX.png");
-
-  maoApontandoEsquerda = loadImage ("maoApontandoEsquerda.png");
-  maoPolegar = loadImage ("maoPolegar.png");
-
-  telaGameOver = loadImage ("telaGameOver.png");
-  telaVitoria = loadImage ("telaVitoria.png");
-
-  coxinha = loadImage ("coxinha.png");
-  brigadeiro = loadImage ("brigadeiro.png");
-  queijo = loadImage ("pdqueijo.png");
-  foodShadow = loadImage ("sombraComidas.png");
-
-  shovel = loadImage ("pa.png");
-  shovelShadow = loadImage ("sombraPaChicote.png");
-  shovelAttack = loadImage ("paAtaque.png");
-  caixaItemPa = loadImage ("caixaItemPa.png");
-
-  stone = loadImage ("pedra.png");
-  stoneShadow = loadImage ("sombraPedra.png");
-  stoneAttack = loadImage ("pedraFogo.png");
-
-  whip = loadImage ("chicote.png");
-  whipShadow = loadImage ("sombraPaChicote.png");
-  whipAttack = loadImage ("chicoteAtaque.png");
-  caixaItemChicote = loadImage ("caixaItemChicote.png");
-
-  caixaNumeroItem = loadImage ("caixaNumeroItem.png");
-  for (int i = 0; i < imagensNumerosItem.length; i = i + 1) {
-    imagensNumerosItem[i] = loadImage ("numeroItem" + i + ".png");
-  }
-  imagemNumeroItemInfinito = loadImage ("numeroItemInfinito.png");
-
-  jLeiteMovimento = loadImage ("joaoleite.png");
-  jLeiteIdle = loadImage ("jLeiteIdle.png");
-  jLeiteItem = loadImage("joaoleiteitem.png"); 
-  jLeiteDanoMovimento = loadImage ("joaoleitedano.png");
-  jLeiteDanoIdle = loadImage ("jLeiteDanoIdle.png");
-  jLeiteMorte = loadImage ("jLeiteMorte.png");
-
-  sombraJLeite = loadImage ("sombrajoaoleite.png");
-
-  vidaJLeiteLayout = loadImage ("vidaJLeiteLayout.png");
-  vidaJLeiteLayoutBackground = loadImage ("vidaJLeiteLayoutBackground.png");
-  vidaJLeiteBarra = loadImage ("vidaJLeiteBarra.png");
-
-  skeleton = loadImage ("esqueleto.png");
-  skeletonShadow = loadImage ("sombraEsqueleto.png");
-  kickingSkeleton = loadImage ("esqueletoChuteAtaque.png");
-  headlessKickingSkeleton = loadImage ("esqueletoChuteMovimento.png");
-  skeletonHead = loadImage ("cabecaEsqueletoChute.png");
-  kickingSkeletonShadow = loadImage ("sombraEsqueletoChute.png");
-  skeletonDog = loadImage ("cachorro.png");
-  skeletonDogShadow = loadImage ("sombraCachorro.png");
-  skeletonCrow = loadImage ("corvo.png");
-  skeletonCrowShadow = loadImage ("sombraCorvo.png");
-  redSkeleton = loadImage ("esqueletoRaiva.png");
-  redSkeletonShadow = loadImage ("sombraEsqueletoRaiva.png");
-
-  hitInimigos = loadImage ("hitInimigos.png");
-
-  vidaBossesLayoutBackground = loadImage ("vidaBossesLayoutBackground.png");
-  vidaBossesBarra = loadImage ("vidaBossesBarra.png");
-
-  for (int i = 0; i < vidaBossesLayoutOsso.length; i = i + 1) {
-    vidaBossesLayoutOsso[i] = loadImage ("vidaBossesLayoutOsso" + i + ".png");
-  }
-
-  vidaCoveiroLayout = loadImage ("vidaCoveiroLayout.png");
-
-  coveiroIdle = loadImage ("coveiroIdle.png");
-  coveiroMovimento = loadImage ("coveiroMovimento.png");
-  coveiroPa = loadImage ("coveiroPa.png");
-  coveiroCarregandoLapide = loadImage ("coveiroCarregandoLapide.png");
-  coveiroPaFenda = loadImage ("coveiroPaFenda.png");
-  coveiroLapide = loadImage ("coveiroLapide.png");
-  coveiroLapideDano = loadImage ("coveiroDanoAgua.png");
-  coveiroMorte = loadImage ("coveiroMorte.png");
-  sombraCoveiro = loadImage ("sombraCoveiro.png");
-
-  fendaAbrindo = loadImage ("fendaAbrindo.png");
-  fendaAberta = loadImage ("fendaAberta.png");
-  fendaFechando = loadImage ("fendaFechando.png");
-
-  for (int i = 0; i < imagensLapidesAtaque.length; i = i + 1) {
-    imagensLapidesAtaque[i] = loadImage ("lapideAtaque" + i + ".png");
-  }
-
-  for (int i = 0; i < imagensLapidesCenario.length; i = i + 1) {
-    imagensLapidesCenario[i] = loadImage ("lapideCenario" + i + ".png");
-  }
-
-  aguaPoca = loadImage("aguaPoca.png"); 
-
-  for (int i = 0; i < imagensPocaCenarioCheia.length; i = i + 1) {
-    imagensPocaCenarioCheia[i] = loadImage("pocaCheia" + i + ".png");
-  }
-
-  for (int i = 0; i < imagensPocaCenarioVazia.length; i = i + 1) {
-    imagensPocaCenarioVazia[i] = loadImage("pocaVazia" + i + ".png");
-  }
-
-  vidaFazendeiroLayout = loadImage ("vidaFazendeiroLayout.png");
-
-  fazendeiroIdle = loadImage ("fazendeiroIdle.png");
-  fazendeiroMovimento = loadImage ("fazendeiroMovimento.png");
-  fazendeiroFoice = loadImage ("fazendeiroFoice.png");
-  fazendeiroMimosa = loadImage ("fazendeiroMimosa.png");
-  fazendeiroIdleMimosa = loadImage ("fazendeiroIdleMimosa.png");
-  fazendeiroPneu = loadImage ("fazendeiroPneu.png");
-  fazendeiroPneuEscudo = loadImage ("fazendeiroPneuEscudo.png");
-  fazendeiroPneuDano = loadImage ("fazendeiroPneuDano.png");
-  fazendeiroIdlePneu = loadImage ("fazendeiroIdlePneu.png");
-  fazendeiroMorte = loadImage ("fazendeiroMorte.png");
-  sombraFazendeiro = loadImage ("sombraFazendeiro.png");
-
-  mimosa = loadImage ("mimosa.png");
-  mimosaDireita = loadImage ("mimosaDireita.png");
-  mimosaEsquerda = loadImage ("mimosaEsquerda.png");
-
-  pneuEsquerdaDesce = loadImage ("pneuEsquerdaDesce.png");
-  pneuEsquerdaSobe = loadImage ("pneuEsquerdaSobe.png");
-  pneuDireitaDesce = loadImage ("pneuDireitaDesce.png");
-  pneuDireitaSobe = loadImage ("pneuDireitaSobe.png");
-
-  vidaPadreLayout = loadImage ("vidaPadreLayout.png");
-  vidaPadreRaivaLayout = loadImage ("vidaPadreRaivaLayout.png");
-
-  for (int i = 0; i < vidaPadreLayoutOsso.length; i = i + 1) {
-    vidaPadreLayoutOsso[i] = loadImage ("vidaPadreLayoutOsso" + i + ".png");
-  }
-
-  vidaPadreRaivaBarra = loadImage ("vidaPadreRaivaBarra.png");
-
-  padreMovimentoIdle = loadImage ("padreMovimentoIdle.png");
-  padreCruz = loadImage ("padreCruz.png");
-  padreLevantem = loadImage ("padreLevantem.png");
-  padreCaveiraAparecendo = loadImage ("padreCaveiraAparecendo.png");
-  padreCaveira = loadImage ("padreCaveira.png");
-  for (int i = 0; i < padreCaveiraDano.length; i = i + 1) {
-    padreCaveiraDano[i] = loadImage ("padreCaveiraDano" + i + ".png");
-  }
-
-  padreRaivaMovimentoIdle = loadImage ("padreRaivaMovimentoIdle.png");
-  padreRaivaCruz = loadImage ("padreRaivaCruz.png");
-  padreRaivaLevantem = loadImage ("padreRaivaLevantem.png");
-  padreRaivaCaveiraAparecendo = loadImage ("padreRaivaCaveiraAparecendo.png");
-  padreRaivaCaveira = loadImage ("padreRaivaCaveira.png");
-  for (int i = 0; i < padreRaivaCaveiraDano.length; i = i + 1) {
-    padreRaivaCaveiraDano[i] = loadImage ("padreRaivaCaveiraDano" + i + ".png");
-  }
-  padreRaivaRaio = loadImage ("padreRaivaRaio.png");
-  padreMorte = loadImage ("padreMorte.png");
-
-  sombraPadre = loadImage ("sombraPadre.png");
-
-  hitCruz = loadImage ("hitCruz.png");
-  hitRaivaCruz = loadImage ("hitRaivaCruz.png");
-
-  caveiraPadreAparecendo = loadImage ("caveiraPadreAparecendo.png");
-  caveiraPadreFlutuando = loadImage ("caveiraPadreFlutuando.png");
-  caveiraPadreAtaque = loadImage ("caveiraPadreAtaque.png");
-  caveiraPadreRaivaAparecendo = loadImage ("caveiraPadreRaivaAparecendo.png");
-  caveiraPadreRaivaFlutuando = loadImage ("caveiraPadreRaivaFlutuando.png");
-  caveiraPadreRaivaAtaque = loadImage ("caveiraPadreRaivaAtaque.png");
-
-  raioPadre = loadImage ("raioPadre.png");
-
-  hitBosses = loadImage ("hitBosses.png");
-  hitEscudo = loadImage ("hitEscudo.png");
-
-  enemyPositionsFirstMap = new int [7][4];
-  enemyPositionsSecondMap  = new int [7][4];
-  enemyPositionsThirdMap = new int [7][4];
-
-  skeletonPositions();
-  kickingSkeletonPositions();
-  skeletonDogPositions();
-  redSkeletonPositions();
-
-  creditosY = 0;
-  creditos2Y = 1000;
-  movimentoCreditosY = 1;
-
-  estadoJogo = "MenuInicial";
-
-  totalInimigos = 0;
-
-  jLeiteX = 360;
-  jLeiteY = 345; 
-
-  vidaJLeiteAtual = 15;
-  vidaJleiteMax = 15; 
-  vidaJLeiteMin = 0;
-
-  vidaJLeiteBarraX = 115;
-
-  foodIndex = 10;
-
-  vidaCoveiroAtual = 40;
-  vidaCoveiroMin = 0;
-
-  vidaCoveiroBarraX = 230;
-
-  indexVidaCoveiroOsso = 3;
-
-  vidaFazendeiroAtual = 40;
-  vidaFazendeiroMin = 0;
-
-  vidaFazendeiroBarraX = 230;
-
-  indexVidaFazendeiroOsso = 3;
-
-  vidaPadreAtual = 40;
-  vidaPadreMin = 0;
-
-  vidaPadreBarraX = 230;
-
-  vidaPadreRaivaAtual = 40;
-  vidaPadreRaivaMin = 0;
-
-  vidaPadreRaivaBarraX = 230;
-
-  indexVidaPadreOsso = 4;
-
-  item = 0;
-
-  totalItem = 0;
-
-  primeiraPedra = 0;
-
-  botaoXAparecendoSom = false;
-  sonsAtivos = true;
-
-  botaoXAparecendoMusica = false;
-  musicasAtivas = true;
-
-  jLeiteMorreu = false;
-  jLeiteMorrendo = false;
-
-  jLeiteUsoItem = false;
-
-  hitInimigosMostrando = true;
-
-  hasIndexChanged = false;
-  
   coveiro = new Coveiro();
   fazendeiro = new Fazendeiro();
   padre = new Padre();
-
-  cenarios = new ArrayList<Cenario>();
-
-  pas = new ArrayList<Pa>();
-  pasAtaque = new ArrayList<PaAtaque>(); 
-
-  pedras = new ArrayList<Pedra>();
-  pedrasAtiradas = new ArrayList<PedraAtirada>();
-
-  chicotes = new ArrayList<Chicote>();
-  chicotesAtaque = new ArrayList<ChicoteAtaque>();
-
-  coxinhas = new ArrayList<Coxinha>();
-  brigadeiros = new ArrayList<Brigadeiro>();
-  queijos = new ArrayList<Queijo>();
-
-  esqueletos = new ArrayList<Esqueleto>();
-  esqueletosChute = new ArrayList<EsqueletoChute>();
-  cabecasEsqueleto = new ArrayList<CabecaEsqueleto>();
-  cachorros = new ArrayList<Cachorro>();
-  corvos = new ArrayList<Corvo>();
-  esqueletosRaiva = new ArrayList<EsqueletoRaiva>();
-
-  fendas = new ArrayList<Fenda>();
-  lapidesAtaque = new ArrayList<LapideAtaque>();
-  lapidesCenario = new ArrayList<LapideCenario>();
-  pocasCenario = new ArrayList<PocaCenario>();
-  aguasPocaCenario = new ArrayList<AguaPocaCenario>();
-
-  mimosas = new ArrayList<Mimosa>();
-  pneus = new ArrayList<Pneu>();
-
-  caveirasPadre = new ArrayList<CaveiraPadre>();
-
-  raios = new ArrayList<Raio>();
+  
+  firstMapEnemiesSpawnManager = new FirstMapEnemiesSpawnManager(ENEMY_MAXIMUM_FIRST_MAP, 2);
 }
 
 public void draw() {
-  if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
+  if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal()) {
     jogando();
+    if (!movementTutorialScreenActive) {
+      noCursor();
+      //weaponTutorialScreen();
+    }
   } else {
     menu();
+    cursor(HAND);
   }
 }
 
 public void keyPressed() {
   if (key == ESC) {
     key = 0;
-    setup();
-    estadoJogo = "MenuInicial";
+    variablesPreLoad();
+    gameState = GameState.MAINMENU.ordinal();
     if (temaBoss.isPlaying()) {
       temaBoss.pause();
     }
@@ -495,43 +137,40 @@ public void keyPressed() {
   }
 
   if (key == ENTER) {
-    if (estadoJogo == "PrimeiroMapa") {
-      if (telaTutorialAndandoAtiva) {
-        telaTutorialAndandoAtiva = false;
+    if (gameState == GameState.FIRSTMAP.ordinal()) {
+      if (movementTutorialScreenActive) {
+        movementTutorialScreenActive = false;
       }
     }
-    if (estadoJogo == "SegundoMapa") {
-      if (telaTutorialPedraAtiva) {
+    if (gameState == GameState.FIRSTMAP.ordinal()) {
+      if (weaponTutorialScreenActive) {
         loop();
-        primeiraPedra = primeiraPedra + 1;
-        umaPedra = false;
       }
     }
   }
 
-  if (estadoJogo == "MenuInicial") {
-    if (key == '1') {
-      estadoJogo = "PrimeiroMapa";
-    }
-    if (key == '2') {
-      estadoJogo = "SegundoMapa";
-      cenarios.add(new Cenario(0, 0, 2));
-      cenarios.add(new Cenario(0, -600, 2));
-    }
-    if (key == '3') {
-      estadoJogo = "TerceiroMapa";
-    }
-    if (key == '4') {
-      estadoJogo = "MapaCoveiro";
-    }
-    if (key == '5') {
-      estadoJogo = "MapaFazendeiro";
-    }
-    if (key == '6') {
-      estadoJogo = "MapaPadre";
+  if (gameState == GameState.MAINMENU.ordinal()) {
+    switch(key) {
+    case '1':
+      gameState = GameState.FIRSTMAP.ordinal();
+      break;
+    case '2':
+      gameState = GameState.SECONDMAP.ordinal();
+      break;
+    case '3':
+      gameState = GameState.THIRDMAP.ordinal();
+      break;
+    case '4':
+      gameState = GameState.FIRSTBOSS.ordinal();
+      break;
+    case '5':
+      gameState = GameState.SECONDBOSS.ordinal();
+      break;
+    case '6':
+      gameState = GameState.THIRDBOSS.ordinal();
+      break;
     }
   }
-
 
   if (keyCode == RIGHT || key == 'd' || key == 'D') { 
     jLeiteDireita = true;
@@ -546,7 +185,7 @@ public void keyPressed() {
     jLeiteBaixo = true;
   }
 
-  if (estadoJogo != "GameOver") {
+  if (gameState != GameState.GAMEOVER.ordinal()) {
     if (key == ' ' && !ativaBarraEspaco && !jLeiteUsoItemConfirma && !finalMapa) {
       if (item != 0) {
         jLeiteUsoItem = true;
@@ -554,29 +193,36 @@ public void keyPressed() {
         tempoItemAtivo = millis();
         ativaBarraEspaco = true;
         jLeiteUsoItemConfirma = true;
-        if (item == 1) {
-          tempoPedraAtirada = millis();
-          umaPedra = false;
-        } else if (item == 2) {
-          umaPa = false;
-        } else if (item == 3) {
-          umChicote = false;
+        oneWeapon = false;
+        if (weaponTotal == 1) {
+          generateItem(15000);
         }
       }
     }
   } else {
-    setup();
-    estadoJogo = ultimoEstado;
+    variablesPreLoad();
+    gameState = lastState;
   }
 
   if (key == 'p' || key == 'P') {
     if (looping) {
       noLoop();
+      timeRemainingFood = (timeToGenerateFood + intervalToGenerateFood) - millis();
+      timeRemainingItem = (timeToGenerateItem + intervalToGenerateItem) - millis();
     } else {
       loop();
+      if (comidas.size() == 0) {
+        generateFood(timeRemainingFood);
+      }
+      if (itens.size() == 0 && item == 0) {
+        generateItem(timeRemainingItem);
+      }
     }
   }
 }
+
+int timeRemainingFood;
+int timeRemainingItem;
 
 public void keyReleased() {
   if (keyCode == RIGHT || key == 'd' || key == 'D') {
@@ -598,259 +244,132 @@ public void keyReleased() {
 }
 
 public void mouseClicked() {
-  if (estadoJogo == "MenuInicial") {
-    if (mouseX > 660 && mouseX < 720 && mouseY > 10 && mouseY < 60) {
-      if (!botaoXAparecendoSom) {
-        botaoXAparecendoSom = true;
-        sonsAtivos = false;
-      } else {
-        botaoXAparecendoSom = false;
-        sonsAtivos = true;
-      }
-    }
-    if (mouseX > 730 && mouseX < 790 && mouseY > 10 && mouseY < 60) {
-      if (!botaoXAparecendoMusica) {
-        botaoXAparecendoMusica = true;
-        musicasAtivas = false;
-      } else {
-        botaoXAparecendoMusica = false;
-        musicasAtivas = true;
-      }
-    }
-  }
-
-  if (estadoJogo == "PrimeiroMapa") {
-    if (telaTutorialAndandoAtiva) {
+  if (gameState == GameState.FIRSTMAP.ordinal()) {
+    if (movementTutorialScreenActive) {
       if (mouseX > 584 && mouseX < 620 && mouseY > 139 && mouseY < 175) {
-        telaTutorialAndandoAtiva = false;
+        movementTutorialScreenActive = false;
       }
     }
-  }  
 
-  if (estadoJogo == "SegundoMapa") {
-    if (telaTutorialPedraAtiva) {
+    if (weaponTutorialScreenActive) {
       if (mouseX > 514 && mouseX < 550 && mouseY > 182 && mouseY < 218) {
         loop();
-        primeiraPedra = primeiraPedra + 1;
-        umaPedra = false;
       }
     }
   }
+}
+
+public void mouseReleased() {
+  hasClickedOnce = false;
 }
 int item;
 
-int totalItem;
-int primeiraPedra;
+int weaponTotal;
 
-int tempoGerarArma;
-int indexArma;
+int itemTotal;
+int timeToGenerateItem;
+int itemIndex;
 
-int totalArmas;
+int itemRandomMapPositionIndex;
 
-boolean armaGerada;
+int intervalToGenerateItem;
+
+boolean hasItemIndexChanged;
 
 public void armas() {
-  if (totalItem == 0 && !jLeiteUsoItem && pedras.size() == 0 && pas.size() == 0 && chicotes.size() == 0) {
+  if (weaponTotal == 0 && !jLeiteUsoItem && itens.size() == 0) {
     item = 0;
-    totalArmas = 0;
+    itemTotal = 0;
   }
 
-  if (!telaTutorialAndandoAtiva) {
-    if (!armaGerada) {
-      indexArma = PApplet.parseInt(random(0, 10));
-      tempoGerarArma = millis();
-      armaGerada = true;
+  if (itemTotal == 0 && hasItemIndexChanged && millis() > timeToGenerateItem + intervalToGenerateItem && itens.size() == 0) {
+    if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal()) {
+      addItem();
+    } else if (gameState >= GameState.FIRSTBOSS.ordinal() && gameState <= GameState.THIRDBOSS.ordinal()) {
+      addItemBoss();
     }
   }
 
-  pa();
-  paAtaque();
-  pedra();
-  pedraAtirada();
-  chicote();
-  chicoteAtaque();
-}
+  generateItemIndex();
+  item();
+  if (armas.size() > 0) {
+    arma();
+  }
 
-PImage caixaNumeroItem;
-PImage[] imagensNumerosItem = new PImage [15];
-PImage imagemNumeroItemInfinito;
-
-PImage caixaItemPa;
-PImage caixaItemPedra;
-PImage caixaItemChicote;
-
-public void caixaNumeroItem() {
-  image(caixaNumeroItem, 705, 510);
-  if (totalItem - 1 >= 0) {
-    if (item == 1) {
-      caixaItemPedra = stone.get(0, 0, 34, 27);
-      image(caixaItemPedra, 729, 516);
-    } else if (item == 2) {
-      image(caixaItemPa, 705, 510);
-    } else if (item == 3) {
-      image(caixaItemChicote, 705, 510);
-    }
-    image(imagensNumerosItem[totalItem - 1], 725, 552);
+  if (jLeiteUsoItem && armas.size() == 0 && weaponTotal > 0) {
+    weapon();
   }
 }
 
-public class Arma {
-  private PImage sprite;
-  private PImage spriteImage;
+public void generateItemIndex() {
+  if (!movementTutorialScreenActive) {
+    if (!hasItemIndexChanged) {
+      itemIndex = PApplet.parseInt(random(0, 10));
+      hasItemIndexChanged = true;
+    }
+  }
+}
 
-  private int x;
-  private int y;
+ArrayList<Arma> armas = new ArrayList<Arma>();
 
-  private int step;
-  private int spriteTime;
-  private int spriteInterval;
-
-  private int spriteWidth;
-  private int spriteHeight;
-
-  private boolean deleteWeapon;
-  private boolean damageBoss;
-
+public abstract class Arma extends MaisGeral {
   private int firstCollisionX;
   private int secondCollisionX;
   private int firstCollisionY;
   private int secondCollisionY;
 
-  public PImage getSprite() {
-    return sprite;
-  }
-
-  public void setSprite(PImage sprite) {
-    this.sprite = sprite;
-  }
-
-  public PImage getSpriteImage() {
-    return spriteImage;
-  }
-
-  public void setSpriteImage(PImage enemy) {
-    this.spriteImage = enemy;
-  }
-
-  public int getX() {
-    return x;
-  }
-
-  public void setX(int x) {
-    this.x = x;
-  }
-
-  public int getY() {
-    return y;
-  }
-
-  public void setY(int y) {
-    this.y = y;
-  }
-
-  public int getStep() {
-    return step;
-  }
-
-  public void setStep(int step) {
-    this.step = step;
-  }
-
-  public int getSpriteTime() {
-    return spriteTime;
-  }
-
-  public void setSpriteTime(int spriteTime) {
-    this.spriteTime = spriteTime;
-  }
-
-  public int getSpriteInterval() {
-    return spriteInterval;
-  }
-
-  public void setSpriteInterval(int spriteInterval) {
-    this.spriteInterval = spriteInterval;
-  }
-
-  public int getSpriteWidth() {
-    return spriteWidth;
-  }
-
-  public void setSpriteWidth(int spriteWidth) {
-    this.spriteWidth = spriteWidth;
-  }
-
-  public int getSpriteHeight() {
-    return spriteHeight;
-  }
-
-  public void setSpriteHeight(int spriteHeight) {
-    this.spriteHeight = spriteHeight;
-  }
-
-  public boolean getDeleteWeapon() {
-    return deleteWeapon;
-  }
-
-  public void setDeleteWeapon(boolean deleteWeapon) {
-    this.deleteWeapon = deleteWeapon;
-  }
-
-    public boolean getDamageBoss() {
-    return damageBoss;
-  }
-
-  public void setDamageBoss(boolean damageBoss) {
-    this.damageBoss = damageBoss;
-  }
+  private boolean deleteWeapon;
+  private boolean damageBoss;
 
   public int getFirstCollisionX() {
     return firstCollisionX;
   }
-
-  public void setFirstCollisionX(int firstCollisionX) {
+  protected void setFirstCollisionX(int firstCollisionX) {
     this.firstCollisionX = firstCollisionX;
   }
 
   public int getSecondCollisionX() {
     return secondCollisionX;
   }
-
-  public void setSecondCollisionX(int secondCollisionX) {
+  protected void setSecondCollisionX(int secondCollisionX) {
     this.secondCollisionX = secondCollisionX;
   }
 
   public int getFirstCollisionY() {
     return firstCollisionY;
   }
-
-  public void setFirstCollisionY(int firstCollisionY) {
+  protected void setFirstCollisionY(int firstCollisionY) {
     this.firstCollisionY = firstCollisionY;
   }
 
   public int getSecondCollisionY() {
     return secondCollisionY;
   }
-
-  public void setSecondCollisionY(int secondCollisionY) {
+  protected void setSecondCollisionY(int secondCollisionY) {
     this.secondCollisionY = secondCollisionY;
   }
 
-  public void display() {
-    if (millis() > spriteTime + spriteInterval) {
-      sprite = spriteImage.get(step, 0, spriteWidth, spriteHeight);
-      step = step % spriteImage.width + spriteWidth;
-      image(sprite, x, y);
-      spriteTime = millis();
-    } else {
-      image(sprite, x, y);
-    }
+  public boolean getDeleteWeapon() {
+    return deleteWeapon;
+  } 
+  protected void setDeleteWeapon(boolean deleteWeapon) {
+    this.deleteWeapon = deleteWeapon;
+  }
 
-    if (step == spriteImage.width) {
-      step = 0;
-      deleteWeapon = true;
+  public boolean getDamageBoss() {
+    return damageBoss;
+  }
+  protected void setDamageBoss(boolean damageBoss) {
+    this.damageBoss = damageBoss;
+  }
+
+  public void stepHandler() {
+    if (getStep() == getSpriteImage().width) {
+      this.deleteWeapon = true;
     }
   }
+
+  public abstract void update();
 
   public boolean hasHit(Geral g) {
     if (firstCollisionX > g.getX() && secondCollisionX < g.getX() + g.getSpriteWidth() && firstCollisionY > g.getY() && secondCollisionY < g.getY() + g.getSpriteHeight()) {
@@ -906,28 +425,118 @@ public class Arma {
     return false;
   }
 }
-PImage vidaCoveiroLayout;
 
-int vidaCoveiroAtual;
-int vidaCoveiroMin;
+boolean oneWeapon;
 
-int vidaCoveiroBarraX;
+public void weapon() {
+  if (!oneWeapon) {
+    switch(item) {
+    case WHIP: 
+      armas.add(new ChicoteAtaque());
+      break;
+    case SHOVEL:
+      armas.add(new PaAtaque());
+      break;
+    }
 
-int indexVidaCoveiroOsso;
+    weaponTotal--;
+    oneWeapon = true;
+  }
+}
+
+public void arma() {
+  for (int i = armas.size() - 1; i >= 0; i = i - 1) {
+    Arma a = armas.get(i);
+    a.update();
+    a.display();
+    if (a.getDeleteWeapon()) {
+      armas.remove(a);
+    }
+    if (gameState == GameState.FIRSTBOSS.ordinal()) {
+      if (a.hasHitCoveiro() && !a.getDamageBoss()) {
+        if (isSoundActive) {
+          indexRandomSomCoveiroTomandoDano = PApplet.parseInt(random(0, sonsCoveiroTomandoDano.length));
+          sonsCoveiroTomandoDano[indexRandomSomCoveiroTomandoDano].rewind();
+          sonsCoveiroTomandoDano[indexRandomSomCoveiroTomandoDano].play();
+        }
+        coveiroCurrentHP -= 2;
+        a.setDamageBoss(true);
+      }
+    }
+    if (gameState == GameState.SECONDBOSS.ordinal()) {
+      if (a.hasHitFazendeiro() && !a.getDamageBoss()) {
+        if (isSoundActive) {
+          indexRandomSomFazendeiroTomandoDano = PApplet.parseInt(random(0, sonsFazendeiroTomandoDano.length));
+          sonsFazendeiroTomandoDano[indexRandomSomFazendeiroTomandoDano].rewind();
+          sonsFazendeiroTomandoDano[indexRandomSomFazendeiroTomandoDano].play();
+        }
+        fazendeiroCurrentHP -= 2;
+        a.setDamageBoss(true);
+      }
+    }
+    if (gameState == GameState.THIRDBOSS.ordinal()) {
+      if (a.hasHitPadre() && !a.getDamageBoss()) {
+        if (padreCurrentHP > 0) {
+          if (isSoundActive) {
+            indexRandomSomPadreTomandoDano = PApplet.parseInt(random(0, sonsPadreTomandoDano.length));
+            sonsPadreTomandoDano[indexRandomSomPadreTomandoDano].rewind();
+            sonsPadreTomandoDano[indexRandomSomPadreTomandoDano].play();
+          }
+          padreCurrentHP -= 2;
+          a.setDamageBoss(true);
+        } else {
+          if (isSoundActive) {
+            indexRandomSomPadreTomandoDano = PApplet.parseInt(random(0, sonsPadreRaivaTomandoDano.length));
+            sonsPadreRaivaTomandoDano[indexRandomSomPadreTomandoDano].rewind();
+            sonsPadreRaivaTomandoDano[indexRandomSomPadreTomandoDano].play();
+          }
+          madPadreCurrentHP -= 2;
+          a.setDamageBoss(true);
+        }
+      }
+    }
+  }
+}
+public class Background extends MaisGeral {
+  Background() {
+    setX(0);
+    setY(0);
+
+    setSpriteImage(backgroundMenu);
+    setSpriteInterval(140);
+    setSpriteWidth(800);
+    setSpriteHeight(600);
+  }
+}
+PImage bossHPBackground;
+PImage bossHPBar;
+PImage[] bossBonesLayout = new PImage [4];
+
+final int bossHPBackgroundX = 0;
+final int bossHPBackgroundY = 0;
+
+final int bossHPBarx = 230;
+final int bossHPBarY = 23;
+final int bossHPBarXStart = 230;
+
+final int bossHPInterval = 11;
+
+final int bossHPLayoutX = 0;
+final int bossHPLayoutY = 0;
+
+final int bossBonesLayoutX = 84;
+final int bossBonesLayoutY = 54;
+PImage coveiroHPLayout;
+
+int coveiroCurrentHP;
+int coveiroHitpointsMinimum;
+
+int coveiroBonesIndex;
 
 public void vidaCoveiro() {
-  image(vidaBossesLayoutBackground, 0, 0);
-
-  vidaCoveiroMin = 0;
-  vidaCoveiroBarraX = 230;
-  while (vidaCoveiroMin < vidaCoveiroAtual) {
-    image(vidaBossesBarra, vidaCoveiroBarraX, 23);
-    vidaCoveiroBarraX = vidaCoveiroBarraX + 11;
-    vidaCoveiroMin = vidaCoveiroMin + 1;
-  }
-
-  image(vidaCoveiroLayout, 0, 0);
-  image(vidaBossesLayoutOsso[indexVidaCoveiroOsso], 84, 54);
+  coveiroHP.update();
+  coveiroHP.display();
+  image(bossBonesLayout[coveiroBonesIndex], 84, 54);
 }
 
 AudioPlayer[] sonsCoveiroIdle = new AudioPlayer [3];
@@ -1017,7 +626,7 @@ public class Coveiro {
 
       if (!andando && !ataquePa && !novoAtaqueFenda && !carregandoNovoAtaqueLapide && !novoAtaqueLapide && !coveiroTomouDanoAgua) {
         if (!somCoveiroIdleTocando) {
-          if (sonsAtivos) {
+          if (isSoundActive) {
             indexRandomSomCoveiroIdle = PApplet.parseInt(random(0, sonsCoveiroIdle.length));
             sonsCoveiroIdle[indexRandomSomCoveiroIdle].rewind();
             sonsCoveiroIdle[indexRandomSomCoveiroIdle].play();
@@ -1082,7 +691,7 @@ public class Coveiro {
         }
 
         if (stepCoveiroPaFenda == 1452) {
-          if (sonsAtivos) {
+          if (isSoundActive) {
             somCoveiroFenda.rewind();
             somCoveiroFenda.play();
           }
@@ -1113,7 +722,7 @@ public class Coveiro {
 
       if (novoAtaqueLapide && !coveiroTomouDanoAgua) {
         if (stepCoveiroLapide == 760) {
-          if (sonsAtivos) {
+          if (isSoundActive) {
             indexRandomSomCoveiroEsmaga = PApplet.parseInt(random(0, sonsCoveiroEsmaga.length));
             sonsCoveiroEsmaga[indexRandomSomCoveiroEsmaga].rewind();
             sonsCoveiroEsmaga[indexRandomSomCoveiroEsmaga].play();
@@ -1238,7 +847,7 @@ public class Coveiro {
       if (ataquePaAcontecendo && dist(coveiroX, coveiroY, jLeiteX, jLeiteY) < 200) {
         if (millis() > tempoDanoPa + 775) {
           if (!jLeiteImune) {
-            vidaJLeiteAtual = vidaJLeiteAtual - 5;
+            playerCurrentHP -= 5;
             jLeiteImune = true;
             tempoImune = millis();
           }
@@ -1287,10 +896,10 @@ public class Coveiro {
   }
 
   public void coveiroMorte() {
-    if ((vidaCoveiroAtual <= 0 || indexVidaCoveiroOsso == 0) && !coveiroMorreu) {
+    if ((coveiroCurrentHP <= 0 || coveiroBonesIndex == 0) && !coveiroMorreu) {
       coveiroMorreu = true;
       coveiroMorrendo = true;
-      if (sonsAtivos) {
+      if (isSoundActive) {
         somCoveiroMorreu.rewind();
         somCoveiroMorreu.play();
       }
@@ -1390,7 +999,7 @@ public class Fenda {
   public void colisao() {
     if (jLeiteX + 63 > fendaX + 40 && jLeiteX < fendaX + 220 && jLeiteY > fendaY - 50) {
       if (causouDanoJLeite && !jLeiteImune) {
-        vidaJLeiteAtual = vidaJLeiteAtual - 4;
+        playerCurrentHP -= 4;
         jLeiteImune = true;
         tempoImune = millis();
       }
@@ -1401,7 +1010,7 @@ public class Fenda {
   }
 }
 
-ArrayList<Fenda> fendas;
+ArrayList<Fenda> fendas = new ArrayList<Fenda>();
 
 public void fenda() {
   if (fendas.size() == 0 && abriuFenda) {
@@ -1476,7 +1085,7 @@ public class LapideAtaque {
   }
 }
 
-ArrayList<LapideAtaque> lapidesAtaque;
+ArrayList<LapideAtaque> lapidesAtaque = new ArrayList<LapideAtaque>();
 
 public void lapideAtaque() {
   if (ataqueLapideAcontecendo && lapidesAtaque.size() == 0) {
@@ -1495,7 +1104,7 @@ public void lapideAtaque() {
     }
 
     if (l.acertouJLeite() && !jLeiteImune) {
-      vidaJLeiteAtual = vidaJLeiteAtual - 5;
+      playerCurrentHP -= 5;
       jLeiteImune = true;
       tempoImune = millis();
     }
@@ -1555,7 +1164,7 @@ public class LapideCenario {
   }
 }
 
-ArrayList<LapideCenario> lapidesCenario;
+ArrayList<LapideCenario> lapidesCenario = new ArrayList<LapideCenario>();
 
 public void lapideCenario() {
   if (lapidesCenario.size() == 0) {
@@ -1610,7 +1219,7 @@ public class AguaPocaCenario {
   }
 }
 
-ArrayList<AguaPocaCenario> aguasPocaCenario;
+ArrayList<AguaPocaCenario> aguasPocaCenario = new ArrayList<AguaPocaCenario>();
 
 public void aguaPocaCenario() {
   for (int i = aguasPocaCenario.size() - 1; i >= 0; i = i - 1) {
@@ -1655,8 +1264,8 @@ public class PocaCenario {
     if (coveiro.coveiroSocoChao) {
       if (coveiroX > pocaCenarioX && coveiroX < pocaCenarioX + 160 && coveiroY + 200 > pocaCenarioY) {
         if (!pocaEsvaziou) {
-          if (indexVidaCoveiroOsso >= 1) {
-            indexVidaCoveiroOsso = indexVidaCoveiroOsso - 1;
+          if (coveiroBonesIndex >= 1) {
+            coveiroBonesIndex = coveiroBonesIndex - 1;
           }
         }
         coveiro.coveiroSocoChao = false;
@@ -1672,7 +1281,7 @@ public class PocaCenario {
   }
 }
 
-ArrayList<PocaCenario> pocasCenario;
+ArrayList<PocaCenario> pocasCenario = new ArrayList<PocaCenario>();
 
 public void pocaCenario() {
   if (pocasCenario.size() == 0) {
@@ -1696,37 +1305,17 @@ public void pocaCenario() {
     coveiroDelayTomouDanoAgua = false;
   }
 }
-AudioPlayer somFazendeiroVidaMetade;
+PImage fazendeiroHPLayout;
 
-PImage vidaFazendeiroLayout;
+int fazendeiroCurrentHP;
+int fazendeiroHitpointsMinimum;
 
-int vidaFazendeiroAtual;
-int vidaFazendeiroMin;
-
-int vidaFazendeiroBarraX;
-
-int indexVidaFazendeiroOsso;
+int fazendeiroBonesIndex;
 
 public void vidaFazendeiro() {
-  image(vidaBossesLayoutBackground, 0, 0);
-
-  vidaFazendeiroMin = 0;
-  vidaFazendeiroBarraX = 230;
-  while (vidaFazendeiroMin < vidaFazendeiroAtual) {
-    image(vidaBossesBarra, vidaFazendeiroBarraX, 23);
-    vidaFazendeiroBarraX = vidaFazendeiroBarraX + 11;
-    vidaFazendeiroMin = vidaFazendeiroMin + 1;
-  }
-
-  image(vidaFazendeiroLayout, 0, 0);
-  image(vidaBossesLayoutOsso[indexVidaFazendeiroOsso], 84, 54);
-
-  if (vidaFazendeiroAtual == 20) {
-    if (sonsAtivos) {
-      somFazendeiroVidaMetade.rewind();
-      somFazendeiroVidaMetade.play();
-    }
-  }
+  fazendeiroHP.update();
+  fazendeiroHP.display();
+  image(bossBonesLayout[fazendeiroBonesIndex], 84, 54);
 }
 
 AudioPlayer[] sonsFazendeiroIdle = new AudioPlayer [3];
@@ -1831,7 +1420,7 @@ public class Fazendeiro {
     if (!fazendeiroMorreu) {
       if (!andando && !ataqueFoice && !novoAtaqueMimosa && !ataqueMimosaAcontecendo && !novoAtaquePneu && !ataquePneuAcontecendo && !fazendeiroTomouDanoPneu) {
         if (!somFazendeiroIdleTocando) {
-          if (sonsAtivos) {
+          if (isSoundActive) {
             indexRandomSomFazendeiroIdle = PApplet.parseInt(random(0, sonsFazendeiroIdle.length));
             sonsFazendeiroIdle[indexRandomSomFazendeiroIdle].rewind();
             sonsFazendeiroIdle[indexRandomSomFazendeiroIdle].play();
@@ -1887,7 +1476,7 @@ public class Fazendeiro {
 
       if (novoAtaqueMimosa && !ataqueMimosaAcontecendo && !novoAtaquePneu && !ataquePneuAcontecendo && !fazendeiroTomouDanoPneu) {
         if (stepFazendeiroMimosa == 0) {
-          if (sonsAtivos) {
+          if (isSoundActive) {
             indexRandomSomFazendeiroMimosa = PApplet.parseInt(random(0, sonsFazendeiroSoltandoMimosa.length));
             sonsFazendeiroSoltandoMimosa[indexRandomSomFazendeiroMimosa].rewind();
             sonsFazendeiroSoltandoMimosa[indexRandomSomFazendeiroMimosa].play();
@@ -1927,7 +1516,7 @@ public class Fazendeiro {
 
       if (novoAtaquePneu && !ataquePneuAcontecendo && !ataqueMimosaAcontecendo && !fazendeiroTomouDanoPneu) {
         if (stepFazendeiroPneu == 0) {
-          if (sonsAtivos) {
+          if (isSoundActive) {
             somSoltandoPneu.rewind();
             somSoltandoPneu.play();
           }
@@ -2078,7 +1667,7 @@ public class Fazendeiro {
     if (ataqueFoiceAcontecendo && dist(fazendeiroX, fazendeiroY, jLeiteX, jLeiteY) < 100) {
       if (millis() > tempoDanoFoice + 310) {
         if (!jLeiteImune) {
-          vidaJLeiteAtual = vidaJLeiteAtual - 3;
+          playerCurrentHP -= 3;
           jLeiteImune = true;
           tempoImune = millis();
         }
@@ -2115,10 +1704,10 @@ public class Fazendeiro {
   }
 
   public void fazendeiroMorte() {
-    if ((vidaFazendeiroAtual <= 0 || indexVidaFazendeiroOsso == 0) && !fazendeiroMorreu) {
+    if ((fazendeiroCurrentHP <= 0 || fazendeiroBonesIndex == 0) && !fazendeiroMorreu) {
       fazendeiroMorreu = true;
       fazendeiroMorrendo = true;
-      if (sonsAtivos) {
+      if (isSoundActive) {
         somFazendeiroMorreu.rewind();
         somFazendeiroMorreu.play();
       }
@@ -2238,7 +1827,7 @@ public class Mimosa {
   }
 }
 
-ArrayList<Mimosa> mimosas;
+ArrayList<Mimosa> mimosas = new ArrayList<Mimosa>();
 
 public void mimosa() {
   if (ataqueMimosaAcontecendo && mimosas.size() == 0) {
@@ -2253,7 +1842,7 @@ public void mimosa() {
     if (m.saiuDaTela()) {
       mimosas.remove(m);
       if (!m.acertouJLeite) {
-        if (sonsAtivos) {
+        if (isSoundActive) {
           somMimosaErra.rewind();
           somMimosaErra.play();
         }
@@ -2261,10 +1850,10 @@ public void mimosa() {
     }
 
     if (m.acertouJLeite() && !jLeiteImune) {
-      vidaJLeiteAtual = vidaJLeiteAtual - 2;
+      playerCurrentHP -= 2;
       jLeiteImune = true;
       tempoImune = millis();
-      if (sonsAtivos) {
+      if (isSoundActive) {
         sonsMimosaHit[PApplet.parseInt(random(0, 2))].rewind();
         sonsMimosaHit[PApplet.parseInt(random(0, 2))].play();
       }
@@ -2418,8 +2007,8 @@ public class Pneu {
 
   public boolean acertouFazendeiro() {
     if (pneuX + 116 > fazendeiroX && pneuX < fazendeiroX + 188 && pneuY + 84 > fazendeiroY && pneuY < fazendeiroY + 125 && acertarFazendeiro) {
-      if (indexVidaFazendeiroOsso >= 1) {
-        indexVidaFazendeiroOsso = indexVidaFazendeiroOsso - 1;
+      if (fazendeiroBonesIndex >= 1) {
+        fazendeiroBonesIndex = fazendeiroBonesIndex - 1;
       }
       tempoSpriteFazendeiroTomouDanoPneu = millis();
       fazendeiroTomouDanoPneu = true;
@@ -2430,7 +2019,7 @@ public class Pneu {
   }
 }
 
-ArrayList<Pneu> pneus;
+ArrayList<Pneu> pneus = new ArrayList<Pneu>();
 
 public void pneu() {
   if (pneus.size() == 0) {
@@ -2451,30 +2040,30 @@ public void pneu() {
       pneus.remove(p);
     }
     if (p.acertouJoaoLeite() && !jLeiteImune) {
-      if (sonsAtivos) {
+      if (isSoundActive) {
         somAcertouPneuJLeite.rewind();
         somAcertouPneuJLeite.play();
       }
-      vidaJLeiteAtual = vidaJLeiteAtual - 5;
+      playerCurrentHP -= 5;
       jLeiteImune = true;
       tempoImune = millis();
     }
     if (p.acertouFazendeiro()) {
-      if (sonsAtivos) {
+      if (isSoundActive) {
         somAcertouPneuFazendeiro.rewind();
         somAcertouPneuFazendeiro.play();
       }
     }
   }
 }
-PImage vidaPadreLayout;
-PImage vidaPadreRaivaLayout;
+PImage padreHPLayout;
+PImage madPadreHPLayout;
 
 PImage[] vidaPadreLayoutOsso = new PImage [5];
 
-PImage vidaPadreRaivaBarra;
+PImage madPadreHPBar;
 
-int vidaPadreAtual, vidaPadreRaivaAtual;
+int padreCurrentHP, madPadreCurrentHP;
 int vidaPadreMin, vidaPadreRaivaMin;
 
 int vidaPadreBarraX;
@@ -2483,29 +2072,12 @@ int vidaPadreRaivaBarraX;
 int indexVidaPadreOsso;
 
 public void vidaPadre() {
-  image(vidaBossesLayoutBackground, 0, 0);
+  image(bossHPBackground, 0, 0);
 
-  vidaPadreRaivaMin = 0;
-  vidaPadreRaivaBarraX = 230;
-  while (vidaPadreRaivaMin < vidaPadreRaivaAtual) {
-    image(vidaPadreRaivaBarra, vidaPadreRaivaBarraX, 23);
-    vidaPadreRaivaBarraX = vidaPadreRaivaBarraX + 11;
-    vidaPadreRaivaMin = vidaPadreRaivaMin + 1;
-  }
-
-  vidaPadreMin = 0;
-  vidaPadreBarraX = 230;
-  while (vidaPadreMin < vidaPadreAtual) {
-    image(vidaBossesBarra, vidaPadreBarraX, 23);
-    vidaPadreBarraX = vidaPadreBarraX + 11;
-    vidaPadreMin = vidaPadreMin + 1;
-  }
-
-  if (!padre.padreMudouForma) {
-    image(vidaPadreLayout, 0, 0);
-  } else {
-    image(vidaPadreRaivaLayout, 0, 0);
-  }
+  HitpointsLayout p;
+  p = (padre.padreMudouForma) ? madPadreHP : padreHP;
+  p.update();
+  p.display();
   image(vidaPadreLayoutOsso[indexVidaPadreOsso], 84, 54);
 }
 
@@ -2643,7 +2215,7 @@ public class Padre {
     if (!padreMudouForma) {
       if (!ataqueCruz && !novoAtaqueLevantem && !novoAtaqueCaveira && !caveiraApareceu && !padreCaveiraCaiuCabeca && !padreTomouDanoCaveira) {
         if (!somPadreIdleTocando) {
-          if (sonsAtivos) {
+          if (isSoundActive) {
             indexRandomSomPadreIdle = PApplet.parseInt(random(0, sonsPadreIdle.length));
             sonsPadreIdle[indexRandomSomPadreIdle].rewind();
             sonsPadreIdle[indexRandomSomPadreIdle].play();
@@ -2685,7 +2257,7 @@ public class Padre {
 
       if (novoAtaqueLevantem && !novoAtaqueCaveira && !caveiraApareceu && !padreCaveiraCaiuCabeca && !padreTomouDanoCaveira) {
         if (stepPadreLevantem == 0) {
-          if (sonsAtivos) {
+          if (isSoundActive) {
             sonsPadreLevantem[0].rewind();
             sonsPadreLevantem[0].play();
           }
@@ -2730,7 +2302,7 @@ public class Padre {
 
       if (caveiraApareceu && !padreCaveiraCaiuCabeca && !padreTomouDanoCaveira) {
         if (stepPadreCaveira == 0) {
-          if (sonsAtivos) {
+          if (isSoundActive) {
             sonsPadreCaveira[0].rewind();
             sonsPadreCaveira[0].play();
           }
@@ -2779,7 +2351,7 @@ public class Padre {
       if (!padreMorreu) {
         if (!ataqueCruz && !novoAtaqueLevantem && !novoAtaqueCaveira && !caveiraApareceu && !padreCaveiraCaiuCabeca && !padreTomouDanoCaveira && !padreCarregandoNovoAtaqueRaio) {
           if (!somPadreIdleTocando) {
-            if (sonsAtivos) {
+            if (isSoundActive) {
               indexRandomSomPadreIdle = PApplet.parseInt(random(0, sonsPadreRaivaIdle.length));
               sonsPadreRaivaIdle[indexRandomSomPadreIdle].rewind();
               sonsPadreRaivaIdle[indexRandomSomPadreIdle].play();
@@ -2821,16 +2393,16 @@ public class Padre {
 
         if (novoAtaqueLevantem && !novoAtaqueCaveira && !caveiraApareceu && !padreCaveiraCaiuCabeca && !padreTomouDanoCaveira && !padreCarregandoNovoAtaqueRaio) {
           if (stepPadreRaivaLevantem == 0) {
-            if (sonsAtivos) {
+            if (isSoundActive) {
               sonsPadreLevantem[0].rewind();
               sonsPadreLevantem[0].play();
             }
           }
 
           if (!padreRaivaCurou) {
-            while (vidaPadreRaivaAtual < 40 && amountRecoveredLevantem < 3) {
+            while (madPadreCurrentHP < 40 && amountRecoveredLevantem < 3) {
               amountRecoveredLevantem = amountRecoveredLevantem + 1;
-              vidaPadreRaivaAtual = vidaPadreRaivaAtual + 1;
+              madPadreCurrentHP = madPadreCurrentHP + 1;
             }
             padreRaivaCurou = true;
           }
@@ -2872,7 +2444,7 @@ public class Padre {
 
         if (caveiraApareceu && !padreCaveiraCaiuCabeca && !padreTomouDanoCaveira && !padreCarregandoNovoAtaqueRaio) {
           if (stepPadreRaivaCaveira == 0) {
-            if (sonsAtivos) {
+            if (isSoundActive) {
               sonsPadreCaveira[1].rewind();
               sonsPadreCaveira[1].play();
             }
@@ -2947,7 +2519,7 @@ public class Padre {
             padreCarregandoNovoAtaqueRaio = false;
             padreParouCarregarRaio = true;
             gatilhoNovoAtaqueRaio = false;
-            if (sonsAtivos) {
+            if (isSoundActive) {
               somPadreRaio.rewind();
               somPadreRaio.play();
             }
@@ -3027,7 +2599,7 @@ public class Padre {
             if (!jLeiteImune) {
               hitHitCruzMostrando = true;
               hitCruz(jLeiteX - 30, jLeiteY);
-              vidaJLeiteAtual = vidaJLeiteAtual - 2;
+              playerCurrentHP -= 2;
               jLeiteImune = true;
               tempoImune = millis();
             }
@@ -3037,7 +2609,7 @@ public class Padre {
             if (!jLeiteImune) {
               hitHitCruzMostrando = true;
               hitCruz(jLeiteX - 30, jLeiteY);
-              vidaJLeiteAtual = vidaJLeiteAtual - 3;
+              playerCurrentHP -= 3;
               jLeiteImune = true;
               tempoImune = millis();
             }
@@ -3083,7 +2655,7 @@ public class Padre {
   }
 
   public void padreMudarForma() {
-    if ((vidaPadreAtual <= 0 || indexVidaPadreOsso == 2) && !padreFormaMudada) {
+    if ((padreCurrentHP <= 0 || indexVidaPadreOsso == 2) && !padreFormaMudada) {
       padreMudouForma = true;
       padreFormaMudada = true;
     }
@@ -3106,10 +2678,10 @@ public class Padre {
   }
 
   public void padreMorte() {
-    if ((vidaPadreRaivaAtual <= 0 || indexVidaPadreOsso == 0) && !padreMorreu) {
+    if ((madPadreCurrentHP <= 0 || indexVidaPadreOsso == 0) && !padreMorreu) {
       padreMorreu = true;
       padreMorrendo = true;
-      if (sonsAtivos) {
+      if (isSoundActive) {
         somPadreMorreu.rewind();
         somPadreMorreu.play();
       }
@@ -3312,7 +2884,7 @@ public class CaveiraPadre {
   }
 }
 
-ArrayList<CaveiraPadre> caveirasPadre;
+ArrayList<CaveiraPadre> caveirasPadre = new ArrayList<CaveiraPadre>();
 
 int tempoPrimeiraCaveiraAtaque;
 int randomIndexCaveiraPadre = 4;
@@ -3359,12 +2931,12 @@ public void caveiraPadre() {
         padreCaveiraCaiuCabeca = true;
         if (indexVidaPadreOsso >= 1 && umOsso) {
           if (!padre.padreMudouForma) {
-            if (sonsAtivos) {
+            if (isSoundActive) {
               sonsPadreImpossivel[0].rewind();
               sonsPadreImpossivel[0].play();
             }
           } else {
-            if (sonsAtivos) {
+            if (isSoundActive) {
               sonsPadreImpossivel[1].rewind();
               sonsPadreImpossivel[1].play();
             }
@@ -3378,7 +2950,7 @@ public void caveiraPadre() {
     }
 
     if (c.acertouJLeite() && !jLeiteImune) {
-      vidaJLeiteAtual = vidaJLeiteAtual - 4;
+      playerCurrentHP -= 4;
       jLeiteImune = true;
       tempoImune = millis();
       ataqueCaveiraAcontecendo = false;
@@ -3444,7 +3016,7 @@ public class Raio {
   }
 }
 
-ArrayList<Raio> raios;
+ArrayList<Raio> raios = new ArrayList<Raio>();
 
 public void raio() {
   if (raios.size() == 0 && padre.padreCarregandoNovoAtaqueRaio) {
@@ -3455,10 +3027,202 @@ public void raio() {
     Raio r = raios.get(i);
     r.display();
     if (r.acertouJLeite() && !imortalidade) {
-      vidaJLeiteAtual = vidaJLeiteAtual - 9999999;
+      playerCurrentHP -= 9999999;
     }
     if (r.deletarRaio) {
       raios.remove(r);
+    }
+  }
+}
+boolean hasClickedOnce;
+
+public abstract class Button {
+  private PImage buttonPlain;
+
+  private PVector button = new PVector();
+
+  private int firstXBoundary;
+  private int secondXBoundary;
+  private int firstYBoundary;
+  private int secondYBoundary;
+
+  public PImage getButtonPlain() {
+    return buttonPlain;
+  }
+  protected void setButtonPlain(PImage buttonPlain) {
+    this.buttonPlain = buttonPlain;
+  }
+
+  public PVector getButton() {
+    return button;
+  }
+  protected void setButton(int x, int y) { 
+    this.button.x = x;
+    this.button.y = y;
+  }
+
+  public int getFirstXBoundary() {
+    return firstXBoundary;
+  }
+  protected void setFirstXBoundary(int firstXBoundary) {
+    this.firstXBoundary = firstXBoundary;
+  }
+
+  public int getSecondXBoundary() {
+    return secondXBoundary;
+  }
+  protected void setSecondXBoundary(int secondXBoundary) {
+    this.secondXBoundary = secondXBoundary;
+  }
+
+  public int getFirstYBoundary() {
+    return firstYBoundary;
+  }
+  protected void setFirstYBoundary(int firstYBoundary) {
+    this.firstYBoundary = firstYBoundary;
+  }
+
+  public int getSecondYBoundary() {
+    return secondYBoundary;
+  }
+  protected void setSecondYBoundary(int secondYBoundary) {
+    this.secondYBoundary = secondYBoundary;
+  }
+
+  public abstract void display();
+
+  public abstract void setState();
+
+  public boolean isMouseOver() {
+    if (mouseX > firstXBoundary && mouseX < secondXBoundary && mouseY > firstYBoundary && mouseY < secondYBoundary) {
+      return true;
+    } 
+
+    return false;
+  }
+
+  public boolean hasClicked() {
+    if (isMouseOver() && mousePressed) {
+      return true;
+    }
+
+    return false;
+  }
+}
+final int SOUND = 0;
+final int MUSIC = 1;
+
+public class AudioButton extends Button {
+  private int index;
+
+  private boolean isXActive;
+
+  AudioButton(PImage buttonPlain, int x, int firstXBoundary, int secondXBoundary, boolean isAudioActive, int index) {
+    this.setButtonPlain(buttonPlain);
+    this.setButton(x, 10);
+    this.setFirstXBoundary(firstXBoundary);
+    this.setSecondXBoundary(secondXBoundary);
+    this.setFirstYBoundary(10);
+    this.setSecondYBoundary(60);
+    this.isXActive = !isAudioActive;
+    this.index = index;
+  }
+
+  public void display() {
+    image(getButtonPlain(), getButton().x, getButton().y);
+
+    if (isXActive) {
+      image(botaoX, getButton().x, getButton().y);
+    }
+  } 
+
+  public void setBooleans(boolean setter) {
+    switch(index) {
+    case 0:
+      isSoundActive = !setter;
+      break;
+    case 1:
+      isMusicActive = !setter;
+      break;
+    }
+  }
+
+  public void setState() {
+    if (hasClicked() && !hasClickedOnce) {
+      if (isXActive) {
+        isXActive = false;
+      } else {
+        isXActive = true;
+      }
+
+      setBooleans(isXActive);
+      hasClickedOnce = true;
+    }
+  }
+}
+public class HandsButton extends MenuButton {
+
+  HandsButton(PImage buttonPlain, PImage buttonOther) {
+    this.setButtonPlain(buttonPlain);
+    this.setButtonOther(buttonOther);
+    this.setButton(20, 520);
+    this.setFirstXBoundary(20);
+    this.setSecondXBoundary(125);
+    this.setFirstYBoundary(520);
+    this.setSecondYBoundary(573);
+    this.setOrdinal(GameState.MAINMENU.ordinal());
+    this.setOffsetX(0);
+  }
+}
+public class MenuButton extends Button {
+  private PImage buttonOther;
+
+  private int offsetX;
+  private int ordinal;
+
+  public PImage getButtonOther() {
+    return buttonOther;
+  }
+  protected void setButtonOther(PImage buttonOther) {
+    this.buttonOther = buttonOther;
+  }
+
+  protected void setOrdinal(int ordinal) {
+    this.ordinal = ordinal;
+  }
+
+  protected void setOffsetX(int offsetX) {
+    this.offsetX = offsetX;
+  }
+
+  MenuButton(PImage buttonPlain, PImage buttonOther, int y, int firstYBoundary, int secondYBoundary, int ordinal) {
+    this.setButtonPlain(buttonPlain);
+    this.buttonOther = buttonOther;
+    this.setButton(271, y);
+    this.setFirstXBoundary(300);
+    this.setSecondXBoundary(500);
+    this.setFirstYBoundary(firstYBoundary);
+    this.setSecondYBoundary(secondYBoundary);
+    this.ordinal = ordinal;
+    this.offsetX = 29;
+  }
+
+  MenuButton() {
+  };
+
+  public void display() {
+    if (isMouseOver()) {
+      image(buttonOther, getButton().x, getButton().y);
+
+      return;
+    }
+
+    image(getButtonPlain(), getButton().x + offsetX, getButton().y);
+  }
+
+  public void setState() {
+    if (hasClicked()) {
+      gameState = ordinal;
     }
   }
 }
@@ -3469,25 +3233,24 @@ public class Brigadeiro extends Comida {
     this.setX(x);
     this.setY(y);
 
-    setSpriteImage(brigadeiro);
-    setSpriteInterval(75);
-    setSpriteWidth(32);
-    setSpriteHeight(31);
-    setMovementY(1);
-
-    setAmountRecovered(0);
+    setValues();
   }
 
   public Brigadeiro() {
     this.setX(PApplet.parseInt(random(200, 500)));
     this.setY(PApplet.parseInt(random(-300, -1000)));
 
+    setValues();
+  }
+
+  public void setValues() {
     setSpriteImage(brigadeiro);
     setSpriteInterval(75);
     setSpriteWidth(32);
     setSpriteHeight(31);
     setMovementY(1);
 
+    setAmountHeal(3);
     setAmountRecovered(0);
   }
 
@@ -3497,81 +3260,25 @@ public class Brigadeiro extends Comida {
     super.display();
   }
 }
-
-ArrayList<Brigadeiro> brigadeiros;
-
-int indexRandomBrigadeiroMapaBoss;
-
-int amountHealBrigadeiro = 3;
-
-public void brigadeiro() {
-  if (totalFood < 1 && hasIndexChanged && millis() > timeToGenerateFood + 10000) {
-    if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
-      if (brigadeiros.size() == 0 && foodIndex >= 0 && foodIndex <= 4 && !telaTutorialAndandoAtiva) {
-        brigadeiros.add(new Brigadeiro());
-        totalFood += 1;
-      }
-    }
-
-    if (estadoJogo == "MapaCoveiro") {
-      if (brigadeiros.size() == 0 && foodIndex >= 0 && foodIndex <= 4) {
-        indexRandomBrigadeiroMapaBoss = PApplet.parseInt(random(0, valoresXMapaCoveiro.length));
-        brigadeiros.add(new Brigadeiro(valoresXMapaCoveiro[indexRandomBrigadeiroMapaBoss], valoresYMapaCoveiro[indexRandomBrigadeiroMapaBoss]));
-        totalFood += 1;
-      }
-    }
-
-    if (estadoJogo == "MapaFazendeiro") {
-      if (brigadeiros.size() == 0 && foodIndex >= 0 && foodIndex <= 4) {
-        indexRandomBrigadeiroMapaBoss = PApplet.parseInt(random(0, valoresXMapaFazendeiro.length));
-        brigadeiros.add(new Brigadeiro(valoresXMapaFazendeiro[indexRandomBrigadeiroMapaBoss], valoresYMapaFazendeiro[indexRandomBrigadeiroMapaBoss]));
-        totalFood += 1;
-      }
-    }
-
-    if (estadoJogo == "MapaPadre") {
-      if (brigadeiros.size() == 0 && foodIndex >= 0 && foodIndex <= 4) {
-        indexRandomBrigadeiroMapaBoss = PApplet.parseInt(random(0, valoresXMapaPadre.length));
-        brigadeiros.add(new Brigadeiro(valoresXMapaPadre[indexRandomBrigadeiroMapaBoss], valoresYMapaPadre[indexRandomBrigadeiroMapaBoss]));
-        totalFood += 1;
-      }
-    }
-  }
-
-  for (int i = brigadeiros.size() - 1; i >= 0; i = i - 1) {
-    Brigadeiro b = brigadeiros.get(i);
-    b.display();
-    if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
-      b.update();
-    }
-    if (b.hasExitScreen() || b.hasCollided()) {
-      brigadeiros.remove(b);
-      totalFood -= 1;
-      hasIndexChanged = false;
-      timeToGenerateFood = millis();
-    }
-    if (b.hasCollided()) {
-      heal(amountHealBrigadeiro, b);
-    }
-  }
-}
 PImage skeletonHead;
 
-public class CabecaEsqueleto extends Geral {
+public class CabecaEsqueleto extends Inimigo {
+  private int startingX;
+
   private int movementX;
 
-  private int skeletonHeadTarget;
+  private PVector target = new PVector (jLeiteX, jLeiteY);
 
-  private boolean isHeadStraight;
-
-  public CabecaEsqueleto(int x, int y, int skeletonHeadTarget) {
+  public CabecaEsqueleto(int x, int y) {
     this.setX(x);
     this.setY(y);
-    this.skeletonHeadTarget = skeletonHeadTarget;
-    
+
+    startingX = x;
     setSpriteWidth(36);
     setSpriteHeight(89);
-    setMovementY(12);
+
+    setDamage(2);
+    setType(TypeOfEnemy.SKELETON_HEAD.ordinal());
   }
 
   public void display() {
@@ -3579,61 +3286,32 @@ public class CabecaEsqueleto extends Geral {
   }
 
   public void update() {
+    super.update();
+
     setX(getX() + movementX);
-    if (!isHeadStraight) {
-      if (getX() > skeletonHeadTarget) {
-        movementX = -8;
-      } else {
-        movementX = 8;
-      }
-    } else {
-      movementX = 0;
-    }
-
-    setY(getY() + getMovementY());
   }
 
-  public void checaCabecaEsqueletoReta() {
-    if (getX() < skeletonHeadTarget) {
-      if (skeletonHeadTarget - getX() < 10) {  
-        isHeadStraight = true;
-      } else {
-        isHeadStraight = false;
-      }
-    } else {
-      if (getX() - skeletonHeadTarget < 10) {  
-        isHeadStraight = true;
-      } else {
-        isHeadStraight = false;
-      }
+  public void updateMovement() {
+    setMovementY(12);
+    if (startingX != target.x) {
+      movementX = (startingX > target.x) ? -9 : 9;
+
+      return;
     }
+
+    movementX = 0;
   }
 }
 
-ArrayList<CabecaEsqueleto> cabecasEsqueleto;
-
-public void cabecaEsqueleto() {
-  for (int i = cabecasEsqueleto.size() - 1; i >= 0; i = i - 1) {
-    CabecaEsqueleto c = cabecasEsqueleto.get(i);
-    c.update();
-    c.display();
-    c.checaCabecaEsqueletoReta();
-    if (c.hasExitScreen()) {
-      cabecasEsqueleto.remove(c);
-    }
-    if (c.hasCollided()) {
-      damage(2);
-    }
-  }
-}
+ArrayList<CabecaEsqueleto> cabecasEsqueleto = new ArrayList<CabecaEsqueleto>();
 PImage skeletonDog;
 PImage skeletonDogShadow;
 
-final int SKELETONDOG = 2;
+final int SKELETON_DOG = 2;
 
-int[] valoresCachorroXMapaFazendeiro = {70, 382, 695};
+final int[] skeletonDogSpawnPointsSecondBoss = {70, 382, 695};
 
-public class Cachorro extends Geral {
+public class Cachorro extends Inimigo {
   public Cachorro(int x, int y) {
     this.setX(x);
     this.setY(y);
@@ -3642,7 +3320,9 @@ public class Cachorro extends Geral {
     setSpriteInterval(55);
     setSpriteWidth(45);
     setSpriteHeight(83);
-    setMovementY(8);
+
+    setDamage(2);
+    setType(TypeOfEnemy.SKELETON_DOG.ordinal());
   }
 
   public void display() {
@@ -3650,9 +3330,13 @@ public class Cachorro extends Geral {
 
     super.display();
   }
+
+  public void updateMovement() {
+    setMovementY(8);
+  }
 }
 
-ArrayList<Cachorro> cachorros;
+ArrayList<Cachorro> cachorros = new ArrayList<Cachorro>();;
 
 int cachorroC, cachorroL;
 
@@ -3660,39 +3344,39 @@ int indexRandomCachorroXMapaBoss;
 
 public void cachorro() {
   if (indexInimigos == 2) {
-    if (estadoJogo == "MapaFazendeiro") {
+    if (gameState == GameState.SECONDBOSS.ordinal()) {
       if (cachorros.size() == 0 && !fazendeiroTomouDanoPneu && !fazendeiro.fazendeiroMorreu) {
         for (int i = 0; i < 2; i = i + 1) {
-          indexRandomCachorroXMapaBoss = PApplet.parseInt(random(0, valoresCachorroXMapaFazendeiro.length));
-          cachorros.add(new Cachorro(valoresCachorroXMapaFazendeiro[indexRandomCachorroXMapaBoss], 0));
+          indexRandomCachorroXMapaBoss = PApplet.parseInt(random(0, skeletonDogSpawnPointsSecondBoss.length));
+          cachorros.add(new Cachorro(skeletonDogSpawnPointsSecondBoss[indexRandomCachorroXMapaBoss], 0));
         }
       }
     }
 
-    if (estadoJogo == "MapaPadre") { 
+    if (gameState == GameState.THIRDBOSS.ordinal()) { 
       if (cachorros.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
-        indexRandomCachorroXMapaBoss = PApplet.parseInt(random(0, valoresInimigosXMapaPadre.length));
-        cachorros.add(new Cachorro(valoresInimigosXMapaPadre[indexRandomCachorroXMapaBoss], 0));
+        indexRandomCachorroXMapaBoss = PApplet.parseInt(random(0, valoresInimigosXTerceiroMapaBoss.length));
+        cachorros.add(new Cachorro(valoresInimigosXTerceiroMapaBoss[indexRandomCachorroXMapaBoss], 0));
         totalInimigos = totalInimigos + 1;
       }
     }
 
-    if (!telaTutorialAndandoAtiva) {
-      if (estadoJogo == "SegundoMapa" && cachorros.size() < 2 && totalInimigos < 6) {
+    if (!movementTutorialScreenActive) {
+      if (gameState == GameState.SECONDMAP.ordinal() && cachorros.size() < 2 && totalInimigos < 6) {
         cachorroC = PApplet.parseInt(random(0, 7));
         cachorroL = PApplet.parseInt(random(0, 4));
 
-        if (enemyPositionsSecondMap[cachorroC][cachorroL] == SKELETONDOG) {
+        if (ENEMY_POSITIONS_SECOND_MAP[cachorroC][cachorroL] == SKELETON_DOG) {
           cachorros.add(new Cachorro(100 + (cachorroC * (600 / 7)), -150 - (cachorroL * 150)));
           totalInimigos = totalInimigos + 1;
         }
       }
 
-      if (estadoJogo == "TerceiroMapa" && cachorros.size() < 2 && totalInimigos < 6) {
+      if (gameState == GameState.THIRDMAP.ordinal() && cachorros.size() < 2 && totalInimigos < 6) {
         cachorroC = PApplet.parseInt(random(0, 7));
         cachorroL = PApplet.parseInt(random(0, 4));
 
-        if (enemyPositionsThirdMap[cachorroC][cachorroL] == SKELETONDOG) {
+        if (ENEMY_POSITIONS_THIRD_MAP[cachorroC][cachorroL] == SKELETON_DOG) {
           cachorros.add(new Cachorro(100 + (cachorroC * (600 / 7)), -150 - (cachorroL * 150)));
           totalInimigos = totalInimigos + 1;
         }
@@ -3700,62 +3384,25 @@ public void cachorro() {
     }
   }
 
-  for (int i = cachorros.size() - 1; i >= 0; i = i - 1) {
-    Cachorro c = cachorros.get(i);
-    c.display();
-    c.update();
-    if (c.hasExitScreen()) {
-      totalInimigos = totalInimigos - 1;
-      cachorros.remove(c);
-    }
-    if (c.hasCollided()) {
-      damage(2);
-    }
-  }
-
-  for (int i = cachorros.size() - 1; i >= 0; i = i - 1) {
-    Cachorro c = cachorros.get(i);
-    for (int j = pasAtaque.size() - 1; j >= 0; j = j - 1) {
-      PaAtaque p = pasAtaque.get(j);
-      if (p.hasHit(c)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(c.getX(), c.getY());
-        cachorros.remove(c);
-      }
-    }
-    for (int j = pedrasAtiradas.size() - 1; j >= 0; j = j - 1) {
-      PedraAtirada p = pedrasAtiradas.get(j);
-      if (p.hasHit(c)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(c.getX(), c.getY());
-        pedrasAtiradas.remove(p);
-        cachorros.remove(c);
-      }
-    }
-    for (int j = chicotes.size() - 1; j >= 0; j = j - 1) {
-      ChicoteAtaque ch = chicotesAtaque.get(j);
-      if (ch.hasHit(c)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(c.getX(), c.getY());
-        cachorros.remove(c);
-      }
-    }
+  if (cachorros.size() > 0) {
+    computeEnemy(cachorros);
+    deleteEnemy(cachorros);
   }
 }
 
 public void skeletonDogPositions() {
-  enemyPositionsSecondMap [0][0] = SKELETONDOG;
-  enemyPositionsSecondMap [1][1] = SKELETONDOG;
-  enemyPositionsSecondMap [2][2] = SKELETONDOG;
-  enemyPositionsSecondMap [3][0] = SKELETONDOG;
-  enemyPositionsSecondMap [4][3] = SKELETONDOG;
-  enemyPositionsSecondMap [5][2] = SKELETONDOG;
-  enemyPositionsSecondMap [6][2] = SKELETONDOG;
+  ENEMY_POSITIONS_SECOND_MAP [0][0] = SKELETON_DOG;
+  ENEMY_POSITIONS_SECOND_MAP [1][1] = SKELETON_DOG;
+  ENEMY_POSITIONS_SECOND_MAP [2][2] = SKELETON_DOG;
+  ENEMY_POSITIONS_SECOND_MAP [3][0] = SKELETON_DOG;
+  ENEMY_POSITIONS_SECOND_MAP [4][3] = SKELETON_DOG;
+  ENEMY_POSITIONS_SECOND_MAP [5][2] = SKELETON_DOG;
+  ENEMY_POSITIONS_SECOND_MAP [6][2] = SKELETON_DOG;
 
-  enemyPositionsThirdMap  [1][0] = SKELETONDOG;
-  enemyPositionsThirdMap  [3][0] = SKELETONDOG;
-  enemyPositionsThirdMap  [5][2] = SKELETONDOG;
-  enemyPositionsThirdMap  [6][1] = SKELETONDOG;
+  ENEMY_POSITIONS_THIRD_MAP  [1][0] = SKELETON_DOG;
+  ENEMY_POSITIONS_THIRD_MAP  [3][0] = SKELETON_DOG;
+  ENEMY_POSITIONS_THIRD_MAP  [5][2] = SKELETON_DOG;
+  ENEMY_POSITIONS_THIRD_MAP  [6][1] = SKELETON_DOG;
 }
 PImage[] sceneryImages = new PImage [6];
 PImage[] bossSceneryImages =  new PImage [3];
@@ -3763,37 +3410,45 @@ PImage[] bossSceneryImages =  new PImage [3];
 PImage door;
 PImage fence;
 
-int sceneryMovement = 2;
+final int SCENERY_MOVEMENT = 2;
 
-public class Cenario {
-  private int sceneryX;
-  private int sceneryY;
+int numberOfSceneries;
+
+public class Scenery {
+  private PVector scenery = new PVector();
+  private int movementY;
 
   private int sceneryIndex;
 
-  public Cenario(int sceneryX, int sceneryY, int sceneryIndex) {
-    this.sceneryX = sceneryX;
-    this.sceneryY = sceneryY;
+  public Scenery(int y, int sceneryIndex) {
+    this.scenery.x = 0;
+    this.scenery.y = y;
     this.sceneryIndex = sceneryIndex;
   }
 
   public void display() {
-    image (sceneryImages[sceneryIndex], sceneryX, sceneryY);
+    image (sceneryImages[sceneryIndex], scenery.x, scenery.y);
   }
 
   public void update() {
-    if (sceneryY > height) {
-      sceneryY = -600;
+    if (scenery.y > height) {
+      scenery.y = -600;
+      numberOfSceneries++;
     }
-    
-    sceneryY = sceneryY + sceneryMovement;
+
+    scenery.y += movementY;
+  }
+
+  public void updateMovement() {
+    movementY = (numberOfSceneries < 30) ? SCENERY_MOVEMENT : 0;
   }
 }
 
-ArrayList<Cenario> cenarios;
+ArrayList<Scenery> cenarios = new ArrayList<Scenery>();
 
 public void cenario() {
-  for (Cenario c : cenarios) {
+  for (Scenery c : cenarios) {
+    c.updateMovement();
     c.update();
     c.display();
   }
@@ -3801,73 +3456,39 @@ public void cenario() {
 PImage whip;
 PImage whipShadow;
 
-public class Chicote extends Geral {
+final int WHIP = 2;
+final int WHIPTOTAL = 5;
+
+public class Chicote extends Item {
   public Chicote() {
     setX(PApplet.parseInt(random(100, 599)));
     setY(PApplet.parseInt(random(-300, -1000)));
 
-    setSpriteImage(whip);
-    setSpriteInterval(75);
-    setSpriteWidth(101);
-    setSpriteHeight(91);
-    setMovementY(sceneryMovement);
+    setValues();
   }
 
   public Chicote(int x, int y) {
     this.setX(x);
     this.setY(y);
 
+    setValues();
+  }
+
+  public void setValues() {
     setSpriteImage(whip);
     setSpriteInterval(75);
     setSpriteWidth(101);
     setSpriteHeight(91);
-    setMovementY(sceneryMovement);
+    setMovementY(1);
+
+    setItemIndex(WHIP);
+    setItemTotal(WHIPTOTAL);
   }
 
   public void display() {
     image (whipShadow, getX() + 10, getY() + 76);
 
     super.display();
-  }
-}
-
-ArrayList<Chicote> chicotes;
-
-int indexRandomChicoteMapaBoss;
-
-public void chicote() {
-  if (totalArmas == 0 && millis() > tempoGerarArma + 15000) {
-    if (estadoJogo == "TerceiroMapa") {
-      if (chicotes.size() == 0 && indexArma >= 5 && indexArma <= 9 && !telaTutorialAndandoAtiva) {
-        chicotes.add(new Chicote());
-        totalArmas = totalArmas + 1;
-      }
-    }
-
-    if (estadoJogo == "MapaPadre") {
-      if (chicotes.size() == 0 && indexArma >= 5 && indexArma <= 9) {
-        indexRandomChicoteMapaBoss = PApplet.parseInt(random(0, valoresXMapaPadre.length));
-        chicotes.add(new Chicote(valoresXMapaPadre[indexRandomChicoteMapaBoss], valoresYMapaPadre[indexRandomChicoteMapaBoss]));
-        totalArmas = totalArmas + 1;
-      }
-    }
-  }
-
-  for (int i = chicotes.size() - 1; i >= 0; i = i - 1) {
-    Chicote c = chicotes.get(i);
-    if (estadoJogo == "TerceiroMapa") {
-      c.update();
-    }
-    c.display();
-    if (c.hasExitScreen() || c.hasCollided()) {
-      chicotes.remove(c);
-    }
-    if (c.hasCollided()) {
-      tempoGerarArma = millis();
-      item = 3;
-      totalItem = 10;
-      armaGerada = false;
-    }
   }
 }
 PImage whipAttack;
@@ -3885,141 +3506,252 @@ public class ChicoteAtaque extends Arma {
     setDeleteWeapon(false);
     setDamageBoss(false);
 
-    setFirstCollisionX(jLeiteX + 56);
-    setSecondCollisionX(jLeiteX + 50);
+    setFirstCollisionX(jLeiteX + 86);
+    setSecondCollisionX(jLeiteX + 20);
     setFirstCollisionY(jLeiteY);
     setSecondCollisionY(jLeiteY - 140);
   }
-}
 
-ArrayList<ChicoteAtaque> chicotesAtaque;
-
-boolean umChicote;
-
-public void chicoteAtaque() {
-  if (jLeiteUsoItem) {
-    if (chicotesAtaque.size() == 0 && item == 3 && totalItem > 0 && !umChicote) {
-      chicotesAtaque.add(new ChicoteAtaque());
-      totalItem = totalItem - 1;
-      umChicote = true;
-    }
-  }
-
-  for (int i = chicotesAtaque.size() - 1; i >= 0; i = i - 1) {
-    ChicoteAtaque c = chicotesAtaque.get(i);
-    c.display();
-    if (c.getDeleteWeapon()) {
-      chicotesAtaque.remove(c);
-    }
-
-    if (estadoJogo == "MapaPadre") {
-      if (c.hasHitPadre() && !c.getDamageBoss()) {
-        if (vidaPadreAtual > 0) {
-          if (sonsAtivos) {
-            indexRandomSomPadreTomandoDano = PApplet.parseInt(random(0, sonsPadreTomandoDano.length));
-            sonsPadreTomandoDano[indexRandomSomPadreTomandoDano].rewind();
-            sonsPadreTomandoDano[indexRandomSomPadreTomandoDano].play();
-          }
-          vidaPadreAtual = vidaPadreAtual - 2;
-          c.setDamageBoss(true);
-        } else {
-          if (sonsAtivos) {
-            indexRandomSomPadreTomandoDano = PApplet.parseInt(random(0, sonsPadreRaivaTomandoDano.length));
-            sonsPadreRaivaTomandoDano[indexRandomSomPadreTomandoDano].rewind();
-            sonsPadreRaivaTomandoDano[indexRandomSomPadreTomandoDano].play();
-          }
-          vidaPadreRaivaAtual = vidaPadreRaivaAtual - 2;
-          c.setDamageBoss(true);
-        }
-      }
-    }
+  public void update() {
+    setX(jLeiteX - 70);
+    setY(jLeiteY - 140);
   }
 }
 PImage foodShadow;
 
 int timeToGenerateFood;
+int intervalToGenerateFood = 10000;
+
 int foodIndex;
 
-int totalFood;
+int foodTotal;
 
-boolean hasIndexChanged;
+int foodRandomMapPositionIndex;
+
+boolean hasFoodIndexChanged;
 
 public void foodAll() {
-  generateIndex();
-  coxinha();
-  brigadeiro();
-  queijo();
+  generateFoodIndex();
+
+  if (foodTotal == 0 && hasFoodIndexChanged && millis() > timeToGenerateFood + intervalToGenerateFood && comidas.size() == 0) {
+    if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal()) {
+      addFood();
+    } else if (gameState >= GameState.FIRSTBOSS.ordinal() && gameState <= GameState.THIRDBOSS.ordinal()) {
+      addFoodBoss();
+    }
+  }
+
+  if (comidas.size() > 0) {
+    foods();
+  }
 }
 
-public void generateIndex() {
-  if (!telaTutorialAndandoAtiva) {
-    if (!hasIndexChanged) {
+public void generateFoodIndex() {
+  if (!movementTutorialScreenActive) {
+    if (!hasFoodIndexChanged) {
       foodIndex = PApplet.parseInt(random(0, 10));
-      hasIndexChanged = true;
+      hasFoodIndexChanged = true;
     }
   }
 }
 
+ArrayList<Comida> comidas = new ArrayList<Comida>();
+
 public class Comida extends Geral {
-  private int amountRecovered = 0;
-  
-  public int getAmountRecovered(){
+  private int amountHeal;
+  private int amountRecovered;
+
+  public int getAmountHeal() {
+    return amountHeal;
+  }
+  protected void setAmountHeal(int amountHeal) {
+    this.amountHeal = amountHeal;
+  }
+
+  public int getAmountRecovered() {
     return amountRecovered;
   }
-  
-  public void setAmountRecovered(int amountRecovered){
+  protected void setAmountRecovered(int amountRecovered) {
     this.amountRecovered = amountRecovered;
   }
 }
 
+public void generateFood(int timeAmount) {
+  if (foodTotal == 1) {
+    foodTotal--;
+  }
+
+  hasFoodIndexChanged = false;
+  timeToGenerateFood = millis();
+  intervalToGenerateFood = timeAmount;
+}
+
+public void addFood() {
+  if (!movementTutorialScreenActive) {
+    if (foodIndex >= 0 && foodIndex <= 4) {
+      comidas.add(new Brigadeiro());
+    } else if (foodIndex >= 5 && foodIndex <=7) {
+      comidas.add(new Queijo());
+    } else if (foodIndex >= 8 && foodIndex <= 9) { 
+      comidas.add(new Coxinha());
+    }
+
+    foodTotal++;
+  }
+}
+
+<Food extends Comida> void x(Food food, ArrayList<Food> foods){
+  foods.add(food);
+}
+
+public void addFoodBoss() {
+  if (gameState == GameState.FIRSTBOSS.ordinal()) {
+    foodRandomMapPositionIndex = PApplet.parseInt(random(0, X_VALUES_FIRST_BOSS.length));
+    if (foodIndex >= 0 && foodIndex <= 4) {
+      comidas.add(new Brigadeiro(X_VALUES_FIRST_BOSS[foodRandomMapPositionIndex], Y_VALUES_FIRST_BOSS[foodRandomMapPositionIndex]));
+    } else if (foodIndex >= 5 && foodIndex <=7) {
+      comidas.add(new Queijo(X_VALUES_FIRST_BOSS[foodRandomMapPositionIndex], Y_VALUES_FIRST_BOSS[foodRandomMapPositionIndex]));
+    } else if (foodIndex >= 8 && foodIndex <= 9) { 
+      comidas.add(new Coxinha(X_VALUES_FIRST_BOSS[foodRandomMapPositionIndex], Y_VALUES_FIRST_BOSS[foodRandomMapPositionIndex]));
+    }
+
+    foodTotal++;
+  }
+
+  if (gameState == GameState.SECONDBOSS.ordinal()) {
+    foodRandomMapPositionIndex = PApplet.parseInt(random(0, X_VALUES_SECOND_BOSS.length));
+    if (foodIndex >= 0 && foodIndex <= 4) {
+      comidas.add(new Brigadeiro(X_VALUES_SECOND_BOSS[foodRandomMapPositionIndex], Y_VALUES_SECOND_BOSS[foodRandomMapPositionIndex]));
+    } else if (foodIndex >= 5 && foodIndex <=7) {
+      comidas.add(new Queijo(X_VALUES_SECOND_BOSS[foodRandomMapPositionIndex], Y_VALUES_SECOND_BOSS[foodRandomMapPositionIndex]));
+    } else if (foodIndex >= 8 && foodIndex <= 9) { 
+      comidas.add(new Coxinha(X_VALUES_SECOND_BOSS[foodRandomMapPositionIndex], Y_VALUES_SECOND_BOSS[foodRandomMapPositionIndex]));
+    }
+    
+    foodTotal++;
+  }
+
+  if (gameState == GameState.THIRDBOSS.ordinal()) {
+    foodRandomMapPositionIndex = PApplet.parseInt(random(0, X_VALUES_THIRD_BOSS.length));
+    if (foodIndex >= 0 && foodIndex <= 4) {
+      comidas.add(new Brigadeiro(X_VALUES_THIRD_BOSS[foodRandomMapPositionIndex], Y_VALUES_THIRD_BOSS[foodRandomMapPositionIndex]));
+    } else if (foodIndex >= 5 && foodIndex <=7) {
+      comidas.add(new Queijo(X_VALUES_THIRD_BOSS[foodRandomMapPositionIndex], Y_VALUES_THIRD_BOSS[foodRandomMapPositionIndex]));
+    } else if (foodIndex >= 8 && foodIndex <= 9) { 
+      comidas.add(new Coxinha(X_VALUES_THIRD_BOSS[foodRandomMapPositionIndex], Y_VALUES_THIRD_BOSS[foodRandomMapPositionIndex]));
+    }
+    foodTotal++;
+  }
+}
+
+public void foods() {
+  for (int i = comidas.size() - 1; i >= 0; --i) {
+    Comida c = comidas.get(i);
+    c.display();
+    if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal()) {
+      c.update();
+    }
+    if (c.hasExitScreen() || c.hasCollided()) {
+      comidas.remove(c);
+
+      if (c.hasExitScreen()) {
+        generateFood(2500);
+      }
+      if (c.hasCollided()) {
+        heal(c.getAmountHeal(), c);
+        generateFood(10000);
+      }
+    }
+  }
+}
+
 public void heal(int amount, Comida c) {
-  while (vidaJLeiteAtual < vidaJleiteMax && c.amountRecovered < amount) {
-    c.amountRecovered += 1;
-    vidaJLeiteAtual += 1;
+  while (playerCurrentHP < prayerHPMaximum && c.amountRecovered < amount) {
+    c.amountRecovered++;
+    playerCurrentHP++;
+  }
+}
+public class Controls {
+  private TutorialSprite walking = new TutorialSprite(250, 90, 0);
+  private TutorialSprite attacking = new TutorialSprite(540, 60, 1);
+
+  private HandsButton handButton = new HandsButton(menuThumbsUp, menuPointingBack);
+
+  public void images() {
+    image(imagemControles, 0, 0);
+  }
+
+  public void sprites() {
+    walking.display();
+    attacking.display();
+  }
+
+  public void button() {
+    handButton.display();
+    handButton.setState();
   }
 }
 PImage skeletonCrow;
 PImage skeletonCrowShadow;
 
-public class Corvo extends Geral {
-  private int targetX = jLeiteX;
+class Corvo extends Inimigo {
+  private PVector target = new PVector(jLeiteX, jLeiteY);
+  
+  private int movementX;
 
   private int newTargetInterval;
 
   private boolean hasNewTarget;
 
-  public Corvo() {
-    setX(PApplet.parseInt(random(100, width - 163)));
-    setY(PApplet.parseInt(random(-300, -1000)));
+  Corvo() {
+    this.setX(360);
+    this.setY(PApplet.parseInt(random(-300, -1000)));
 
-    setSpriteImage(skeletonCrow);
-    setSpriteInterval(75);
-    setSpriteWidth(121);
-    setSpriteHeight(86);
-    setMovementY(3);
+    setValues();
   }
 
-  public Corvo(int x, int y) {
+  Corvo(int x, int y) {
     this.setX(x);
     this.setY(y);
 
-    setSpriteImage(skeletonCrow);
-    setSpriteInterval(75);
-    setSpriteWidth(121);
-    setSpriteHeight(86);
-    setMovementY(4);
+    setValues();
+  }
+
+  private void setValues() {
+    this.setSpriteImage(skeletonCrow);
+    this.setSpriteInterval(75);
+    this.setSpriteWidth(121);
+    this.setSpriteHeight(86);
+    
+    this.setType(TypeOfEnemy.SKELETON_CROW.ordinal());
   }
 
   public void display() {
     super.display();
 
     image(skeletonCrowShadow, getX() + 24, getY() + 86);
-  }  
+  } 
+
+  public void update() {
+    super.update();
+
+    setX(getX() + movementX);
+  }
+
+  public void updateMovement() {
+    setMovementY(3);
+    if (getX() != target.x) {
+      movementX = (getX() < target.x) ? 3 : -3;
+      return;
+    }
+
+    movementX = 0;
+  }
 
   public void updateTarget() {
     if (getY() > 0) {
       if (!hasNewTarget) {
-        targetX = jLeiteX;
+        target.x = jLeiteX;
         newTargetInterval = millis();
         hasNewTarget = true;
       }
@@ -4030,88 +3762,55 @@ public class Corvo extends Geral {
     }
   }
 
-  public void update() {
-    if (getX() < targetX) {
-      setX(getX() + 3);
-    }
-    if (getX() > targetX) {
-      setX(getX() - 3);
-    }
-
-    super.update();
-  }
-
   public boolean hasCollided() {
     if (getX() + 95 > jLeiteX && getX() + 25 < jLeiteX + 63 && getY() + 86 > jLeiteY && getY() < jLeiteY + 126) {
       return true;
-    } else {
-      return false;
     }
+
+    return false;
   }
 }
 
-ArrayList<Corvo> corvos;
+ArrayList<Corvo> corvos = new ArrayList<Corvo>();
 
 int indexRandomCorvoXMapaBoss;
 
 public void corvo() {
   if (indexInimigos == 3) {
-    if (estadoJogo == "MapaPadre") {
+    if (gameState == GameState.THIRDBOSS.ordinal()) {
       if (corvos.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
-        indexRandomCorvoXMapaBoss = PApplet.parseInt(random(0, valoresInimigosXMapaPadre.length));
-        corvos.add(new Corvo(valoresInimigosXMapaPadre[indexRandomCorvoXMapaBoss], 0));
+        indexRandomCorvoXMapaBoss = PApplet.parseInt(random(0, valoresInimigosXTerceiroMapaBoss.length));
+        corvos.add(new Corvo(valoresInimigosXTerceiroMapaBoss[indexRandomCorvoXMapaBoss], 0));
       }
     }
 
-    if (!telaTutorialAndandoAtiva) {
-      if (estadoJogo == "SegundoMapa" && corvos.size() < 2) {
+    if (!movementTutorialScreenActive) {
+      if (gameState == GameState.SECONDMAP.ordinal() && corvos.size() < 1) {
         corvos.add(new Corvo());
       }
 
-      if (estadoJogo == "TerceiroMapa" && corvos.size() < 2) {
+      if (gameState == GameState.THIRDMAP.ordinal() && corvos.size() < 1) {
         corvos.add(new Corvo());
       }
     }
   }
 
-  for (int i = corvos.size() - 1; i >= 0; i = i - 1) {
-    Corvo c = corvos.get(i);
-    c.updateTarget();
-    c.update();
-    c.display();
-    if (c.hasExitScreen()) {
-      corvos.remove(c);
+  if (corvos.size() > 0) {
+    for (int i = corvos.size() - 1; i >= 0; i = i - 1) {
+      Corvo c = corvos.get(i);
+      c.updateTarget();
+      c.updateMovement();
+      c.update();
+      c.display();
+      if (c.hasExitScreen()) {
+        corvos.remove(c);
+      }
+      if (c.hasCollided()) {
+        damage(3);
+      }
     }
-    if (c.hasCollided()) {
-      damage(3);
-    }
-  }
 
-  for (int i = corvos.size() - 1; i >= 0; i = i - 1) {
-    Corvo c = corvos.get(i);
-    for (int j = pasAtaque.size() - 1; j >= 0; j = j - 1) {
-      PaAtaque p = pasAtaque.get(j);
-      if (p.hasHitCrow(c)) {
-        hitInimigos(c.getX(), c.getY());
-        corvos.remove(c);
-      }
-    }
-    for (int j = pedrasAtiradas.size() - 1; j >= 0; j = j - 1) {
-      PedraAtirada p = pedrasAtiradas.get(j);
-      if (p.hasHit(c)) {
-        hitInimigos(c.getX(), c.getY());
-        pedrasAtiradas.remove(p);
-        corvos.remove(c);
-      }
-    }
-    for (int j = chicotes.size() - 1; j >= 0; j = j - 1) {
-      ChicoteAtaque ch = chicotesAtaque.get(j);
-      if (ch.hasHit(c)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(c.getX(), c.getY());
-        corvos.remove(c);
-      }
-    }
+    deleteEnemy(corvos);
   }
 }
 PImage coxinha;
@@ -4121,25 +3820,24 @@ public class Coxinha extends Comida {
     this.setX(x);
     this.setY(y);
 
-    setSpriteImage(coxinha);
-    setSpriteInterval(75);
-    setSpriteWidth(28);
-    setSpriteHeight(30);
-    setMovementY(1);
-
-    setAmountRecovered(0);
+    setValues();
   }
 
   public Coxinha() {
     setX(PApplet.parseInt(random(200, 500)));
     setY(PApplet.parseInt(random(-300, -1000)));
 
+    setValues();
+  }
+
+  public void setValues() {
     setSpriteImage(coxinha);
     setSpriteInterval(75);
     setSpriteWidth(28);
     setSpriteHeight(30);
     setMovementY(1);
 
+    setAmountHeal(5);
     setAmountRecovered(0);
   }
 
@@ -4149,72 +3847,163 @@ public class Coxinha extends Comida {
     super.display();
   }
 }
+final int FIRSTCLOSINGCREDITY = 0;
+final int SECONDCLOSINGCREDITY = 1000;
+final int CLOSINGCREDITMOVEMENT = 1;
 
-ArrayList<Coxinha> coxinhas;
+int timeToMoveClosingCredit;
 
-int indexRandomCoxinhaMapaBoss;
+public class ClosingCredit {
+  private PVector closingCredit = new PVector();
+  private int movementY;
 
-int amountHealCoxinha = 5;
+  ClosingCredit(int y) {
+    this.closingCredit.x = 0;
+    this.closingCredit.y = y;
+  }
 
-public void coxinha() {
-  if (totalFood < 1 && hasIndexChanged && millis() > timeToGenerateFood + 10000) {
-    if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
-      if (coxinhas.size() == 0 && foodIndex >= 8 && foodIndex <= 9 && !telaTutorialAndandoAtiva) {
-        coxinhas.add(new Coxinha());
-        totalFood += 1;
-      }
+  public void display() {
+    image(creditos, closingCredit.x, closingCredit.y);
+  }
+
+  public void update() {
+    if (closingCredit.y + 1000 <= 0) {
+      closingCredit.y = 1000;
     }
 
-    if (estadoJogo == "MapaCoveiro") {
-      if (coxinhas.size() == 0 && foodIndex >= 8 && foodIndex <= 9) {
-        indexRandomCoxinhaMapaBoss = PApplet.parseInt(random(0, valoresXMapaCoveiro.length));
-        coxinhas.add(new Coxinha(valoresXMapaCoveiro[indexRandomCoxinhaMapaBoss], valoresYMapaCoveiro[indexRandomCoxinhaMapaBoss]));
-        totalFood += 1;
-      }
+    closingCredit.y -= movementY;
+  }
+
+  public void updateMovement() {
+    movementY = (millis() > timeToMoveClosingCredit + 500) ? CLOSINGCREDITMOVEMENT : 0;
+  }
+}
+public class Credits {
+  private ClosingCredit firstCredit = new ClosingCredit(FIRSTCLOSINGCREDITY);
+  private ClosingCredit secondCredit = new ClosingCredit(SECONDCLOSINGCREDITY);
+
+  private HandsButton handButton = new HandsButton(menuThumbsUp, menuPointingBack);
+
+  public void credits() {
+    firstCredit.updateMovement();
+    firstCredit.update();
+    firstCredit.display();
+    secondCredit.updateMovement();
+    secondCredit.update();
+    secondCredit.display();
+  }
+
+  public void button() {
+    handButton.display();
+
+    if (handButton.hasClicked()) {
+      firstCredit.closingCredit.y = FIRSTCLOSINGCREDITY;
+      secondCredit.closingCredit.y = SECONDCLOSINGCREDITY;
     }
 
-    if (estadoJogo == "MapaFazendeiro") {
-      if (coxinhas.size() == 0 && foodIndex >= 8 && foodIndex <= 9) {
-        indexRandomCoxinhaMapaBoss = PApplet.parseInt(random(0, valoresXMapaFazendeiro.length));
-        coxinhas.add(new Coxinha(valoresXMapaFazendeiro[indexRandomCoxinhaMapaBoss], valoresYMapaFazendeiro[indexRandomCoxinhaMapaBoss]));
-        totalFood += 1;
-      }
-    }
+    handButton.setState();
+  }
+}
+public abstract class EnemiesSpawnManager {
+  private int spawnState = 1;
 
-    if (estadoJogo == "MapaPadre") {
-      if (coxinhas.size() == 0 && foodIndex >= 8 && foodIndex <= 9) {
-        indexRandomCoxinhaMapaBoss = PApplet.parseInt(random(0, valoresXMapaPadre.length));
-        coxinhas.add(new Coxinha(valoresXMapaPadre[indexRandomCoxinhaMapaBoss], valoresYMapaPadre[indexRandomCoxinhaMapaBoss]));
-        totalFood += 1;
-      }
+  private int enemiesTotal;
+  private int enemiesMaximum;
+  private int[] eachEnemyTotal;
+
+  private int[] maximumModifier;
+
+  public int getSpawnstate()
+  {
+    return this.spawnState;
+  }
+  public void setSpawnstate(int spawnState)
+  {
+    this.spawnState = spawnState;
+  }
+
+  public int getEnemiesTotal() {
+    return this.enemiesTotal;
+  }
+  public void setEnemiesTotal(int enemiesTotal) {
+    this.enemiesTotal = enemiesTotal;
+  }
+
+  public int getEnemiesMaximum() {
+    return this.enemiesMaximum;
+  }
+  public void setEnemiesMaximum(int enemiesMaximum) {
+    this.enemiesMaximum = enemiesMaximum;
+  }
+
+  public int[] getEachEnemyTotal() {
+    return this.eachEnemyTotal;
+  }
+  public void setEachEnemyTotal(int[] eachEnemyTotal) {
+    this.eachEnemyTotal = eachEnemyTotal;
+  }
+
+  public int[] getMaximumModifier() {
+    return this.maximumModifier;
+  }
+  public void setMaximumModifier(int[] maximumModifier) {
+    this.maximumModifier = maximumModifier;
+  }
+
+  EnemiesSpawnManager(int[] maximumModifier, int size) {
+    this.maximumModifier = maximumModifier;
+    this.eachEnemyTotal = new int[size];
+  }
+
+  public void setVariables() {
+    spawnState = (numberOfSceneries % 5 == 0) ? numberOfSceneries / 5 : spawnState;
+
+    enemiesMaximum = maximumModifier[spawnState - 1];
+  }
+
+  public void states() {
+    switch (spawnState) {
+    case 1:
+      firstBatch();
+      break;
+    case 2:
+      secondBatch();
+      break;
+    case 3:
+      thirdBatch();
+      break;
+    case 4:
+      fourthBatch();
+      break;
+    case 5:
+      fifthBatch();
+      break;
+    case 6:
+      sixthBatch();
+      break;
     }
   }
 
-  for (int i = coxinhas.size() - 1; i >= 0; i = i - 1) {
-    Coxinha c = coxinhas.get(i);
-    c.display();
-    if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
-      c.update();
-    }
-    if (c.hasExitScreen() || c.hasCollided()) {
-      coxinhas.remove(c);
-      totalFood -= 1;
-      hasIndexChanged = false;
-      timeToGenerateFood = millis();
-    }
-    if (c.hasCollided()) {
-      heal(amountHealCoxinha, c);
-    }
-  }
+  public abstract void firstBatch();
+
+  public abstract void secondBatch();
+
+  public abstract void thirdBatch();
+
+  public abstract void fourthBatch();
+
+  public abstract void fifthBatch();
+
+  public abstract void sixthBatch();
 }
 PImage skeleton;
 PImage skeletonShadow;
 
 final int SKELETON = 0;
 
-int[] valoresEsqueletoXMapaCoveiro = {200, 520};
+final int[] valoresEsqueletoXPrimeiroMapaBoss = {200, 520};
 
-public class Esqueleto extends Geral {
+public class Esqueleto extends Inimigo {
   public Esqueleto(int x, int y) {
     this.setX(x);
     this.setY(y);
@@ -4223,7 +4012,9 @@ public class Esqueleto extends Geral {
     setSpriteInterval(155);
     setSpriteWidth(76);
     setSpriteHeight(126);
-    setMovementY(3);
+
+    setDamage(2);
+    setType(TypeOfEnemy.SKELETON.ordinal());
   }
 
   public void display() {
@@ -4231,59 +4022,62 @@ public class Esqueleto extends Geral {
 
     super.display();
   }
+
+  public void updateMovement() {
+    setMovementY(3);
+  }
 }
 
-ArrayList<Esqueleto> esqueletos;
+ArrayList<Esqueleto> esqueletos = new ArrayList<Esqueleto>();
 
 int esqueletoC, esqueletoL;
-
 int indexRandomEsqueletoXMapaBoss;
 
 public void esqueleto() {
   if (indexInimigos == 0) {
-    if (estadoJogo == "MapaCoveiro") {
+    if (gameState == GameState.FIRSTBOSS.ordinal()) {
       if (esqueletos.size() == 0 && !coveiro.coveiroMorreu && !coveiroTomouDanoAgua) {
         for (int i = 0; i < 2; i = i + 1) {
           indexRandomEsqueletoXMapaBoss = PApplet.parseInt(random(0, 2));
-          esqueletos.add(new Esqueleto(valoresEsqueletoXMapaCoveiro[indexRandomEsqueletoXMapaBoss], 0));
+          esqueletos.add(new Esqueleto(valoresEsqueletoXPrimeiroMapaBoss[indexRandomEsqueletoXMapaBoss], 0));
         }
       }
     }
 
-    if (estadoJogo == "MapaPadre") { 
+    if (gameState == GameState.THIRDBOSS.ordinal()) { 
       if (esqueletos.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
-        indexRandomEsqueletoXMapaBoss = PApplet.parseInt(random(0, valoresInimigosXMapaPadre.length));
-        esqueletos.add(new Esqueleto(valoresInimigosXMapaPadre[indexRandomEsqueletoXMapaBoss], 0));
+        indexRandomEsqueletoXMapaBoss = PApplet.parseInt(random(0, valoresInimigosXTerceiroMapaBoss.length));
+        esqueletos.add(new Esqueleto(valoresInimigosXTerceiroMapaBoss[indexRandomEsqueletoXMapaBoss], 0));
         totalInimigos = totalInimigos + 1;
       }
     }
 
-    if (!telaTutorialAndandoAtiva) {
-      if (estadoJogo == "PrimeiroMapa" && esqueletos.size() < 2 && totalInimigos < 6) {
+    if (!movementTutorialScreenActive) {
+      /*if (gameState == GameState.FIRSTMAP.ordinal() && esqueletos.size() < 2 && totalInimigos < 6) {
+       esqueletoC = int(random(0, 7));
+       esqueletoL = int(random(0, 4));
+       
+       if (ENEMY_POSITIONS_FIRST_MAP[esqueletoC][esqueletoL] == SKELETON) {
+       esqueletos.add(new Esqueleto(100 + (esqueletoC * (600 / 7)), -150 - (esqueletoL * 150)));
+       totalInimigos = totalInimigos + 1;
+       }
+       }*/
+
+      if (gameState == GameState.SECONDMAP.ordinal() && esqueletos.size() < 2 && totalInimigos < 6) {
         esqueletoC = PApplet.parseInt(random(0, 7));
         esqueletoL = PApplet.parseInt(random(0, 4));
 
-        if (enemyPositionsFirstMap[esqueletoC][esqueletoL] == SKELETON) {
+        if (ENEMY_POSITIONS_SECOND_MAP[esqueletoC][esqueletoL] == SKELETON) {
           esqueletos.add(new Esqueleto(100 + (esqueletoC * (600 / 7)), -150 - (esqueletoL * 150)));
           totalInimigos = totalInimigos + 1;
         }
       }
 
-      if (estadoJogo == "SegundoMapa" && esqueletos.size() < 2 && totalInimigos < 6) {
+      if (gameState == GameState.THIRDMAP.ordinal() && esqueletos.size() < 2 && totalInimigos < 6) {
         esqueletoC = PApplet.parseInt(random(0, 7));
         esqueletoL = PApplet.parseInt(random(0, 4));
 
-        if (enemyPositionsSecondMap[esqueletoC][esqueletoL] == SKELETON) {
-          esqueletos.add(new Esqueleto(100 + (esqueletoC * (600 / 7)), -150 - (esqueletoL * 150)));
-          totalInimigos = totalInimigos + 1;
-        }
-      }
-
-      if (estadoJogo == "TerceiroMapa" && esqueletos.size() < 2 && totalInimigos < 6) {
-        esqueletoC = PApplet.parseInt(random(0, 7));
-        esqueletoL = PApplet.parseInt(random(0, 4));
-
-        if (enemyPositionsThirdMap[esqueletoC][esqueletoL] == SKELETON) {
+        if (ENEMY_POSITIONS_THIRD_MAP[esqueletoC][esqueletoL] == SKELETON) {
           esqueletos.add(new Esqueleto(100 + (esqueletoC * (600 / 7)), -150 - (esqueletoL * 150)));
           totalInimigos = totalInimigos + 1;
         }
@@ -4291,81 +4085,40 @@ public void esqueleto() {
     }
   }
 
-  for (int i = esqueletos.size() - 1; i >= 0; i = i - 1) {
-    Esqueleto e = esqueletos.get(i);
-    e.update();
-    e.display();
-    if (e.hasExitScreen()) {
-      totalInimigos = totalInimigos - 1;
-      esqueletos.remove(e);
-    }
-    if (e.hasCollided()) {
-      damage(2);
-    }
-  }
-
-  for (int i = esqueletos.size() - 1; i >= 0; i = i - 1) {
-    Esqueleto e = esqueletos.get(i);
-    for (int j = pasAtaque.size() - 1; j >= 0; j = j - 1) {
-      PaAtaque p = pasAtaque.get(j);
-      if (p.hasHit(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.getX(), e.getY());
-        esqueletos.remove(e);
-      }
-    }
-    for (int j = pedrasAtiradas.size() - 1; j >= 0; j = j - 1) {
-      PedraAtirada p = pedrasAtiradas.get(j);
-      if (p.hasHit(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.getX(), e.getY());
-        pedrasAtiradas.remove(p);
-        esqueletos.remove(e);
-      }
-    }
-    for (int j = chicotes.size() - 1; j >= 0; j = j - 1) {
-      ChicoteAtaque c = chicotesAtaque.get(j);
-      if (c.hasHit(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.getX(), e.getY());
-        esqueletos.remove(e);
-      }
-    }
+  if (esqueletos.size() > 0) {
+    computeEnemy(esqueletos);
+    deleteEnemy(esqueletos);
   }
 }
 
+final int[][] SKELETON_POSITIONS = new int [5][8];
+
 public void skeletonPositions() {
-  enemyPositionsFirstMap  [0][0] = SKELETON;
-  enemyPositionsFirstMap  [1][2] = SKELETON;
-  enemyPositionsFirstMap  [2][0] = SKELETON;
-  enemyPositionsFirstMap  [3][2] = SKELETON;
-  enemyPositionsFirstMap  [4][0] = SKELETON;
-  enemyPositionsFirstMap  [5][2] = SKELETON;
-  enemyPositionsFirstMap  [6][0] = SKELETON;
-
-  enemyPositionsSecondMap [0][1] = SKELETON;
-  enemyPositionsSecondMap [1][3] = SKELETON;
-  enemyPositionsSecondMap [2][0] = SKELETON;
-  enemyPositionsSecondMap [3][2] = SKELETON;
-  enemyPositionsSecondMap [4][0] = SKELETON;
-  enemyPositionsSecondMap [5][0] = SKELETON;
-  enemyPositionsSecondMap [6][0] = SKELETON;
-
-  enemyPositionsThirdMap  [0][3] = SKELETON;
-  enemyPositionsThirdMap  [2][0] = SKELETON;
-  enemyPositionsThirdMap  [4][2] = SKELETON;
-  enemyPositionsThirdMap  [6][3] = SKELETON;
+  SKELETON_POSITIONS  [0][0] = SKELETON;
+  SKELETON_POSITIONS  [0][2] = SKELETON;
+  SKELETON_POSITIONS  [0][4] = SKELETON;
+  SKELETON_POSITIONS  [0][6] = SKELETON;
+  SKELETON_POSITIONS  [2][0] = SKELETON;
+  SKELETON_POSITIONS  [2][2] = SKELETON;
+  SKELETON_POSITIONS  [2][4] = SKELETON;
+  SKELETON_POSITIONS  [2][6] = SKELETON;
+  SKELETON_POSITIONS  [4][0] = SKELETON;
+  SKELETON_POSITIONS  [4][2] = SKELETON;
+  SKELETON_POSITIONS  [4][4] = SKELETON;
+  SKELETON_POSITIONS  [4][6] = SKELETON;
 }
 PImage kickingSkeleton;
 PImage headlessKickingSkeleton;
 PImage kickingSkeletonShadow;
 
-final int KICKINGSKELETON = 1;
+final int KICKING_SKELETON = 1;
 
-public class EsqueletoChute extends Geral {
+public class EsqueletoChute extends Inimigo {
   private PImage kickingSkeletonSprite;
 
   private int movementX;
+
+  private PVector target = new PVector(jLeiteX, jLeiteY);
 
   private int changeDirectionDelay;
 
@@ -4373,16 +4126,18 @@ public class EsqueletoChute extends Geral {
   private int kickingSkeletonSpriteTime;
 
   private boolean hasLostHead;
-  private boolean gatilhoEsqueletoCabeca, esqueletoCabecaSaiu;
+  private boolean kickHeadTrigger, hasKickedHead;
 
   public EsqueletoChute(int x, int y) {
     this.setX(x);
     this.setY(y);
 
-    setSpriteImage(headlessKickingSkeleton);
-    setSpriteInterval(200);
-    setSpriteWidth(48);
-    setSpriteHeight(74);
+    this.setSpriteImage(headlessKickingSkeleton);
+    this.setSpriteInterval(200);
+    this.setSpriteWidth(48);
+    this.setSpriteHeight(74);
+    
+    this.setType(TypeOfEnemy.KICKING_SKELETON.ordinal());
   }
 
   public void display() {
@@ -4402,31 +4157,42 @@ public class EsqueletoChute extends Geral {
         image(kickingSkeletonSprite, getX(), getY());
       }
 
-      if (kickingSkeletonStep == 196) {
-        esqueletoCabecaSaiu = true;
-        gatilhoEsqueletoCabeca = true;
+      if (kickingSkeletonStep == 196 && !kickHeadTrigger) {
+        hasKickedHead = true;
+        kickHeadTrigger = true;
       }
 
       if (kickingSkeletonStep == kickingSkeleton.width) {
         hasLostHead = true;
         kickingSkeletonStep = 0;
       }
-    } else {
-      super.display();
+
+      return;
     }
+
+    super.display();
   }
 
   public void update() {
+    super.update();
+
     setX(getX() + movementX);
-    setY(getY() + getMovementY());
   }
 
   public void updateMovement() {
     if (!hasLostHead) {
-      setMovementY(PApplet.parseInt(sceneryMovement));
+      setMovementY(SCENERY_MOVEMENT / 2);
+      if (getX() != target.x) { 
+        movementX = (getX() < target.x) ? 3 : -3;
+
+        return;
+      }
+
       movementX = 0;
+
+      return;
     } else {
-      setMovementY(PApplet.parseInt(sceneryMovement) + 1);
+      setMovementY(SCENERY_MOVEMENT + 1);
       if (millis() > changeDirectionDelay + 250) {
         movementX = PApplet.parseInt(random(-5, 5));
         changeDirectionDelay = millis();
@@ -4435,7 +4201,7 @@ public class EsqueletoChute extends Geral {
   }
 }
 
-ArrayList<EsqueletoChute> esqueletosChute;
+ArrayList<EsqueletoChute> esqueletosChute = new ArrayList<EsqueletoChute>();
 
 int esqueletoChuteC, esqueletoChuteL;
 
@@ -4443,122 +4209,78 @@ int indexRandomEsqueletoChuteXMapaBoss;
 
 public void esqueletoChute() {
   if (indexInimigos == 1) {
-    if (estadoJogo == "MapaPadre") { 
+    if (gameState == GameState.THIRDBOSS.ordinal()) { 
       if (esqueletosChute.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
-        indexRandomEsqueletoChuteXMapaBoss = PApplet.parseInt(random(0, valoresInimigosXMapaPadre.length));
-        esqueletosChute.add(new EsqueletoChute(valoresInimigosXMapaPadre[indexRandomEsqueletoChuteXMapaBoss], 0));
+        indexRandomEsqueletoChuteXMapaBoss = PApplet.parseInt(random(0, valoresInimigosXTerceiroMapaBoss.length));
+        esqueletosChute.add(new EsqueletoChute(valoresInimigosXTerceiroMapaBoss[indexRandomEsqueletoChuteXMapaBoss], 0));
         totalInimigos = totalInimigos + 1;
       }
     }
 
-    if (!telaTutorialAndandoAtiva) {
-      if (estadoJogo == "PrimeiroMapa" && esqueletosChute.size() < 2 && totalInimigos < 6) {
-        esqueletoChuteC = PApplet.parseInt(random(0, 7));
-        esqueletoChuteL = PApplet.parseInt(random(0, 4));
-
-        if (enemyPositionsFirstMap[esqueletoChuteC][esqueletoChuteL] == KICKINGSKELETON) {
-          esqueletosChute.add(new EsqueletoChute(100 + (esqueletoChuteC * (600 / 7)), -150 - (esqueletoChuteL * 150)));
-          totalInimigos = totalInimigos + 1;
-        }
-      }
-      if (estadoJogo == "SegundoMapa" && esqueletosChute.size() < 2 && totalInimigos < 6) {
-        esqueletoChuteC = PApplet.parseInt(random(0, 7));
-        esqueletoChuteL = PApplet.parseInt(random(0, 4));
-
-        if (enemyPositionsSecondMap[esqueletoChuteC][esqueletoChuteL] == KICKINGSKELETON) {
-          esqueletosChute.add(new EsqueletoChute(100 + (esqueletoChuteC * (600 / 7)), -150 - (esqueletoChuteL * 150)));
-          totalInimigos = totalInimigos + 1;
-        }
-      }
-      if (estadoJogo == "TerceiroMapa" && esqueletosChute.size() < 2 && totalInimigos < 6) {
-        esqueletoChuteC = PApplet.parseInt(random(0, 7));
-        esqueletoChuteL = PApplet.parseInt(random(0, 4));
-
-        if (enemyPositionsThirdMap[esqueletoChuteC][esqueletoChuteL] == KICKINGSKELETON) {
-          esqueletosChute.add(new EsqueletoChute(100 + (esqueletoChuteC * (600 / 7)), -150 - (esqueletoChuteL * 150)));
-          totalInimigos = totalInimigos + 1;
-        }
-      }
+    if (!movementTutorialScreenActive) {
+      /*
+      if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal() && esqueletosChute.size() < 2 && totalInimigos < 6) {
+       esqueletoChuteC = int(random(0, 8));
+       esqueletoChuteL = int(random(0, 12));
+       
+       if (KICKING_SKELETON_POSITIONS[esqueletoChuteC][esqueletoChuteL] == KICKING_SKELETON) {
+       esqueletosChute.add(new EsqueletoChute(120 + (esqueletoChuteC * 50), -150 - (esqueletoChuteL * 75)));
+       totalInimigos = totalInimigos + 1;
+       }
+       }
+       */
     }
   }
 
-  for (int i = esqueletosChute.size() - 1; i >= 0; i = i - 1) {
-    EsqueletoChute e = esqueletosChute.get(i);
-    e.updateMovement();
-    e.update();
-    e.display();
-    if (e.esqueletoCabecaSaiu) {
-      cabecasEsqueleto.add(new CabecaEsqueleto(e.getX(), e.getY(), jLeiteX));
-      e.esqueletoCabecaSaiu = false;
+  if (esqueletosChute.size() > 0) {
+    for (int i = esqueletosChute.size() - 1; i >= 0; i = i - 1) {
+      EsqueletoChute e = esqueletosChute.get(i);
+      e.updateMovement();
+      e.update();
+      e.display();
+      if (e.hasKickedHead) {
+        cabecasEsqueleto.add(new CabecaEsqueleto(e.getX(), e.getY()));
+        e.hasKickedHead = false;
+      }
+      if (e.hasExitScreen()) {
+        totalInimigos--;
+        esqueletosChute.remove(e);
+      }
+      if (e.hasCollided()) {
+        damage(2);
+      }
     }
-    if (e.hasExitScreen()) {
-      totalInimigos = totalInimigos - 1;
-      esqueletosChute.remove(e);
-    }
-    if (e.hasCollided()) {
-      damage(2);
-    }
+
+    deleteEnemy(esqueletosChute);
   }
 
-  for (int i = esqueletosChute.size() - 1; i >= 0; i = i - 1) {
-    EsqueletoChute e = esqueletosChute.get(i);
-    for (int j = pasAtaque.size() - 1; j >= 0; j = j - 1) {
-      PaAtaque p = pasAtaque.get(j);
-      if (p.hasHit(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.getX() - 40, e.getY() - 20);
-        esqueletosChute.remove(e);
-      }
-    }
-    for (int j = pedrasAtiradas.size() - 1; j >= 0; j = j - 1) {
-      PedraAtirada p = pedrasAtiradas.get(j);
-      if (p.hasHit(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.getX() - 40, e.getY() - 20);
-        pedrasAtiradas.remove(p);
-        esqueletosChute.remove(e);
-      }
-    }
-    for (int j = chicotes.size() - 1; j >= 0; j = j - 1) {
-      ChicoteAtaque c = chicotesAtaque.get(j);
-      if (c.hasHit(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.getX() - 40, e.getY() - 20);
-        esqueletosChute.remove(e);
-      }
-    }
+  if (cabecasEsqueleto.size() > 0) {
+    computeEnemy(cabecasEsqueleto);
   }
 }
 
+final int[][] KICKING_SKELETON_POSITIONS = new int [8][12];
+
 public void kickingSkeletonPositions() {
-  enemyPositionsFirstMap  [0][2] = KICKINGSKELETON;
-  enemyPositionsFirstMap  [1][0] = KICKINGSKELETON;
-  enemyPositionsFirstMap  [2][2] = KICKINGSKELETON;
-  enemyPositionsFirstMap  [3][0] = KICKINGSKELETON;
-  enemyPositionsFirstMap  [4][2] = KICKINGSKELETON;
-  enemyPositionsFirstMap  [5][0] = KICKINGSKELETON;
-  enemyPositionsFirstMap  [6][2] = KICKINGSKELETON;
-
-  enemyPositionsSecondMap [0][2] = KICKINGSKELETON;
-  enemyPositionsSecondMap [1][0] = KICKINGSKELETON;
-  enemyPositionsSecondMap [2][3] = KICKINGSKELETON;
-  enemyPositionsSecondMap [3][3] = KICKINGSKELETON;
-  enemyPositionsSecondMap [4][2] = KICKINGSKELETON;
-  enemyPositionsSecondMap [5][3] = KICKINGSKELETON;
-  enemyPositionsSecondMap [6][3] = KICKINGSKELETON;
-
-  enemyPositionsThirdMap  [0][2] = KICKINGSKELETON;
-  enemyPositionsThirdMap  [1][3] = KICKINGSKELETON;
-  enemyPositionsThirdMap  [2][1] = KICKINGSKELETON;
-  enemyPositionsThirdMap  [4][3] = KICKINGSKELETON;
-  enemyPositionsThirdMap  [5][1] = KICKINGSKELETON;
+  KICKING_SKELETON_POSITIONS [0][0] = KICKING_SKELETON;
+  KICKING_SKELETON_POSITIONS [0][3] = KICKING_SKELETON;
+  KICKING_SKELETON_POSITIONS [0][6] = KICKING_SKELETON;
+  KICKING_SKELETON_POSITIONS [0][9] = KICKING_SKELETON;
+  KICKING_SKELETON_POSITIONS [3][0] = KICKING_SKELETON;
+  KICKING_SKELETON_POSITIONS [3][3] = KICKING_SKELETON;
+  KICKING_SKELETON_POSITIONS [3][6] = KICKING_SKELETON;
+  KICKING_SKELETON_POSITIONS [3][9] = KICKING_SKELETON;
+  KICKING_SKELETON_POSITIONS [6][0] = KICKING_SKELETON;
+  KICKING_SKELETON_POSITIONS [6][3] = KICKING_SKELETON;
+  KICKING_SKELETON_POSITIONS [6][6] = KICKING_SKELETON;
+  KICKING_SKELETON_POSITIONS [6][9] = KICKING_SKELETON;
 }
 PImage redSkeleton;
 PImage redSkeletonShadow;
 
 final int REDSKELETON = 3;
 
-public class EsqueletoRaiva extends Geral {
+public class EsqueletoRaiva extends Inimigo {
   private int movementX = 3;
 
   public EsqueletoRaiva(int x, int y) {
@@ -4569,7 +4291,9 @@ public class EsqueletoRaiva extends Geral {
     setSpriteInterval(75);
     setSpriteWidth(76);
     setSpriteHeight(126);
-    setMovementY(3);
+
+    setDamage(3);
+    setType(TypeOfEnemy.RED_SKELETON.ordinal());
   }
 
   public void display() {
@@ -4579,20 +4303,24 @@ public class EsqueletoRaiva extends Geral {
   }
 
   public void update() {
-    setX(getX() + movementX);
+    super.update();
 
+    setX(getX() + movementX);
+  }
+
+  public void updateMovement() {
     if (getX() < 100) {
-      movementX = 3;
+      movementX = 2;
     }
     if (getX() + 30 > 700) {
-      movementX = -3;
-    } 
+      movementX = -2;
+    }
 
-    super.update();
+    setMovementY(3);
   }
 }
 
-ArrayList<EsqueletoRaiva> esqueletosRaiva;
+ArrayList<EsqueletoRaiva> esqueletosRaiva = new ArrayList<EsqueletoRaiva>();
 
 int esqueletoRaivaC, esqueletoRaivaL;
 
@@ -4600,86 +4328,48 @@ int indexRandomEsqueletoRaivaXMapaBoss;
 
 public void esqueletoRaiva() {
   if (indexInimigos == 4) {
-    if (estadoJogo == "MapaPadre") { 
+    if (gameState == GameState.THIRDBOSS.ordinal()) { 
       if (esqueletosRaiva.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
-        indexRandomEsqueletoRaivaXMapaBoss = PApplet.parseInt(random(0, valoresInimigosXMapaPadre.length));
-        esqueletosRaiva.add(new EsqueletoRaiva(valoresInimigosXMapaPadre[indexRandomEsqueletoRaivaXMapaBoss], 0));
+        indexRandomEsqueletoRaivaXMapaBoss = PApplet.parseInt(random(0, valoresInimigosXTerceiroMapaBoss.length));
+        esqueletosRaiva.add(new EsqueletoRaiva(valoresInimigosXTerceiroMapaBoss[indexRandomEsqueletoRaivaXMapaBoss], 0));
         totalInimigos = totalInimigos + 1;
       }
     }
 
-    if (!telaTutorialAndandoAtiva) {
-      if (estadoJogo == "TerceiroMapa" && esqueletosRaiva.size() < 2 && totalInimigos < 6) {
+    if (!movementTutorialScreenActive) {
+      if (gameState == GameState.THIRDMAP.ordinal() && esqueletosRaiva.size() < 2 && totalInimigos < 6) {
         esqueletoRaivaC = PApplet.parseInt(random(0, 7));
         esqueletoRaivaL = PApplet.parseInt(random(0, 4));
 
-        if (enemyPositionsThirdMap[esqueletoRaivaC][esqueletoRaivaL] == REDSKELETON) {
+        if (ENEMY_POSITIONS_THIRD_MAP[esqueletoRaivaC][esqueletoRaivaL] == REDSKELETON) {
           esqueletosRaiva.add(new EsqueletoRaiva(100 + (esqueletoRaivaC * (600 / 7)), -150 - (esqueletoRaivaL * 150)));
           totalInimigos = totalInimigos + 1;
         }
       }
     }
   }
-
-
-  for (int i = esqueletosRaiva.size() - 1; i >= 0; i = i - 1) {
-    EsqueletoRaiva e = esqueletosRaiva.get(i);
-    e.display();
-    e.update();
-    if (e.hasExitScreen()) {
-      totalInimigos = totalInimigos - 1;
-      esqueletosRaiva.remove(e);
-    }
-    if (e.hasCollided()) {
-      damage(3);
-    }
-  }
-  for (int i = esqueletosRaiva.size() - 1; i >= 0; i = i - 1) {
-    EsqueletoRaiva e = esqueletosRaiva.get(i);
-    for (int j = pasAtaque.size() - 1; j >= 0; j = j - 1) {
-      PaAtaque p = pasAtaque.get(j);
-      if (p.hasHit(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.getX(), e.getY());
-        esqueletosRaiva.remove(e);
-      }
-    }
-    for (int j = pedrasAtiradas.size() - 1; j >= 0; j = j - 1) {
-      PedraAtirada p = pedrasAtiradas.get(j);
-      if (p.hasHit(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.getX(), e.getY());
-        pedrasAtiradas.remove(p);
-        esqueletosRaiva.remove(e);
-      }
-    }
-    for (int j = chicotes.size() - 1; j >= 0; j = j - 1) {
-      ChicoteAtaque ch = chicotesAtaque.get(j);
-      if (ch.hasHit(e)) {
-        totalInimigos = totalInimigos - 1;
-        hitInimigos(e.getX(), e.getY());
-        esqueletosRaiva.remove(e);
-      }
-    }
+  
+  if (esqueletosRaiva.size() > 0) {
+    computeEnemy(esqueletosRaiva);
+    deleteEnemy(esqueletosRaiva);
   }
 }
 
 public void redSkeletonPositions() {
-  enemyPositionsThirdMap[0][0] = REDSKELETON;
-  enemyPositionsThirdMap[1][2] = REDSKELETON;
-  enemyPositionsThirdMap[2][3] = REDSKELETON;
-  enemyPositionsThirdMap[3][2] = REDSKELETON;
-  enemyPositionsThirdMap[4][1] = REDSKELETON;
-  enemyPositionsThirdMap[5][0] = REDSKELETON;
-  enemyPositionsThirdMap[6][2] = REDSKELETON;
+  ENEMY_POSITIONS_THIRD_MAP[0][0] = REDSKELETON;
+  ENEMY_POSITIONS_THIRD_MAP[1][2] = REDSKELETON;
+  ENEMY_POSITIONS_THIRD_MAP[2][3] = REDSKELETON;
+  ENEMY_POSITIONS_THIRD_MAP[3][2] = REDSKELETON;
+  ENEMY_POSITIONS_THIRD_MAP[4][1] = REDSKELETON;
+  ENEMY_POSITIONS_THIRD_MAP[5][0] = REDSKELETON;
+  ENEMY_POSITIONS_THIRD_MAP[6][2] = REDSKELETON;
 }
-public class Geral {
+public class MaisGeral {
   private PImage sprite;
   private PImage spriteImage;
 
   private int x;
   private int y;
-  private int movementY;
 
   private int step;
   private int spriteTime;
@@ -4691,104 +4381,92 @@ public class Geral {
   public PImage getSprite() {
     return sprite;
   }
-
-  public void setSprite(PImage sprite) {
+  protected void setSprite(PImage sprite) {
     this.sprite = sprite;
   }
 
   public PImage getSpriteImage() {
     return spriteImage;
   }
-
-  public void setSpriteImage(PImage enemy) {
+  protected void setSpriteImage(PImage enemy) {
     this.spriteImage = enemy;
   }
 
   public int getX() {
     return x;
   }
-
-  public void setX(int x) {
+  protected void setX(int x) {
     this.x = x;
   }
 
   public int getY() {
     return y;
   }
-
-  public void setY(int y) {
+  protected void setY(int y) {
     this.y = y;
-  }
-
-  public int getMovementY() {
-    return movementY;
-  }
-
-  public void setMovementY(int movementY) {
-    this.movementY = movementY;
   }
 
   public int getStep() {
     return step;
   }
-
-  public void setStep(int step) {
+  protected void setStep(int step) {
     this.step = step;
   }
 
   public int getSpriteTime() {
     return spriteTime;
   }
-
-  public void setSpriteTime(int spriteTime) {
+  protected void setSpriteTime(int spriteTime) {
     this.spriteTime = spriteTime;
   }
 
   public int getSpriteInterval() {
     return spriteInterval;
   }
-
-  public void setSpriteInterval(int spriteInterval) {
+  protected void setSpriteInterval(int spriteInterval) {
     this.spriteInterval = spriteInterval;
   }
 
   public int getSpriteWidth() {
     return spriteWidth;
   }
-
-  public void setSpriteWidth(int spriteWidth) {
+  protected void setSpriteWidth(int spriteWidth) {
     this.spriteWidth = spriteWidth;
   }
 
   public int getSpriteHeight() {
     return spriteHeight;
   }
-
-  public void setSpriteHeight(int spriteHeight) {
+  protected void setSpriteHeight(int spriteHeight) {
     this.spriteHeight = spriteHeight;
   }
 
   public void display() {
-    if (millis() > spriteTime + spriteInterval) {
-      sprite = spriteImage.get(step, 0, spriteWidth, spriteHeight);
-      step = step % spriteImage.width + spriteWidth;
-      image(sprite, x, y);
-      spriteTime = millis();
-    } else {
-      image(sprite, x, y);
-    }
+    handler.spriteHandler(this);
+    stepHandler();
+  }
 
-    if (step == spriteImage.width) {
-      step = 0;
-    }
+  public void stepHandler() {
+    handler.stepHandler(this);
+  }
+}
+
+public class Geral extends MaisGeral {
+  private int movementY;
+
+  public int getMovementY() {
+    return movementY;
+  }
+  protected void setMovementY(int movementY) {
+    this.movementY = movementY;
   }
 
   public void update() {
-    y = y + movementY;
+    setY(getY() + getMovementY());
   }
 
   public boolean hasCollided() {
-    if (x + spriteWidth >= jLeiteX && x <= jLeiteX + 63 && y + spriteHeight >= jLeiteY && y <= jLeiteY + 126) {
+    if (getX() + getSpriteWidth() >= jLeiteX && getX() <= jLeiteX + 63 && getY() + getSpriteHeight() >= jLeiteY && getY() <= jLeiteY + 126) {
       return true;
     }
 
@@ -4796,7 +4474,7 @@ public class Geral {
   }
 
   public boolean hasExitScreen() {
-    if (y > height) {
+    if (getY() > height) {
       return true;
     }
 
@@ -4915,22 +4593,22 @@ int indexInimigos;
 int totalInimigos;
 int maximoInimigosPadre = 2;
 
-int[] valoresInimigosXMapaPadre = {25, 350, 679};
+int[] valoresInimigosXTerceiroMapaBoss = {25, 350, 679};
 
 public void inimigosTodos() {
   if (!jLeiteMorreu) {
-    if (!telaTutorialAndandoAtiva) {
+    if (!movementTutorialScreenActive) {
       if (millis() > tempoGerarInimigo + 250) {
-        if (estadoJogo == "PrimeiroMapa") {
+        if (gameState == GameState.FIRSTMAP.ordinal()) {
           indexInimigos = PApplet.parseInt(random(0, 2));
         } 
-        if (estadoJogo == "SegundoMapa") {
+        if (gameState == GameState.SECONDMAP.ordinal()) {
           indexInimigos = PApplet.parseInt(random(0, 4));
         } 
-        if (estadoJogo == "TerceiroMapa") {
+        if (gameState == GameState.THIRDMAP.ordinal()) {
           indexInimigos = PApplet.parseInt(random(1, 5));
         } 
-        if (estadoJogo == "MapaPadre") {
+        if (gameState == GameState.THIRDBOSS.ordinal()) {
           indexInimigos = PApplet.parseInt(random(0, 5));
           if (!ataqueLevantemAcontecendo) {
             maximoInimigosPadre = 2;
@@ -4945,43 +4623,177 @@ public void inimigosTodos() {
     indexInimigos = 6;
   }
 
+  println(numberOfSceneries);
+  firstMapEnemiesSpawnManager.states();
   esqueleto();
   esqueletoChute();
-  cabecaEsqueleto();
   cachorro();
   corvo();
   esqueletoRaiva();
 }
 
+enum TypeOfEnemy {
+  SKELETON, KICKING_SKELETON, SKELETON_HEAD, SKELETON_DOG, SKELETON_CROW, RED_SKELETON
+}
+
+public abstract class Inimigo extends Geral {
+  private int damage;
+  private int type;
+
+  public int getDamage() {
+    return damage;
+  }
+  protected void setDamage(int damage) {
+    this.damage = damage;
+  }
+
+  public int getType() {
+    return type;
+  }
+  protected void setType(int type) {
+    this.type = type;
+  }
+
+  public abstract void updateMovement();
+}
+
 public void damage(int amount) {
   if (!jLeiteImune) {
-    vidaJLeiteAtual -= amount;
+    playerCurrentHP -= amount;
     jLeiteImune = true;
     tempoImune = millis();
   }
 }
-PImage vidaJLeiteLayout, vidaJLeiteLayoutBackground, vidaJLeiteBarra;
 
-int vidaJLeiteAtual;
-int vidaJleiteMax;
-int vidaJLeiteMin;
-
-int vidaJLeiteBarraX;
-
-public void vida() {
-  image(vidaJLeiteLayoutBackground, 8, 490);
-
-  vidaJLeiteMin = 0;
-  vidaJLeiteBarraX = 115;
-  while (vidaJLeiteMin < vidaJLeiteAtual) {
-    image (vidaJLeiteBarra, vidaJLeiteBarraX, 566);
-    vidaJLeiteBarraX = vidaJLeiteBarraX + 12;
-    vidaJLeiteMin = vidaJLeiteMin + 1;
+<Enemy extends Inimigo> void computeEnemy(ArrayList<Enemy> inimigos) {
+  for (int i = inimigos.size() - 1; i >= 0; i = i - 1) {
+    Enemy enemy = inimigos.get(i);
+    enemy.updateMovement();
+    enemy.update();
+    enemy.display();
+    if (enemy.hasExitScreen()) {
+      inimigos.remove(enemy);
+      if (enemy.getType() != 2) {
+        totalInimigos--;
+      }
+    }
+    if (enemy.hasCollided()) {
+      damage(enemy.getDamage());
+    }
   }
-
-  image(vidaJLeiteLayout, 8, 490);
 }
 
+<Enemy extends Geral> void deleteEnemy(ArrayList<Enemy> inimigos) {
+  for (int i = inimigos.size() - 1; i >= 0; i--) {
+    Enemy enemy = inimigos.get(i);
+    for (int j = armas.size() - 1; j >= 0; j--) {
+      Arma arma = armas.get(j);
+      if (arma.hasHit(enemy)) {
+        totalInimigos--;
+        hitInimigos(enemy.getX() - 40, enemy.getY() - 20);
+        inimigos.remove(enemy);
+      }
+    }
+  }
+}
+ArrayList<Item> itens = new ArrayList<Item>();
+
+public class Item extends Geral {
+  private int itemIndex;
+  private int itemTotal;
+
+  public int getItemIndex() {
+    return itemIndex;
+  }
+  protected void setItemIndex(int itemIndex) {
+    this.itemIndex = itemIndex;
+  }
+
+  public int getItemTotal() {
+    return itemTotal;
+  }
+  protected void setItemTotal(int itemTotal) {
+    this.itemTotal = itemTotal;
+  }
+}
+
+public void item() {  
+  for (int i = itens.size() - 1; i >= 0; i = i - 1) {
+    Item it = itens.get(i);
+    if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal()) {
+      it.update();
+    }
+    it.display();
+    if (it.hasExitScreen() || it.hasCollided()) {
+      itens.remove(it);
+
+      if (it.hasExitScreen()) {
+        generateItem(2500);
+      }
+      if (it.hasCollided()) {
+        item = it.getItemIndex();
+        weaponTotal = it.getItemTotal();
+      }
+    }
+  }
+}
+
+public void generateItem(int timeAmount) {
+  if (itemTotal == 1) {
+    itemTotal--;
+  }
+  
+  hasItemIndexChanged = false;
+  timeToGenerateItem = millis();
+  intervalToGenerateItem = timeAmount;
+}
+
+public void addItem() {
+  if (!movementTutorialScreenActive) {
+    if (itemIndex >= 0 && itemIndex <= 4) {
+      itens.add(new Pa());
+    } else if (itemIndex >= 5 && itemIndex <= 9) {
+      itens.add(new Chicote());
+    }
+
+    itemTotal++;
+  }
+}
+
+public void addItemBoss() {
+  if (gameState == GameState.FIRSTBOSS.ordinal()) {
+    itemRandomMapPositionIndex = PApplet.parseInt(random(0, X_VALUES_FIRST_BOSS.length));
+    if (itemIndex >= 0 && itemIndex <= 4) {
+      itens.add(new Pa(X_VALUES_FIRST_BOSS[itemRandomMapPositionIndex], Y_VALUES_FIRST_BOSS[itemRandomMapPositionIndex]));
+    } else if (itemIndex >= 5 && itemIndex <= 9) {
+      itens.add(new Chicote(X_VALUES_FIRST_BOSS[itemRandomMapPositionIndex], Y_VALUES_FIRST_BOSS[itemRandomMapPositionIndex]));
+    }
+
+    itemTotal++;
+  }
+
+  if (gameState == GameState.SECONDBOSS.ordinal()) {
+    itemRandomMapPositionIndex = PApplet.parseInt(random(0, X_VALUES_SECOND_BOSS.length));
+    if (itemIndex >= 0 && itemIndex <= 4) {
+      itens.add(new Pa(X_VALUES_SECOND_BOSS[itemRandomMapPositionIndex], Y_VALUES_SECOND_BOSS[itemRandomMapPositionIndex]));
+    } else if (itemIndex >= 5 && itemIndex <= 9) {
+      itens.add(new Chicote(X_VALUES_SECOND_BOSS[itemRandomMapPositionIndex], Y_VALUES_SECOND_BOSS[itemRandomMapPositionIndex]));
+    }
+
+    itemTotal++;
+  }
+
+  if (gameState == GameState.THIRDBOSS.ordinal()) {
+    itemRandomMapPositionIndex = PApplet.parseInt(random(0, X_VALUES_THIRD_BOSS.length));
+    if (itemIndex >= 0 && itemIndex <= 4) {
+      itens.add(new Pa(X_VALUES_THIRD_BOSS[itemRandomMapPositionIndex], Y_VALUES_THIRD_BOSS[itemRandomMapPositionIndex]));
+    } else if (itemIndex >= 5 && itemIndex <= 9) {
+      itens.add(new Chicote(X_VALUES_THIRD_BOSS[itemRandomMapPositionIndex], Y_VALUES_THIRD_BOSS[itemRandomMapPositionIndex]));
+    }
+
+    itemTotal++;
+  }
+}
 AudioPlayer[] sonsMorteJLeite = new AudioPlayer [4];
 
 PImage jLeiteMovimento, spriteJLeiteMovimento; 
@@ -4995,6 +4807,10 @@ PImage sombraJLeite;
 
 float tempoItem;
 float tempoItemAtivo;
+
+int playerCurrentHP;
+int prayerHPMaximum;
+int playerHPMinimum;
 
 int jLeiteX, jLeiteY; 
 
@@ -5023,25 +4839,25 @@ boolean imortalidade;
 
 public void jLeite() {
   if (imortalidade) {
-    vidaJLeiteAtual = 15;
+    playerCurrentHP = 15;
   }
 
   if (finalMapa) {
     if (jLeiteY + 126 < - 50) {
-      if (estadoJogo == "PrimeiroMapa") {
-        estadoJogo = ("MapaCoveiro");
+      if (gameState == GameState.FIRSTMAP.ordinal()) {
+        gameState = GameState.FIRSTBOSS.ordinal();
         if (temaIgreja.isPlaying()) {
           temaIgreja.pause();
         }
       }
-      if (estadoJogo == "SegundoMapa") {
-        estadoJogo = ("MapaFazendeiro");
+      if (gameState == GameState.SECONDMAP.ordinal()) {
+        gameState = GameState.SECONDBOSS.ordinal();
         if (temaFazenda.isPlaying()) {
           temaFazenda.pause();
         }
       }
-      if (estadoJogo == "TerceiroMapa") {
-        estadoJogo = ("MapaPadre");
+      if (gameState == GameState.THIRDMAP.ordinal()) {
+        gameState = GameState.THIRDBOSS.ordinal();
         if (temaCidade.isPlaying()) {
           temaCidade.pause();
         }
@@ -5049,7 +4865,7 @@ public void jLeite() {
     }
   }
 
-  if (vidaJLeiteAtual < 0 && !jLeiteMorreu) {
+  if (playerCurrentHP < 0 && !jLeiteMorreu) {
     jLeiteMorreu = true;
     jLeiteMorrendo = true;
     tempoMorto = millis();
@@ -5065,26 +4881,26 @@ public void jLeite() {
     if (temaCidade.isPlaying()) {
       temaCidade.pause();
     }
-    if (estadoJogo == "MapaCoveiro") {
-      if (sonsAtivos) {
+    if (gameState == GameState.FIRSTBOSS.ordinal()) {
+      if (isSoundActive) {
         sonsMorteJLeite[0].rewind();
         sonsMorteJLeite[0].play();
       }
     }
-    if (estadoJogo == "MapaFazendeiro") {
-      if (sonsAtivos) {
+    if (gameState == GameState.SECONDBOSS.ordinal()) {
+      if (isSoundActive) {
         sonsMorteJLeite[1].rewind();
         sonsMorteJLeite[1].play();
       }
     }
-    if (estadoJogo == "MapaPadre") {
+    if (gameState == GameState.THIRDBOSS.ordinal()) {
       if (!padre.padreMudouForma) {
-        if (sonsAtivos) {
+        if (isSoundActive) {
           sonsMorteJLeite[2].rewind();
           sonsMorteJLeite[2].play();
         }
       } else {
-        if (sonsAtivos) {
+        if (isSoundActive) {
           sonsMorteJLeite[3].rewind();
           sonsMorteJLeite[3].play();
         }
@@ -5093,12 +4909,12 @@ public void jLeite() {
   }
 
   if (jLeiteMorreu && millis() > tempoMorto + 2500) {
-    if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
-      setup();
-      estadoJogo = "MenuInicial";
-    } else if (estadoJogo == "MapaCoveiro" || estadoJogo == "MapaFazendeiro" || estadoJogo == "MapaPadre") {
-      ultimoEstado = estadoJogo;
-      estadoJogo = "GameOver";
+    if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal()) {
+      variablesPreLoad();
+      gameState = GameState.MAINMENU.ordinal();
+    } else if (gameState >= GameState.FIRSTBOSS.ordinal() && gameState <= GameState.THIRDBOSS.ordinal()) {
+      lastState = gameState;
+      gameState = GameState.GAMEOVER.ordinal();
     }
   }
 
@@ -5107,7 +4923,7 @@ public void jLeite() {
   }
 
   if (!jLeiteMorreu) {
-    if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
+    if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal()) {
       if (jLeiteDireita && jLeiteX < width - 163) { 
         jLeiteX = jLeiteX + 3;
       }
@@ -5130,7 +4946,7 @@ public void jLeite() {
       }
     }
 
-    if (estadoJogo == "MapaCoveiro" || estadoJogo == "MapaFazendeiro"|| estadoJogo == "MapaPadre") {
+    if (gameState >= GameState.FIRSTBOSS.ordinal() && gameState <= GameState.THIRDBOSS.ordinal()) {
       if (!jLeiteLentidao) {
         if (jLeiteDireita && jLeiteX < width - 88) { 
           jLeiteX = jLeiteX + 3;
@@ -5168,7 +4984,7 @@ public void jLeite() {
 
     image(sombraJLeite, jLeiteX + 7, jLeiteY + 112);
 
-    if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
+    if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal()) {
       if (!jLeiteUsoItem && !jLeiteImune) {
         if (millis() > tempoSpriteJLeiteMovimento + 75) { 
           spriteJLeiteMovimento = jLeiteMovimento.get(stepJLeiteMovimento, 0, 63, 126); 
@@ -5306,201 +5122,350 @@ public void jLeite() {
     }
   }
 }
+boolean isFirstMapSet;
+
 public void jogando() {
-  if (estadoJogo == "PrimeiroMapa") {
-    if (musicasAtivas) {
+  if (gameState == GameState.FIRSTMAP.ordinal()) {
+    if (!isFirstMapSet) {
+      movementTutorialScreenActive = true;
+      cenarios.add(new Scenery(0, 0));
+      cenarios.add(new Scenery(-600, 0));
+      generateItem(5000);
+      generateFood(5000);
+      isFirstMapSet = true;
+    }
+    if (isMusicActive) {
       temaIgreja.play();
     }
   }
 
-  if (estadoJogo == "SegundoMapa") {
-    if (musicasAtivas) {
+  if (gameState == GameState.SECONDMAP.ordinal()) {
+    if (isMusicActive) {
       temaFazenda.play();
     }
   }
 
-  if (estadoJogo == "TerceiroMapa") {
-    if (musicasAtivas) {
+  if (gameState == GameState.THIRDMAP.ordinal()) {
+    if (isMusicActive) {
       temaCidade.play();
     }
   }
 
   if (millis() > tempoBossMorreu + 3000 && coveiro.coveiroMorreu) {
-    estadoJogo = "SegundoMapa";
+    gameState = GameState.SECONDMAP.ordinal();
   }
 
   if (millis() > tempoBossMorreu + 3000 && fazendeiro.fazendeiroMorreu) {
-    estadoJogo = "TerceiroMapa";
+    gameState = GameState.THIRDMAP.ordinal();
   }
 
   if (millis() > tempoBossMorreu + 7000 && padre.padreMorreu) {
-    estadoJogo = "Vitoria";
+    gameState = GameState.WIN.ordinal();
   }
-
 
   cenario();
   inimigosTodos();
   armas(); 
   jLeite(); 
   foodAll();
-  vida();
-  caixaNumeroItem();
-  if (telaTutorialAndandoAtiva) {
+  playerHitpoints();
+  ib.updateItemImage();
+  ib.display();
+  if (movementTutorialScreenActive) {
     telaTutorialAndando();
   }
-  if (primeiraPedra == 1) {
-    telaTutorialPedra();
+}
+PImage itemBox;
+PImage[] itemNumbers = new PImage [15];
+
+PImage shovelBox;
+PImage whipBox;
+
+public class FirstMap {
+  Scenery firstScenery;
+  Scenery secondScenery;
+
+  TransitionGate door;
+
+  HUD hud;
+
+  Player player;
+
+  FirstMapEnemiesSpawnManager firstMapEnemiesSpawnManager;
+
+  TutorialScreen movement;
+  TutorialScreen attack;
+}
+
+public class TutorialScreen {
+}
+
+public class Player {
+}
+
+public class ItemBox {
+  private PImage itemImage;
+
+  public void display() {
+    image(itemBox, 705, 510);
+
+    if (hasItem()) {
+      image(itemImage, 705, 510);
+      image(itemNumbers[weaponTotal - 1], 725, 552);
+    }
   }
-  telaGameOver();
-  telaVitoria();
+
+  public void updateItemImage() {
+    itemImage = (item == SHOVEL) ? shovelBox : whipBox;
+  }
+
+  public boolean hasItem() {
+    if (weaponTotal - 1 >= 0) {
+      return true;
+    }
+
+    return false;
+  }
+}
+
+public class HUD {
+  private HitpointsLayout p;
+
+  public void display() {
+    switch(gameState) {
+    case 3:
+      coveiroHP.update();
+      coveiroHP.display();
+      break;
+    case 4:
+      fazendeiroHP.update();
+      fazendeiroHP.display();
+      break;
+    case 5:
+      p = (padre.padreMudouForma) ? madPadreHP : padreHP;
+      p.update();
+      p.display();
+      break;
+    }
+
+    playerHP.update();
+    playerHP.display();
+    ib.updateItemImage();
+    ib.display();
+  }
+}
+
+public class HitpointsLayout {
+  private PImage layoutBackground;
+  private PImage hitpointsLayout;
+  private PImage hitpointsBar;
+
+  private PVector background;
+  private PVector layout;
+  private PVector bar;
+
+  private int barXStart;
+  private int interval;
+
+  private int minimumHP;
+  private int currentHP;
+
+  private int index;
+
+  HitpointsLayout(int index) {
+    this.index = index;
+
+    this.minimumHP = 0;
+
+    if (index == 0) {
+      player();
+    } else {
+      switch (index) {
+      case 1:
+        this.hitpointsLayout = coveiroHPLayout;
+
+        this.currentHP = coveiroCurrentHP;
+        break;
+      case 2:
+        this.hitpointsLayout = fazendeiroHPLayout;
+
+        this.currentHP = fazendeiroCurrentHP;
+        break;
+      case 3:
+        this.hitpointsLayout = padreHPLayout;
+
+        this.currentHP = padreCurrentHP;
+        break;
+      case 4:
+        this.hitpointsLayout = madPadreHPLayout;
+
+        this.currentHP = madPadreCurrentHP;
+        break;
+      }
+      bosses();
+    }
+  }
+
+  public void player() {
+    this.layoutBackground = playerHPBackground;
+    this.hitpointsLayout = playerHPLayout;
+    this.hitpointsBar = playerHPBar;
+
+    this.background = new PVector(playerHPBackgroundX, playerHPBackgroundY);
+    this.layout = new PVector(playerHPLayoutX, playerHPLayoutY);
+    this.bar = new PVector(playerHPBarX, playerHPBarY);
+
+    this.barXStart = playerHPBarXStart;
+    this.interval = playerHPInterval;
+
+    this.currentHP = playerCurrentHP;
+  }
+
+  public void bosses() {
+    this.layoutBackground = bossHPBackground;
+    this.hitpointsBar  = (index != 4) ? bossHPBar : madPadreHPBar;
+
+    this.background = new PVector(bossHPBackgroundX, bossHPBackgroundY);
+    this.layout = new PVector(bossHPLayoutX, bossHPLayoutY);
+    this.bar = new PVector(bossHPBarx, bossHPBarY);
+
+    this.barXStart = bossHPBarXStart;
+    this.interval = bossHPInterval;
+  }
+
+  public void display() {
+    image(layoutBackground, background.x, background.y);
+
+    minimumHP = 0;
+    bar.x = barXStart;
+    while (minimumHP < currentHP) {
+      image (hitpointsBar, bar.x, bar.y);
+      bar.x += interval;
+      minimumHP++;
+    }
+
+    image (hitpointsLayout, layout.x, layout.y);
+  }
+
+  public void update() {
+    switch(index) {
+    case 0:
+      currentHP = playerCurrentHP;
+      break;
+    case 1:
+      this.currentHP = coveiroCurrentHP;
+      break;
+    case 2:
+      this.currentHP = fazendeiroCurrentHP;
+      break;
+    case 3:
+      this.currentHP = padreCurrentHP;
+      break;
+    case 4:
+      this.currentHP = madPadreCurrentHP;
+      break;
+    }
+  }
+}
+
+PImage playerHPLayout;
+PImage playerHPBackground; 
+PImage playerHPBar;
+
+final int playerHPBackgroundX = 8;
+final int playerHPBackgroundY = 490;
+
+final int playerHPBarX = 115;
+final int playerHPBarY = 566;
+final int playerHPBarXStart = 115;
+
+final int playerHPInterval = 12;
+
+final int playerHPLayoutX = 8;
+final int playerHPLayoutY = 490;
+
+public void playerHitpoints() {
+  playerHP.update();
+  playerHP.display();
+}
+public class Handler {
+  public void spriteHandler(MaisGeral object) {
+    if (millis() > object.getSpriteTime() + object.getSpriteInterval()) {
+      object.setSprite(object.getSpriteImage().get(object.getStep(), 0, object.getSpriteWidth(), object.getSpriteHeight()));
+      object.setStep(object.getStep() % object.getSpriteImage().width + object.getSpriteWidth());
+      object.setSpriteTime(millis());
+    }
+
+    image(object.getSprite(), object.getX(), object.getY());
+  }
+
+  public void stepHandler(MaisGeral object) {
+    if (object.getStep() == object.getSpriteImage().width) {
+      object.setStep(0);
+    }
+  }
 }
 AudioPlayer temaMenu;
 
-PImage backgroundMenu, spriteBackgroundMenu;
-PImage pesadeloLogo;
-PImage botaoJogar, jogarMao;
-PImage botaoBotoes, botoesMao;
-PImage botaoCreditos, creditosMao, creditos;
-PImage botaoSom, botaoMusica;
+PImage playButton;
+PImage playHands;
+
+PImage controlsButton; 
+PImage controlsHands;
+
+PImage creditsButton;
+PImage creditsHands;
+
+PImage creditos;
+
+PImage soundButton;
+PImage musicButton;
 PImage botaoX;
 
 PImage imagemControles;
 
-PImage maoApontandoEsquerda, maoPolegar;
+PImage menuPointingBack;
+PImage menuThumbsUp;
 
-int stepBackgroundMenu;
-int tempoSpriteBackgroundMenu;
-
-int creditosY, creditos2Y;
-int movimentoCreditosY;
-
-boolean botaoXAparecendoSom;
-boolean botaoXAparecendoMusica;
+PImage telaVitoria;
+PImage telaGameOver;
 
 public void menu() {
-  if (estadoJogo == "MenuInicial") {
-    if (millis() > tempoSpriteBackgroundMenu + 140) {
-      spriteBackgroundMenu = backgroundMenu.get(stepBackgroundMenu, 0, 800, 600);
-      stepBackgroundMenu = stepBackgroundMenu % 6400 + 800;
-      tempoSpriteBackgroundMenu = millis();
-    }
-    if (stepBackgroundMenu == backgroundMenu.width) {
-      stepBackgroundMenu = 0;
-    }
-
-    background(spriteBackgroundMenu);
-    image(pesadeloLogo, 231, 40);
-
-    if (mouseX > 300 && mouseX < 500 && mouseY > 300 && mouseY < 377) {
-      image(jogarMao, 271, 300);
-      if (mousePressed) {
-        setup();
-        estadoJogo = "PrimeiroMapa";
-        telaTutorialAndandoAtiva = true;
-        cenarios.add(new Cenario(0, 0, 0));
-        cenarios.add(new Cenario(0, -600, 0));
-        //begone.play();
-      }
+  winLose();
+  if (gameState == GameState.MAINMENU.ordinal()) {
+    if (mm == null) {
+      mm = new MainMenu();
     } else {
-      image(botaoJogar, 300, 300, 200, 77);
-    }
-
-    if (mouseX > 300 && mouseX < 500 && mouseY > 400 && mouseY < 477) {
-      image(botoesMao, 271, 400);
-      if (mousePressed) {
-        estadoJogo = "Instru\u00e7\u00f5esBot\u00f5es";
-      }
-    } else {
-      image(botaoBotoes, 300, 400, 200, 77);
-    }
-
-    if (mouseX > 300 && mouseX < 500 && mouseY > 500 && mouseY < 577) {
-      image(creditosMao, 271, 500);
-      if (mousePressed) {
-        estadoJogo = "Cr\u00e9ditos";
-      }
-    } else {
-      image(botaoCreditos, 300, 500, 200, 77);
-    }
-
-    image(botaoSom, 660, 10);
-    image(botaoMusica, 730, 10);
-
-    //MOSTRA O X SOBRE OS BOT\u00d5ES DEPOIS QUE O JOGADOR CLICA SOBRE ELES.
-    if (botaoXAparecendoSom) {
-      image(botaoX, 660, 10);
-    }
-    if (botaoXAparecendoMusica) {
-      image(botaoX, 730, 10);
+      mm.images();
+      mm.buttons();
     }
   }
 
-  //bot\u00f5es.
-  if (estadoJogo == "Instru\u00e7\u00f5esBot\u00f5es") {
-    background(51);
-
-    image(imagemControles, 0, 0);
-    if (millis() > tempoSpriteJLeiteMovimento + 75) { 
-      spriteJLeiteMovimento = jLeiteMovimento.get(stepJLeiteMovimento, 0, 63, 126); 
-      stepJLeiteMovimento = stepJLeiteMovimento % 378 + 63;
-      image(spriteJLeiteMovimento, 250, 90); 
-      tempoSpriteJLeiteMovimento = millis();
+  // Bot\u00f5es.
+  if (gameState == GameState.CONTROLSMENU.ordinal()) {
+    if (ctrl == null) {
+      ctrl = new Controls();
     } else {
-      image(spriteJLeiteMovimento, 250, 90);
-    }
-
-    if (stepJLeiteMovimento == jLeiteMovimento.width) {
-      stepJLeiteMovimento = 0;
-    }
-
-    if (millis() > tempoSpriteJLeiteItem + 150) { 
-      spriteJLeiteItem = jLeiteItem.get(stepJLeiteItem, 0, 94, 126); 
-      stepJLeiteItem = stepJLeiteItem % 282 + 94;
-      image(spriteJLeiteItem, 540, 60); 
-      tempoSpriteJLeiteItem = millis();
-    } else {
-      image(spriteJLeiteItem, 540, 60);
-    }
-
-    if (stepJLeiteItem == jLeiteItem.width) {
-      stepJLeiteItem = 0;
-    }
-
-    if (mouseX > 20 && mouseX < 125 && mouseY > 520 && mouseY < 573) {
-      image(maoPolegar, 20, 520);
-      if (mousePressed) {
-        estadoJogo = "MenuInicial";
-      }
-    } else {
-      image(maoApontandoEsquerda, 20, 520);
+      background(51);
+      ctrl.images();
+      ctrl.sprites();
+      ctrl.button();
     }
   }
 
-  //cr\u00e9ditos.
-  if (estadoJogo == "Cr\u00e9ditos") {
-    creditos2Y = creditos2Y - movimentoCreditosY;
-    creditosY = creditosY - movimentoCreditosY;
-    image(creditos, 0, creditos2Y);
-    image(creditos, 0, creditosY);
-    if (creditosY + 1000 <= 0) {
-      creditosY = 1000;
-    }
-    if (creditos2Y + 1000 <= 0) {
-      creditos2Y = 1000;
-    }
-
-    if (mouseX > 20 && mouseX < 125 && mouseY > 520 && mouseY < 573) {
-      image(maoPolegar, 20, 520);
-      if (mousePressed) {
-        estadoJogo = "MenuInicial";
-      }
+  // Cr\u00e9ditos
+  if (gameState == GameState.CREDITSMENU.ordinal()) {
+    if (cre == null) {
+      cre = new Credits();
     } else {
-      image(maoApontandoEsquerda, 20, 520);
+      cre.credits();
+      cre.button();
     }
   }
 
-  if (estadoJogo == "MapaCoveiro") {
-    if (musicasAtivas) {
+  // Bosses
+  if (gameState == GameState.FIRSTBOSS.ordinal()) {
+    if (isMusicActive) {
       temaBoss.play();
     }
 
@@ -5508,26 +5473,28 @@ public void menu() {
     coveiro();
     armas();
     jLeite();
-    vida();
+    playerHitpoints();
     foodAll();
-    caixaNumeroItem();
+    ib.updateItemImage();
+    ib.display();
   }
 
-  if (estadoJogo == "MapaFazendeiro") {
-    if (musicasAtivas) {
+  if (gameState == GameState.SECONDBOSS.ordinal()) {
+    if (isMusicActive) {
       temaBoss.play();
     }
     background(bossSceneryImages[1]);
     fazendeiro();
     armas(); 
     jLeite();
-    vida();
+    playerHitpoints();
     foodAll();
-    caixaNumeroItem();
+    ib.updateItemImage();
+    ib.display();
   }
 
-  if (estadoJogo == "MapaPadre") {
-    if (musicasAtivas) {
+  if (gameState == GameState.THIRDBOSS.ordinal()) {
+    if (isMusicActive) {
       temaBoss.play();
     }
 
@@ -5535,37 +5502,44 @@ public void menu() {
     padre();
     armas();
     jLeite();
-    vida();
+    playerHitpoints();
     foodAll();
-    caixaNumeroItem();
-    telaGameOver();
+    ib.updateItemImage();
+    ib.display();
+  }
+
+  if (gameState >= GameState.WIN.ordinal() && gameState <= GameState.GAMEOVER.ordinal()) {
+    menuHand();
   }
 }
 
 PImage telaTutorialAndando, telaTutorialPedra, telaTutorialPedraSeta, telaTutorialX;
 
-boolean telaTutorialAndandoAtiva, telaTutorialPedraAtiva;
+boolean movementTutorialScreenActive, weaponTutorialScreenActive;
 
 public void telaTutorialAndando() {
   image (telaTutorialAndando, 187.5f, 119);
 
+  playerWalkingSprite(470, 260);
+
+  image(telaTutorialX, 584, 139);
+}
+
+public void playerWalkingSprite(int spriteX, int spriteY) {
   if (millis() > tempoSpriteJLeiteMovimento + 75) { 
     spriteJLeiteMovimento = jLeiteMovimento.get(stepJLeiteMovimento, 0, 63, 126); 
-    stepJLeiteMovimento = stepJLeiteMovimento % 378 + 63;
-    image(spriteJLeiteMovimento, 470, 260); 
+    stepJLeiteMovimento = stepJLeiteMovimento % 378 + 63; 
     tempoSpriteJLeiteMovimento = millis();
-  } else {
-    image(spriteJLeiteMovimento, 470, 260);
   }
 
   if (stepJLeiteMovimento == jLeiteMovimento.width) {
     stepJLeiteMovimento = 0;
   }
 
-  image(telaTutorialX, 584, 139);
+  image(spriteJLeiteMovimento, spriteX, spriteY);
 }
 
-public void telaTutorialPedra() {
+public void weaponTutorialScreen() {
   noLoop();
 
   image(telaTutorialPedra, 236, 169);
@@ -5573,142 +5547,111 @@ public void telaTutorialPedra() {
   image(telaTutorialX, 514, 182);
   image(telaTutorialPedraSeta, 705, 456);
 
-  telaTutorialPedraAtiva = true;
+  weaponTutorialScreenActive = true;
 }
 
-PImage telaVitoria;
-
-public void telaVitoria() {
-  if (estadoJogo == "Vitoria") {
-    image (telaVitoria, 0, 0);
-
-    if (mouseX > 20 && mouseX < 125 && mouseY > 520 && mouseY < 573) {
-      image(maoPolegar, 20, 520);
-      if (mousePressed) {
-        estadoJogo = "MenuInicial";
-      }
-    } else {
-      image(maoApontandoEsquerda, 20, 520);
+public void menuHand() {
+  if (mouseX > 20 && mouseX < 125 && mouseY > 520 && mouseY < 573) {
+    image(menuThumbsUp, 20, 520);
+    if (mousePressed) {
+      gameState = GameState.MAINMENU.ordinal();
     }
+  } else {
+    image(menuPointingBack, 20, 520);
   }
 }
 
-PImage telaGameOver;
-
-public void telaGameOver() {
-  if (estadoJogo == "GameOver") {
+public void winLose() {
+  switch (gameState) {
+  case 9:
+    image(telaVitoria, 0, 0);
+    break;
+  case 10: 
     image(telaGameOver, 0, 0);
+    break;
+  }
+}
+PImage backgroundMenu; 
+PImage pesadeloLogo;
 
-    if (mouseX > 20 && mouseX < 125 && mouseY > 520 && mouseY < 573) {
-      image(maoPolegar, 20, 520);
-      if (mousePressed) {
-        estadoJogo = "MenuInicial";
+public class MainMenu {
+  private Background background = new Background();
+
+  private MenuButton play = new MenuButton(playButton, playHands, 300, 300, 377, GameState.FIRSTMAP.ordinal());
+  private MenuButton controls = new MenuButton (controlsButton, controlsHands, 400, 400, 477, GameState.CONTROLSMENU.ordinal());
+  private MenuButton credits = new MenuButton (creditsButton, creditsHands, 500, 500, 577, GameState.CREDITSMENU.ordinal());
+
+  private AudioButton sound = new AudioButton(soundButton, 660, 660, 720, isSoundActive, SOUND);
+  private AudioButton music = new AudioButton(musicButton, 730, 730, 790, isMusicActive, MUSIC);
+
+  private Button[] buttons = new Button [5];
+
+  MainMenu() {
+    addButtons();
+  }
+
+  public void addButtons() {
+    buttons[0] = play;
+    buttons[1] = controls;
+    buttons[2] = credits;
+    buttons[3] = sound;
+    buttons[4] = music;
+  }
+
+  public void images() {
+    background.display();
+
+    image(pesadeloLogo, 231, 40);
+  }
+
+  public void buttons() {
+    for (Button b : buttons) {
+      b.display();
+
+      if (b == controls) {
+        timeToMoveClosingCredit = millis();
       }
-    } else {
-      image(maoApontandoEsquerda, 20, 520);
+
+      b.setState();
     }
   }
 }
 PImage shovel;
 PImage shovelShadow;
 
-public class Pa extends Geral {
+final int SHOVEL = 1;
+final int SHOVELTOTAL = 5;
+
+public class Pa extends Item {
   public Pa() {
     setX(PApplet.parseInt(random(100, 616)));
     setY(PApplet.parseInt(random(-300, -1000)));
 
-    setSpriteImage(shovel);
-    setSpriteInterval(75);
-    setSpriteWidth(84);
-    setSpriteHeight(91);
-    setMovementY(sceneryMovement);
+    setValues();
   }
 
   public Pa(int x, int y) {
     this.setX(x);
     this.setY(y);
 
+    setValues();
+  }
+
+  public void setValues() {
     setSpriteImage(shovel);
     setSpriteInterval(75);
     setSpriteWidth(84);
     setSpriteHeight(91);
-    setMovementY(sceneryMovement);
+    setMovementY(1);
+
+    setItemIndex(SHOVEL);
+    setItemTotal(SHOVELTOTAL);
   }
 
   public void display() {
     image (shovelShadow, getX() + 1, getY() + 85);
 
     super.display();
-  }
-}
-
-ArrayList<Pa> pas;
-
-int indexRandomPaMapaBoss;
-
-public void pa() {
-  if (totalArmas == 0 && millis() > tempoGerarArma + 15000) {
-    if (estadoJogo == "PrimeiroMapa") {
-      if (pas.size() == 0 && indexArma >= 0 && indexArma <= 9 && !telaTutorialAndandoAtiva) {
-        pas.add(new Pa());
-        totalArmas = totalArmas + 1;
-      }
-    }
-
-    if (estadoJogo == "SegundoMapa") {
-      if (pas.size() == 0 && indexArma >= 0 && indexArma <= 4 && !telaTutorialAndandoAtiva) {
-        pas.add(new Pa());
-        totalArmas = totalArmas + 1;
-      }
-    }
-
-    if (estadoJogo == "TerceiroMapa") {
-      if (pas.size() == 0 && indexArma >= 0 && indexArma <= 2 && !telaTutorialAndandoAtiva) {
-        pas.add(new Pa());
-        totalArmas = totalArmas + 1;
-      }
-    }
-
-    if (estadoJogo == "MapaCoveiro") {
-      if (pas.size() == 0 && indexArma >= 0 && indexArma <= 9) {
-        indexRandomPaMapaBoss = PApplet.parseInt(random(0, valoresXMapaCoveiro.length));
-        pas.add(new Pa(valoresXMapaCoveiro[indexRandomPaMapaBoss], valoresYMapaCoveiro[indexRandomPaMapaBoss]));
-        totalArmas = totalArmas + 1;
-      }
-    }
-
-    if (estadoJogo == "MapaFazendeiro") {
-      if (pas.size() == 0 && indexArma >= 0 && indexArma <= 4) {
-        indexRandomPaMapaBoss = PApplet.parseInt(random(0, valoresXMapaFazendeiro.length));
-        pas.add(new Pa(valoresXMapaFazendeiro[indexRandomPaMapaBoss], valoresYMapaFazendeiro[indexRandomPaMapaBoss]));
-        totalArmas = totalArmas + 1;
-      }
-    }
-
-    if (estadoJogo == "MapaPadre") {
-      if (pas.size() == 0 && indexArma >= 0 && indexArma <= 2) {
-        indexRandomPaMapaBoss = PApplet.parseInt(random(0, valoresXMapaPadre.length));
-        pas.add(new Pa(valoresXMapaPadre[indexRandomPaMapaBoss], valoresYMapaPadre[indexRandomPaMapaBoss]));
-        totalArmas = totalArmas + 1;
-      }
-    }
-  }
-
-  for (int i = pas.size() - 1; i >= 0; i = i - 1) {
-    Pa p = pas.get(i);
-    if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
-      p.update();
-    }
-    p.display();
-    if (p.hasExitScreen() || p.hasCollided()) {
-      pas.remove(p);
-    }
-    if (p.hasCollided()) {
-      tempoGerarArma = millis();
-      item = 2;
-      totalItem = 7;
-      armaGerada = false;
-    }
   }
 }
 PImage shovelAttack;
@@ -5731,268 +5674,350 @@ public class PaAtaque extends Arma {
     setFirstCollisionY(jLeiteY + 56);
     setSecondCollisionY(jLeiteY - 44);
   }
-}
-
-ArrayList<PaAtaque> pasAtaque;
-
-boolean umaPa;
-
-public void paAtaque() {
-  if (jLeiteUsoItem) {
-    if (pasAtaque.size() == 0 && item == 2 && totalItem > 0 && !umaPa) {
-      pasAtaque.add(new PaAtaque());
-      totalItem = totalItem - 1;
-      umaPa = true;
-    }
-  }
-
-  for (int i = pasAtaque.size() - 1; i >= 0; i = i - 1) {
-    PaAtaque p = pasAtaque.get(i);
-    p.display();
-    if (p.getDeleteWeapon()) {
-      pasAtaque.remove(p);
-    }
-    if (estadoJogo == "MapaCoveiro") {
-      if (p.hasHitCoveiro() && !p.getDamageBoss()) {
-        if (sonsAtivos) {
-          indexRandomSomCoveiroTomandoDano = PApplet.parseInt(random(0, sonsCoveiroTomandoDano.length));
-          sonsCoveiroTomandoDano[indexRandomSomCoveiroTomandoDano].rewind();
-          sonsCoveiroTomandoDano[indexRandomSomCoveiroTomandoDano].play();
-        }
-        vidaCoveiroAtual = vidaCoveiroAtual - 1;
-        p.setDamageBoss(true);
-      }
-    }
-    if (estadoJogo == "MapaFazendeiro") {
-      if (p.hasHitFazendeiro() && !p.getDamageBoss()) {
-        if (sonsAtivos) {
-          indexRandomSomFazendeiroTomandoDano = PApplet.parseInt(random(0, sonsFazendeiroTomandoDano.length));
-          sonsFazendeiroTomandoDano[indexRandomSomFazendeiroTomandoDano].rewind();
-          sonsFazendeiroTomandoDano[indexRandomSomFazendeiroTomandoDano].play();
-        }
-        vidaFazendeiroAtual = vidaFazendeiroAtual - 2;
-        p.setDamageBoss(true);
-      }
-    }
-    if (estadoJogo == "MapaPadre") {
-      if (p.hasHitPadre() && !p.getDamageBoss()) {
-        if (vidaPadreAtual > 0) {
-          if (sonsAtivos) {
-            indexRandomSomPadreTomandoDano = PApplet.parseInt(random(0, sonsPadreTomandoDano.length));
-            sonsPadreTomandoDano[indexRandomSomPadreTomandoDano].rewind();
-            sonsPadreTomandoDano[indexRandomSomPadreTomandoDano].play();
-          }
-          vidaPadreAtual = vidaPadreAtual - 2;
-          p.setDamageBoss(true);
-        } else {
-          if (sonsAtivos) {
-            indexRandomSomPadreTomandoDano = PApplet.parseInt(random(0, sonsPadreRaivaTomandoDano.length));
-            sonsPadreRaivaTomandoDano[indexRandomSomPadreTomandoDano].rewind();
-            sonsPadreRaivaTomandoDano[indexRandomSomPadreTomandoDano].play();
-          }
-          vidaPadreRaivaAtual = vidaPadreRaivaAtual - 2;
-          p.setDamageBoss(true);
-        }
-      }
-    }
-  }
-}
-PImage stone;
-PImage stoneShadow;
-
-public class Pedra extends Geral {
-  public Pedra() {
-    setX(PApplet.parseInt(random(100, 666)));
-    setY(PApplet.parseInt(random(-300, -1000)));
-
-    setSpriteImage(stone);
-    setSpriteInterval(75);
-    setSpriteWidth(34);
-    setSpriteHeight(27);
-    setMovementY(sceneryMovement);
-  }
-
-  public Pedra(int x, int y) {
-    this.setX(x);
-    this.setY(y);
-
-    setSpriteImage(stone);
-    setSpriteInterval(75);
-    setSpriteWidth(34);
-    setSpriteHeight(27);
-    setMovementY(sceneryMovement);
-  }
-
-  public void display() {
-    image (stoneShadow, getX(), getY() + 17);
-
-    super.display();
-  }
-}
-
-ArrayList<Pedra> pedras;
-
-int indexRandomPedraMapaBoss;
-
-public void pedra() {
-  if (totalArmas == 0 && millis() > tempoGerarArma + 15000) {
-    if (estadoJogo == "SegundoMapa") {
-      if (pedras.size() == 0 && indexArma >= 5 && indexArma <= 9 && !telaTutorialAndandoAtiva) {
-        pedras.add(new Pedra());
-        totalArmas = totalArmas + 1;
-      }
-    }
-
-    if (estadoJogo == "TerceiroMapa") {
-      if (pedras.size() == 0 && indexArma >= 3 && indexArma <= 4 && !telaTutorialAndandoAtiva) {
-        pedras.add(new Pedra());
-        totalArmas = totalArmas + 1;
-      }
-    }
-
-    if (estadoJogo == "MapaFazendeiro") {
-      if (pas.size() == 0 && indexArma >= 5 && indexArma <= 9) {
-        indexRandomPedraMapaBoss = PApplet.parseInt(random(0, valoresXMapaFazendeiro.length));
-        pedras.add(new Pedra(valoresXMapaFazendeiro[indexRandomPedraMapaBoss], valoresYMapaFazendeiro[indexRandomPedraMapaBoss]));
-        totalArmas = totalArmas + 1;
-      }
-    }
-
-    if (estadoJogo == "MapaPadre") {
-      if (pas.size() == 0 && indexArma >= 3 && indexArma <= 4) {
-        indexRandomPedraMapaBoss = PApplet.parseInt(random(0, valoresXMapaPadre.length));
-        pedras.add(new Pedra(valoresXMapaPadre[indexRandomPedraMapaBoss], valoresYMapaPadre[indexRandomPedraMapaBoss]));
-        totalArmas = totalArmas + 1;
-      }
-    }
-  }
-
-  for (int i = pedras.size() - 1; i >= 0; i = i - 1) {
-    Pedra p = pedras.get(i);
-    if (estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
-      p.update();
-    }
-    p.display();
-    if (p.hasExitScreen() || p.hasCollided()) {
-      pedras.remove(p);
-    }
-    if (p.hasCollided()) {
-      tempoGerarArma = millis();
-      primeiraPedra = primeiraPedra + 1;
-      item = 1;
-      totalItem = 15;
-      armaGerada = false;
-    }
-  }
-}
-PImage stoneAttack;
-
-public class PedraAtirada extends Arma {
-  private boolean hasHitShield;
-
-  public PedraAtirada() {
-    setX(jLeiteX + 52);
-    setY(jLeiteY + 26);
-
-    setSpriteImage(stoneAttack);
-    setSpriteInterval(90);
-    setSpriteWidth(16);
-    setSpriteHeight(26);
-
-    setFirstCollisionX(getX() + 16);
-    setSecondCollisionX(getX());
-    setFirstCollisionY(getY() + 26);
-    setSecondCollisionY(getY());
-  }
-
-  public void display() {
-    image(stoneAttack, getX(), getY());
-  }
 
   public void update() {
-    setY(getY() - 10);
-  }
-
-  public boolean hasHitFazendeiro() {
-    if (getFirstCollisionX() > fazendeiroX + 60 && getSecondCollisionX() < fazendeiroX + 188 && getFirstCollisionY() > fazendeiroY && getSecondCollisionY() < fazendeiroY + 125) {
-      if (!pneuRolandoPrimeiraVez) {
-        hitBossesMostrando = true;
-        hitBosses(fazendeiroX + 30, fazendeiroY + 20);
-        return true;
-      } else {
-        hitEscudoMostrando = true;
-        hitEscudo(fazendeiroX + 30, fazendeiroY + 20);
-        hasHitShield = true;
-        return false;
-      }
-    } 
-
-    return false;
-  }
-
-  public boolean hasExitScreen() {
-    if (getX() + stoneAttack.height < 0) {
-      return true;
-    } 
-
-    return false;
+    setX(jLeiteX - 70);
+    setY(jLeiteY - 44);
   }
 }
+public void audioPreLoad() {
+  temaBoss = minim.loadFile ("temaBoss.mp3");
+  temaIgreja = minim.loadFile ("temaIgreja.mp3");
+  temaFazenda = minim.loadFile ("temaFazenda.mp3");
+  temaCidade = minim.loadFile ("temaCidade.mp3");
 
-ArrayList<PedraAtirada> pedrasAtiradas;
-
-int tempoPedraAtirada;
-
-boolean umaPedra;
-
-public void pedraAtirada() {
-  if (jLeiteUsoItem) {
-    if (pedrasAtiradas.size() == 0 && item == 1 && totalItem > 0 && millis() > tempoPedraAtirada + 135 && !umaPedra) {
-      pedrasAtiradas.add(new PedraAtirada());
-      totalItem = totalItem - 1;
-      umaPedra = true;
-    }
+  for (int i = 0; i < sonsMorteJLeite.length; i = i + 1) {
+    sonsMorteJLeite[i] =  minim.loadFile ("morteJLeite" + i + ".mp3");
   }
 
-  for (int i = pedrasAtiradas.size() - 1; i >= 0; i = i - 1) {
-    PedraAtirada p = pedrasAtiradas.get(i);
-    p.display();
-    p.update();
-    if (p.hasExitScreen() || p.hasHitShield) {
-      pedrasAtiradas.remove(p);
-    }
-    if (estadoJogo == "MapaFazendeiro") {
-      if (p.hasHitFazendeiro()) {
-        if (sonsAtivos) {
-          indexRandomSomFazendeiroTomandoDano = PApplet.parseInt(random(0, 4));
-          sonsFazendeiroTomandoDano[indexRandomSomFazendeiroTomandoDano].rewind();
-          sonsFazendeiroTomandoDano[indexRandomSomFazendeiroTomandoDano].play();
-        }
-        vidaFazendeiroAtual = vidaFazendeiroAtual - 2;
-        pedrasAtiradas.remove(p);
-      }
-    }
-    if (estadoJogo == "MapaPadre") {
-      if (p.hasHitPadre()) {
-        if (vidaPadreAtual > 0) {
-          if (sonsAtivos) {
-            indexRandomSomPadreTomandoDano = PApplet.parseInt(random(0, sonsPadreTomandoDano.length));
-            sonsPadreTomandoDano[indexRandomSomPadreTomandoDano].rewind();
-            sonsPadreTomandoDano[indexRandomSomPadreTomandoDano].play();
-          }
-          vidaPadreAtual = vidaPadreAtual - 2;
-        } else {
-          if (sonsAtivos) {
-            indexRandomSomPadreTomandoDano = PApplet.parseInt(random(0, sonsPadreRaivaTomandoDano.length));
-            sonsPadreRaivaTomandoDano[indexRandomSomPadreTomandoDano].rewind();
-            sonsPadreRaivaTomandoDano[indexRandomSomPadreTomandoDano].play();
-          }
-          vidaPadreRaivaAtual = vidaPadreRaivaAtual - 2;
-        }
-        pedrasAtiradas.remove(p);
-      }
-    }
+  for (int i = 0; i < sonsCoveiroIdle.length; i = i + 1) {
+    sonsCoveiroIdle[i] =  minim.loadFile ("coveiroIdle" + i + ".mp3");
   }
+
+  for (int i = 0; i < sonsCoveiroTomandoDano.length; i = i + 1) {
+    sonsCoveiroTomandoDano[i] =  minim.loadFile ("coveiroDano" + i + ".mp3");
+  }
+
+  somCoveiroFenda = minim.loadFile ("coveiroFenda.mp3");
+
+  for (int i = 0; i < sonsCoveiroEsmaga.length; i = i + 1) {
+    sonsCoveiroEsmaga[i] =  minim.loadFile ("coveiroEsmaga" + i + ".mp3");
+  }
+
+  somCoveiroMorreu = minim.loadFile ("coveiroMorreu.mp3");
+
+  for (int i = 0; i < sonsFazendeiroIdle.length; i = i + 1) {
+    sonsFazendeiroIdle[i] =  minim.loadFile ("fazendeiroIdle" + i + ".mp3");
+  }
+
+  for (int i = 0; i < sonsFazendeiroTomandoDano.length; i = i + 1) {
+    sonsFazendeiroTomandoDano[i] =  minim.loadFile ("fazendeiroDano" + i + ".mp3");
+  }
+
+  for (int i = 0; i < sonsFazendeiroSoltandoMimosa.length; i = i + 1) {
+    sonsFazendeiroSoltandoMimosa[i] =  minim.loadFile ("fazendeiroMimosa" + i + ".mp3");
+  }
+
+  for (int i = 0; i < sonsMimosaHit.length; i = i + 1) {
+    sonsMimosaHit[i] =  minim.loadFile ("fazendeiroMimosaHit" + i + ".mp3");
+  }
+
+  somMimosaErra =  minim.loadFile ("fazendeiroMimosaErra.mp3");
+
+  somSoltandoPneu = minim.loadFile ("fazendeiroSoltandoPneu.mp3");
+
+  somAcertouPneuJLeite = minim.loadFile ("fazendeiroAcertouPneuJLeite.mp3");
+
+  somAcertouPneuFazendeiro = minim.loadFile ("fazendeiroAcertouPneuFazendeiro.mp3");
+
+  somFazendeiroMorreu = minim.loadFile ("fazendeiroMorreu.mp3");
+
+
+  for (int i = 0; i < sonsPadreIdle.length; i = i + 1) {
+    sonsPadreIdle[i] =  minim.loadFile ("padreIdle" + i + ".mp3");
+  }
+
+  for (int i = 0; i < sonsPadreRaivaIdle.length; i = i + 1) {
+    sonsPadreRaivaIdle[i] =  minim.loadFile ("padreRaivaIdle" + i + ".mp3");
+  }
+
+  for (int i = 0; i < sonsPadreCaveira.length; i = i + 1) {
+    sonsPadreCaveira[i] =  minim.loadFile ("padreCaveira" + i + ".mp3");
+  }
+
+  for (int i = 0; i < sonsPadreTomandoDano.length; i = i + 1) {
+    sonsPadreTomandoDano[i] =  minim.loadFile ("padreDano" + i + ".mp3");
+  }
+
+  for (int i = 0; i < sonsPadreRaivaTomandoDano.length; i = i + 1) {
+    sonsPadreRaivaTomandoDano[i] =  minim.loadFile ("padreRaivaDano" + i + ".mp3");
+  }
+
+  for (int i = 0; i < sonsPadreLevantem.length; i = i + 1) {
+    sonsPadreLevantem[i] =  minim.loadFile ("padreLevantem" + i + ".mp3");
+  }
+
+  for (int i = 0; i < sonsPadreImpossivel.length; i = i + 1) {
+    sonsPadreImpossivel[i] =  minim.loadFile ("padreImpossivel" + i + ".mp3");
+  }
+
+  somPadreRaio = minim.loadFile ("padreRaio.mp3");
+
+  somPadreMorreu = minim.loadFile ("padreMorreu.mp3");
+}
+
+public void imagesPreLoad() {
+  backgroundMenu = loadImage ("backgroundMenu.png");
+
+  for (int i = 0; i < sceneryImages.length; i = i + 1) {
+    sceneryImages[i] = loadImage("mapa" + i + ".png");
+  }
+
+  door = loadImage ("porta.png");
+  fence = loadImage ("cerca.png");
+
+  for (int i = 0; i < bossSceneryImages.length; i = i + 1) {
+    bossSceneryImages[i] = loadImage("mapaBoss" + i + ".png");
+  }
+
+  pesadeloLogo = loadImage ("pesadeloLogo.png");
+
+  playButton = loadImage ("jogar.png");
+  controlsButton = loadImage ("botoes.png");
+  creditsButton = loadImage ("creditos.png");
+  playHands = loadImage ("jogarMao.png");
+  controlsHands = loadImage ("botoesMao.png");
+  creditsHands = loadImage ("creditosMao.png");
+
+  soundButton = loadImage ("botaoSom.png");
+  musicButton = loadImage ("botaoMusica.png");
+  botaoX = loadImage ("botaoX.png");
+
+  imagemControles = loadImage ("controles.png");
+
+  creditos = loadImage ("creditosJogo.png");
+
+  telaTutorialAndando = loadImage ("telaTutorialAndando.png");
+  telaTutorialPedra = loadImage ("telaTutorialPedra.png");
+  telaTutorialPedraSeta = loadImage ("telaTutorialPedraSeta.png");
+  telaTutorialX = loadImage ("telaTutorialX.png");
+
+  menuPointingBack = loadImage ("maoApontandoEsquerda.png");
+  menuThumbsUp = loadImage ("maoPolegar.png");
+
+  telaGameOver = loadImage ("telaGameOver.png");
+  telaVitoria = loadImage ("telaVitoria.png");
+
+  coxinha = loadImage ("coxinha.png");
+  brigadeiro = loadImage ("brigadeiro.png");
+  queijo = loadImage ("pdqueijo.png");
+  foodShadow = loadImage ("sombraComidas.png");
+
+  shovel = loadImage ("pa.png");
+  shovelShadow = loadImage ("sombraPaChicote.png");
+  shovelAttack = loadImage ("paAtaque.png");
+  shovelBox = loadImage ("caixaItemPa.png");
+
+  whip = loadImage ("chicote.png");
+  whipShadow = loadImage ("sombraPaChicote.png");
+  whipAttack = loadImage ("chicoteAtaque.png");
+  whipBox = loadImage ("caixaItemChicote.png");
+
+  itemBox = loadImage ("caixaNumeroItem.png");
+  for (int i = 0; i < itemNumbers.length; i = i + 1) {
+    itemNumbers[i] = loadImage ("numeroItem" + i + ".png");
+  }
+
+  jLeiteMovimento = loadImage ("joaoleite.png");
+  jLeiteIdle = loadImage ("jLeiteIdle.png");
+  jLeiteItem = loadImage("joaoleiteitem.png"); 
+  jLeiteDanoMovimento = loadImage ("joaoleitedano.png");
+  jLeiteDanoIdle = loadImage ("jLeiteDanoIdle.png");
+  jLeiteMorte = loadImage ("jLeiteMorte.png");
+
+  sombraJLeite = loadImage ("sombrajoaoleite.png");
+
+  playerHPLayout = loadImage ("vidaJLeiteLayout.png");
+  playerHPBackground = loadImage ("vidaJLeiteLayoutBackground.png");
+  playerHPBar = loadImage ("vidaJLeiteBarra.png");
+
+  skeleton = loadImage ("esqueleto.png");
+  skeletonShadow = loadImage ("sombraEsqueleto.png");
+  kickingSkeleton = loadImage ("esqueletoChuteAtaque.png");
+  headlessKickingSkeleton = loadImage ("esqueletoChuteMovimento.png");
+  skeletonHead = loadImage ("cabecaEsqueletoChute.png");
+  kickingSkeletonShadow = loadImage ("sombraEsqueletoChute.png");
+  skeletonDog = loadImage ("cachorro.png");
+  skeletonDogShadow = loadImage ("sombraCachorro.png");
+  skeletonCrow = loadImage ("corvo.png");
+  skeletonCrowShadow = loadImage ("sombraCorvo.png");
+  redSkeleton = loadImage ("esqueletoRaiva.png");
+  redSkeletonShadow = loadImage ("sombraEsqueletoRaiva.png");
+
+  hitInimigos = loadImage ("hitInimigos.png");
+
+  bossHPBackground = loadImage ("vidaBossesLayoutBackground.png");
+  bossHPBar = loadImage ("vidaBossesBarra.png");
+
+  for (int i = 0; i < bossBonesLayout.length; i = i + 1) {
+    bossBonesLayout[i] = loadImage ("vidaBossesLayoutOsso" + i + ".png");
+  }
+
+  coveiroHPLayout = loadImage ("vidaCoveiroLayout.png");
+
+  coveiroIdle = loadImage ("coveiroIdle.png");
+  coveiroMovimento = loadImage ("coveiroMovimento.png");
+  coveiroPa = loadImage ("coveiroPa.png");
+  coveiroCarregandoLapide = loadImage ("coveiroCarregandoLapide.png");
+  coveiroPaFenda = loadImage ("coveiroPaFenda.png");
+  coveiroLapide = loadImage ("coveiroLapide.png");
+  coveiroLapideDano = loadImage ("coveiroDanoAgua.png");
+  coveiroMorte = loadImage ("coveiroMorte.png");
+  sombraCoveiro = loadImage ("sombraCoveiro.png");
+
+  fendaAbrindo = loadImage ("fendaAbrindo.png");
+  fendaAberta = loadImage ("fendaAberta.png");
+  fendaFechando = loadImage ("fendaFechando.png");
+
+  for (int i = 0; i < imagensLapidesAtaque.length; i = i + 1) {
+    imagensLapidesAtaque[i] = loadImage ("lapideAtaque" + i + ".png");
+  }
+
+  for (int i = 0; i < imagensLapidesCenario.length; i = i + 1) {
+    imagensLapidesCenario[i] = loadImage ("lapideCenario" + i + ".png");
+  }
+
+  aguaPoca = loadImage("aguaPoca.png"); 
+
+  for (int i = 0; i < imagensPocaCenarioCheia.length; i = i + 1) {
+    imagensPocaCenarioCheia[i] = loadImage("pocaCheia" + i + ".png");
+  }
+
+  for (int i = 0; i < imagensPocaCenarioVazia.length; i = i + 1) {
+    imagensPocaCenarioVazia[i] = loadImage("pocaVazia" + i + ".png");
+  }
+
+  fazendeiroHPLayout = loadImage ("vidaFazendeiroLayout.png");
+
+  fazendeiroIdle = loadImage ("fazendeiroIdle.png");
+  fazendeiroMovimento = loadImage ("fazendeiroMovimento.png");
+  fazendeiroFoice = loadImage ("fazendeiroFoice.png");
+  fazendeiroMimosa = loadImage ("fazendeiroMimosa.png");
+  fazendeiroIdleMimosa = loadImage ("fazendeiroIdleMimosa.png");
+  fazendeiroPneu = loadImage ("fazendeiroPneu.png");
+  fazendeiroPneuEscudo = loadImage ("fazendeiroPneuEscudo.png");
+  fazendeiroPneuDano = loadImage ("fazendeiroPneuDano.png");
+  fazendeiroIdlePneu = loadImage ("fazendeiroIdlePneu.png");
+  fazendeiroMorte = loadImage ("fazendeiroMorte.png");
+  sombraFazendeiro = loadImage ("sombraFazendeiro.png");
+
+  mimosa = loadImage ("mimosa.png");
+  mimosaDireita = loadImage ("mimosaDireita.png");
+  mimosaEsquerda = loadImage ("mimosaEsquerda.png");
+
+  pneuEsquerdaDesce = loadImage ("pneuEsquerdaDesce.png");
+  pneuEsquerdaSobe = loadImage ("pneuEsquerdaSobe.png");
+  pneuDireitaDesce = loadImage ("pneuDireitaDesce.png");
+  pneuDireitaSobe = loadImage ("pneuDireitaSobe.png");
+
+  padreHPLayout = loadImage ("vidaPadreLayout.png");
+  madPadreHPLayout = loadImage ("vidaPadreRaivaLayout.png");
+
+  for (int i = 0; i < vidaPadreLayoutOsso.length; i = i + 1) {
+    vidaPadreLayoutOsso[i] = loadImage ("vidaPadreLayoutOsso" + i + ".png");
+  }
+
+  madPadreHPBar = loadImage ("vidaPadreRaivaBarra.png");
+
+  padreMovimentoIdle = loadImage ("padreMovimentoIdle.png");
+  padreCruz = loadImage ("padreCruz.png");
+  padreLevantem = loadImage ("padreLevantem.png");
+  padreCaveiraAparecendo = loadImage ("padreCaveiraAparecendo.png");
+  padreCaveira = loadImage ("padreCaveira.png");
+  for (int i = 0; i < padreCaveiraDano.length; i = i + 1) {
+    padreCaveiraDano[i] = loadImage ("padreCaveiraDano" + i + ".png");
+  }
+
+  padreRaivaMovimentoIdle = loadImage ("padreRaivaMovimentoIdle.png");
+  padreRaivaCruz = loadImage ("padreRaivaCruz.png");
+  padreRaivaLevantem = loadImage ("padreRaivaLevantem.png");
+  padreRaivaCaveiraAparecendo = loadImage ("padreRaivaCaveiraAparecendo.png");
+  padreRaivaCaveira = loadImage ("padreRaivaCaveira.png");
+  for (int i = 0; i < padreRaivaCaveiraDano.length; i = i + 1) {
+    padreRaivaCaveiraDano[i] = loadImage ("padreRaivaCaveiraDano" + i + ".png");
+  }
+  padreRaivaRaio = loadImage ("padreRaivaRaio.png");
+  padreMorte = loadImage ("padreMorte.png");
+
+  sombraPadre = loadImage ("sombraPadre.png");
+
+  hitCruz = loadImage ("hitCruz.png");
+  hitRaivaCruz = loadImage ("hitRaivaCruz.png");
+
+  caveiraPadreAparecendo = loadImage ("caveiraPadreAparecendo.png");
+  caveiraPadreFlutuando = loadImage ("caveiraPadreFlutuando.png");
+  caveiraPadreAtaque = loadImage ("caveiraPadreAtaque.png");
+  caveiraPadreRaivaAparecendo = loadImage ("caveiraPadreRaivaAparecendo.png");
+  caveiraPadreRaivaFlutuando = loadImage ("caveiraPadreRaivaFlutuando.png");
+  caveiraPadreRaivaAtaque = loadImage ("caveiraPadreRaivaAtaque.png");
+
+  raioPadre = loadImage ("raioPadre.png");
+
+  hitBosses = loadImage ("hitBosses.png");
+  hitEscudo = loadImage ("hitEscudo.png");
+}
+
+public void variablesPreLoad() {
+  skeletonPositions();
+  kickingSkeletonPositions();
+  skeletonDogPositions();
+  redSkeletonPositions();
+
+  gameState = GameState.MAINMENU.ordinal();
+
+  totalInimigos = 0;
+
+  jLeiteX = 360;
+  jLeiteY = 345; 
+
+  playerCurrentHP = 15;
+  prayerHPMaximum = 15; 
+  playerHPMinimum = 0;
+
+  foodIndex = 10;
+
+  coveiroCurrentHP = 40;
+  coveiroHitpointsMinimum = 0;
+  coveiroBonesIndex = 3;
+
+  fazendeiroCurrentHP = 40;
+  fazendeiroHitpointsMinimum = 0;
+  fazendeiroBonesIndex = 3;
+
+  padreCurrentHP = 40;
+  vidaPadreMin = 0;
+
+  madPadreCurrentHP = 40;
+  vidaPadreRaivaMin = 0;
+
+  indexVidaPadreOsso = 4;
+
+  item = 0;
+
+  weaponTotal = 0;
+
+  isSoundActive = true;
+
+  isMusicActive = true;
+
+  jLeiteMorreu = false;
+  jLeiteMorrendo = false;
+
+  jLeiteUsoItem = false;
+
+  hitInimigosMostrando = true;
+
+  hasFoodIndexChanged = false;
 }
 PImage queijo;
 
@@ -6001,25 +6026,24 @@ public class Queijo extends Comida {
     this.setX(x);
     this.setY(y);
 
-    setSpriteImage(queijo);
-    setSpriteInterval(75);
-    setSpriteWidth(31);
-    setSpriteHeight(29);
-    setMovementY(1);
-
-    setAmountRecovered(0);
+    setValues();
   }
 
   public Queijo() {
     this.setX(PApplet.parseInt(random(200, 500)));
     this.setY(PApplet.parseInt(random(-300, -1000)));
 
+    setValues();
+  }
+
+  public void setValues() {    
     setSpriteImage(queijo);
     setSpriteInterval(75);
     setSpriteWidth(31);
     setSpriteHeight(29);
     setMovementY(1);
 
+    setAmountHeal(4);
     setAmountRecovered(0);
   }
 
@@ -6029,62 +6053,235 @@ public class Queijo extends Comida {
     super.display();
   }
 }
+class FirstMapEnemiesSpawnManager extends EnemiesSpawnManager {
+  final int[] SKELETON_MAXIMUM = {1, 2, 2, 3};
+  final int[] KICKING_SKELETON_MAXIMUM = {1, 1, 2, 2};
 
-ArrayList<Queijo> queijos;
+  PVector skeletonLastPosition = new PVector(99, 99);
+  PVector skeletonCurrentPosition = new PVector(99, 99);
+  PVector kickingSkeletonLastPosition = new PVector(99, 99);
+  PVector kickingSkeletonCurrentPosition = new PVector(99, 99);
 
-int indexRandomQueijoMapaBoss;
+  int skeletonRow = 0;
+  int skeletonColumn = 0;
+  int kickingSkeletonRow = 0;
+  int kickingSkeletonColumn = 0;
 
-int amountHealQueijo = 4;
+  FirstMapEnemiesSpawnManager(int[] maximumModifier, int size) {
+    super(maximumModifier, size);
+  }
 
-public void queijo() {
-  if (totalFood < 1 && hasIndexChanged && millis() > timeToGenerateFood + 10000) {
-    if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
-      if (queijos.size() == 0 && foodIndex >= 5 && foodIndex <= 7 && !telaTutorialAndandoAtiva) {
-        queijos.add(new Queijo());
-        totalFood += 1;
-      }
-    }
+  public void setSkeletonPosition() {
+    while (SKELETON_POSITIONS[skeletonRow][skeletonColumn] != SKELETON && skeletonCurrentPosition == skeletonLastPosition) {
+      skeletonRow = PApplet.parseInt(random(0, 7));
+      skeletonColumn = PApplet.parseInt(random(0, 4));
 
-    if (estadoJogo == "MapaCoveiro") {
-      if (queijos.size() == 0 && foodIndex >= 5 && foodIndex <= 7) {
-        indexRandomQueijoMapaBoss = PApplet.parseInt(random(0, valoresXMapaCoveiro.length));
-        queijos.add(new Queijo(valoresXMapaCoveiro[indexRandomQueijoMapaBoss], valoresYMapaCoveiro[indexRandomQueijoMapaBoss]));
-        totalFood += 1;
-      }
-    }
-
-    if (estadoJogo == "MapaFazendeiro") {
-      if (queijos.size() == 0 && foodIndex >= 5 && foodIndex <= 7) {
-        indexRandomQueijoMapaBoss = PApplet.parseInt(random(0, valoresXMapaFazendeiro.length));
-        queijos.add(new Queijo(valoresXMapaFazendeiro[indexRandomQueijoMapaBoss], valoresYMapaFazendeiro[indexRandomQueijoMapaBoss]));
-        totalFood += 1;
-      }
-    }
-
-    if (estadoJogo == "MapaPadre") {
-      if (queijos.size() == 0 && foodIndex >= 5 && foodIndex <= 7) {
-        indexRandomQueijoMapaBoss = PApplet.parseInt(random(0, valoresXMapaFazendeiro.length));
-        queijos.add(new Queijo(valoresXMapaPadre[indexRandomQueijoMapaBoss], valoresYMapaPadre[indexRandomQueijoMapaBoss]));
-        totalFood += 1;
-      }
+      skeletonCurrentPosition.x = skeletonRow;
+      skeletonCurrentPosition.y = skeletonColumn;
     }
   }
 
-  for (int i = queijos.size() - 1; i >= 0; i = i - 1) {
-    Queijo q = queijos.get(i);
-    q.display();
-    if (estadoJogo == "PrimeiroMapa" || estadoJogo == "SegundoMapa" || estadoJogo == "TerceiroMapa") {
-      q.update();
+  public void setKickingSkeletonPosition() {
+    while (KICKING_SKELETON_POSITIONS[kickingSkeletonRow][kickingSkeletonColumn] != KICKING_SKELETON && kickingSkeletonCurrentPosition == kickingSkeletonLastPosition) {
+      kickingSkeletonRow = PApplet.parseInt(random(0, 8));
+      kickingSkeletonColumn = PApplet.parseInt(random(0, 12));
+
+      kickingSkeletonCurrentPosition.x = kickingSkeletonRow;
+      kickingSkeletonCurrentPosition.y = kickingSkeletonColumn;
     }
-    if (q.hasExitScreen() || q.hasCollided()) {
-      queijos.remove(q);
-      totalFood -= 1;
-      hasIndexChanged = false;
-      timeToGenerateFood = millis();
+  }
+
+  public void firstBatch() {
+    int max = getMaximumModifier()[0];
+
+    while (getEnemiesTotal() < max) {
+      setSkeletonPosition();
+
+      esqueletos.add(new Esqueleto(100 + (skeletonColumn * 85), -150 - (skeletonRow * 150)));
+
+      skeletonLastPosition.x = skeletonRow;
+      skeletonLastPosition.y = skeletonColumn;
+
+      setEnemiesTotal(getEnemiesTotal() + 1);
     }
-    if (q.hasCollided()) {
-      heal(amountHealQueijo, q);
+  }
+
+  public void toBeNamed(int max, int skeletonTotal, int kickingSkeletonTotal, int index) {
+    while (getEnemiesTotal() < max) {
+      if (skeletonTotal < SKELETON_MAXIMUM[index]) {
+        setSkeletonPosition();
+
+        esqueletos.add(new Esqueleto(100 + (skeletonColumn * 85), -150 - (skeletonRow * 150)));
+
+        skeletonLastPosition.x = skeletonRow;
+        skeletonLastPosition.y = skeletonColumn;
+
+        skeletonTotal++;
+        setEnemiesTotal(getEnemiesTotal() + 1);
+      }
+
+      if (getEnemiesTotal() >= max) break;
+
+      if (kickingSkeletonTotal < KICKING_SKELETON_MAXIMUM[index]) {
+        setKickingSkeletonPosition();
+
+        esqueletosChute.add(new EsqueletoChute(120 + (kickingSkeletonColumn * 50), -150 - (kickingSkeletonRow * 75)));
+
+        skeletonLastPosition.x = skeletonRow;
+        skeletonLastPosition.y = skeletonColumn;
+
+        kickingSkeletonTotal++;
+        setEnemiesTotal(getEnemiesTotal() + 1);
+      }
+
+      int[] enemiesTotal = {skeletonTotal, kickingSkeletonTotal};
+      setEachEnemyTotal(enemiesTotal);
     }
+  }
+
+  public void secondBatch() {
+    int max = getMaximumModifier()[1];
+
+    int skeletonTotal = getEachEnemyTotal()[0];
+    int kickingSkeletonTotal = getEachEnemyTotal()[1];
+
+    toBeNamed(max, skeletonTotal, kickingSkeletonTotal, 0);
+  }
+
+  public void thirdBatch() {
+    int max = getMaximumModifier()[2];
+
+    int skeletonTotal = getEachEnemyTotal()[0];
+    int kickingSkeletonTotal = getEachEnemyTotal()[1];
+
+    toBeNamed(max, skeletonTotal, kickingSkeletonTotal, 1);
+  }
+
+  public void fourthBatch() {
+    int max = getMaximumModifier()[3];
+
+    int skeletonTotal = getEachEnemyTotal()[0];
+    int kickingSkeletonTotal = getEachEnemyTotal()[1];
+
+    toBeNamed(max, skeletonTotal, kickingSkeletonTotal, 2);
+  }
+
+  public void fifthBatch() {
+    int max = getMaximumModifier()[4];
+
+    int skeletonTotal = getEachEnemyTotal()[0];
+    int kickingSkeletonTotal = getEachEnemyTotal()[1];
+
+    toBeNamed(max, skeletonTotal, kickingSkeletonTotal, 3);
+  }
+
+  public void sixthBatch() {
+  }
+}
+
+class SecondMapEnemiesSpawnManager extends EnemiesSpawnManager {
+
+  SecondMapEnemiesSpawnManager(int[] maximumModifier, int size) {
+    super(maximumModifier, size);
+  }
+
+  public void firstBatch() {
+  }
+
+  public void secondBatch() {
+  }
+
+  public void thirdBatch() {
+  }
+
+  public void fourthBatch() {
+  }
+
+  public void fifthBatch() {
+  }
+
+  public void sixthBatch() {
+  }
+}
+
+class ThirdMapEnemiesSpawnManager extends EnemiesSpawnManager {
+
+  ThirdMapEnemiesSpawnManager(int[] maximumModifier, int size) {
+    super(maximumModifier, size);
+  }
+
+  public void firstBatch() {
+  }
+
+  public void secondBatch() {
+  }
+
+  public void thirdBatch() {
+  }
+
+  public void fourthBatch() {
+  }
+
+  public void fifthBatch() {
+  }
+
+  public void sixthBatch() {
+  }
+}
+public class TransitionGate extends MaisGeral {
+  private boolean hasOpened;
+
+  TransitionGate(int x, int y, int index) {
+    this.setX(x); // 230 para porta, 188 para cerca.
+    this.setY(y); // cenarioY para porta, cenarioY + 20 para cerca.
+
+    switch (index) {
+    case 0:
+      this.setSpriteImage(door);
+      this.setSpriteWidth(334);
+      this.setSpriteHeight(256);
+      break;
+    case 1:
+      this.setSpriteImage(fence);
+      this.setSpriteWidth(426);
+      this.setSpriteHeight(146);
+      break;
+    }
+    this.setSpriteInterval(350);
+  }
+
+  public void display() {
+    if (!hasOpened) {
+      super.display();
+    } else {
+      image(getSpriteImage(), getX(), getY());
+    }
+  }
+
+  public void stepHandler() {
+    if (getStep() == getSpriteImage().width) {
+      hasOpened = true;
+    }
+  }
+}
+public class TutorialSprite extends MaisGeral {
+  TutorialSprite(int x, int y, int index) {
+    this.setX(x);
+    this.setY(y);
+
+    switch (index) {
+    case 0:
+      this.setSpriteImage(jLeiteMovimento);
+      this.setSpriteInterval(75);
+      this.setSpriteWidth(63);
+      break;
+    case 1:
+      this.setSpriteImage(jLeiteItem);
+      this.setSpriteInterval(150);
+      this.setSpriteWidth(94);
+      break;
+    }
+    this.setSpriteHeight(126);
   }
 }
   public void settings() {  size(800, 600); }

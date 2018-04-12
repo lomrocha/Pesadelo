@@ -1,7 +1,7 @@
 PImage redSkeleton;
 PImage redSkeletonShadow;
 
-final int REDSKELETON = 3;
+final int REDSKELETON = 4;
 
 public class EsqueletoRaiva extends Inimigo {
   private int movementX = 3;
@@ -16,7 +16,7 @@ public class EsqueletoRaiva extends Inimigo {
     setSpriteHeight(126);
 
     setDamage(3);
-    setIsHead(false);
+    setType(TypeOfEnemy.RED_SKELETON.ordinal());
   }
 
   void display() {
@@ -41,6 +41,8 @@ public class EsqueletoRaiva extends Inimigo {
 
     setMovementY(3);
   }
+  
+  void updateTarget(){}
 }
 
 ArrayList<EsqueletoRaiva> esqueletosRaiva = new ArrayList<EsqueletoRaiva>();
@@ -64,7 +66,7 @@ void esqueletoRaiva() {
         esqueletoRaivaC = int(random(0, 7));
         esqueletoRaivaL = int(random(0, 4));
 
-        if (enemyPositionsThirdMap[esqueletoRaivaC][esqueletoRaivaL] == REDSKELETON) {
+        if (ENEMY_POSITIONS_THIRD_MAP[esqueletoRaivaC][esqueletoRaivaL] == REDSKELETON) {
           esqueletosRaiva.add(new EsqueletoRaiva(100 + (esqueletoRaivaC * (600 / 7)), -150 - (esqueletoRaivaL * 150)));
           totalInimigos = totalInimigos + 1;
         }
@@ -79,11 +81,11 @@ void esqueletoRaiva() {
 }
 
 void redSkeletonPositions() {
-  enemyPositionsThirdMap[0][0] = REDSKELETON;
-  enemyPositionsThirdMap[1][2] = REDSKELETON;
-  enemyPositionsThirdMap[2][3] = REDSKELETON;
-  enemyPositionsThirdMap[3][2] = REDSKELETON;
-  enemyPositionsThirdMap[4][1] = REDSKELETON;
-  enemyPositionsThirdMap[5][0] = REDSKELETON;
-  enemyPositionsThirdMap[6][2] = REDSKELETON;
+  ENEMY_POSITIONS_THIRD_MAP[0][0] = REDSKELETON;
+  ENEMY_POSITIONS_THIRD_MAP[1][2] = REDSKELETON;
+  ENEMY_POSITIONS_THIRD_MAP[2][3] = REDSKELETON;
+  ENEMY_POSITIONS_THIRD_MAP[3][2] = REDSKELETON;
+  ENEMY_POSITIONS_THIRD_MAP[4][1] = REDSKELETON;
+  ENEMY_POSITIONS_THIRD_MAP[5][0] = REDSKELETON;
+  ENEMY_POSITIONS_THIRD_MAP[6][2] = REDSKELETON;
 }

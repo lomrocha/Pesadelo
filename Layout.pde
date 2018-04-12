@@ -14,13 +14,10 @@ public class FirstMap {
 
   Player player;
 
-  SpawnManager spawnManager;
+  FirstMapEnemiesSpawnManager firstMapEnemiesSpawnManager;
 
   TutorialScreen movement;
   TutorialScreen attack;
-}
-
-public class SpawnManager {
 }
 
 public class TutorialScreen {

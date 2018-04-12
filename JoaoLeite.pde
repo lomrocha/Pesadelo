@@ -16,16 +16,16 @@ int playerCurrentHP;
 int prayerHPMaximum;
 int playerHPMinimum;
 
-int jLeiteX, jLeiteY; 
+int playerX, playerY; 
 
 int stepJLeiteMovimento, stepJLeiteIdle, stepJLeiteItem, stepJLeiteDanoMovimento, stepJLeiteDanoIdle, stepJLeiteMorte;
 int tempoSpriteJLeiteMovimento, tempoSpriteJLeiteIdle, tempoSpriteJLeiteItem, tempoSpriteJLeiteDanoMovimento, tempoSpriteJLeiteDanoIdle, tempoSpriteJLeiteMorte;
 
-int tempoImune;
+int timeImmune;
 
 int tempoMorto;
 
-boolean jLeiteImune;
+boolean isPlayerImmune;
 boolean jLeiteLentidao;
 
 boolean jLeiteDireita, jLeiteEsquerda, jLeiteCima, jLeiteBaixo;
@@ -47,7 +47,7 @@ void jLeite() {
   }
 
   if (finalMapa) {
-    if (jLeiteY + 126 < - 50) {
+    if (playerY + 126 < - 50) {
       if (gameState == GameState.FIRSTMAP.ordinal()) {
         gameState = GameState.FIRSTBOSS.ordinal();
         if (temaIgreja.isPlaying()) {
@@ -122,95 +122,95 @@ void jLeite() {
     }
   }
 
-  if (millis() > tempoImune + 2000) {
-    jLeiteImune = false;
+  if (millis() > timeImmune + 2000) {
+    isPlayerImmune = false;
   }
 
   if (!jLeiteMorreu) {
     if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal()) {
-      if (jLeiteDireita && jLeiteX < width - 163) { 
-        jLeiteX = jLeiteX + 3;
+      if (jLeiteDireita && playerX < width - 163) { 
+        playerX = playerX + 3;
       }
-      if (jLeiteEsquerda && jLeiteX > 100) {
-        jLeiteX = jLeiteX - 3;
+      if (jLeiteEsquerda && playerX > 100) {
+        playerX = playerX - 3;
       }
 
       if (!finalMapa) {
-        if (jLeiteCima && jLeiteY > 0) {
-          jLeiteY = jLeiteY - 3;
+        if (jLeiteCima && playerY > 0) {
+          playerY = playerY - 3;
         }
       } else {
         if (jLeiteCima) {
-          jLeiteY = jLeiteY - 3;
+          playerY = playerY - 3;
         }
       }
 
-      if (jLeiteBaixo && jLeiteY < height - 126) {
-        jLeiteY = jLeiteY + 3;
+      if (jLeiteBaixo && playerY < height - 126) {
+        playerY = playerY + 3;
       }
     }
 
     if (gameState >= GameState.FIRSTBOSS.ordinal() && gameState <= GameState.THIRDBOSS.ordinal()) {
       if (!jLeiteLentidao) {
-        if (jLeiteDireita && jLeiteX < width - 88) { 
-          jLeiteX = jLeiteX + 3;
+        if (jLeiteDireita && playerX < width - 88) { 
+          playerX = playerX + 3;
         }
 
-        if (jLeiteEsquerda && jLeiteX > 25) {
-          jLeiteX = jLeiteX - 3;
+        if (jLeiteEsquerda && playerX > 25) {
+          playerX = playerX - 3;
         }
 
-        if (jLeiteCima && jLeiteY > 75) {
-          jLeiteY = jLeiteY - 3;
+        if (jLeiteCima && playerY > 75) {
+          playerY = playerY - 3;
         }
 
-        if (jLeiteBaixo && jLeiteY < height - 126) {
-          jLeiteY = jLeiteY + 3;
+        if (jLeiteBaixo && playerY < height - 126) {
+          playerY = playerY + 3;
         }
       } else {
-        if (jLeiteDireita && jLeiteX < width - 88) { 
-          jLeiteX = jLeiteX + 1;
+        if (jLeiteDireita && playerX < width - 88) { 
+          playerX = playerX + 1;
         }
 
-        if (jLeiteEsquerda && jLeiteX > 25) {
-          jLeiteX = jLeiteX - 1;
+        if (jLeiteEsquerda && playerX > 25) {
+          playerX = playerX - 1;
         }
 
-        if (jLeiteCima && jLeiteY > 75) {
-          jLeiteY = jLeiteY - 1;
+        if (jLeiteCima && playerY > 75) {
+          playerY = playerY - 1;
         }
 
-        if (jLeiteBaixo && jLeiteY < height - 126) {
-          jLeiteY = jLeiteY + 1;
+        if (jLeiteBaixo && playerY < height - 126) {
+          playerY = playerY + 1;
         }
       }
     }
 
-    image(sombraJLeite, jLeiteX + 7, jLeiteY + 112);
+    image(sombraJLeite, playerX + 7, playerY + 112);
 
     if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal()) {
-      if (!jLeiteUsoItem && !jLeiteImune) {
+      if (!jLeiteUsoItem && !isPlayerImmune) {
         if (millis() > tempoSpriteJLeiteMovimento + 75) { 
           spriteJLeiteMovimento = jLeiteMovimento.get(stepJLeiteMovimento, 0, 63, 126); 
           stepJLeiteMovimento = stepJLeiteMovimento % 378 + 63;
-          image(spriteJLeiteMovimento, jLeiteX, jLeiteY); 
+          image(spriteJLeiteMovimento, playerX, playerY); 
           tempoSpriteJLeiteMovimento = millis();
         } else {
-          image(spriteJLeiteMovimento, jLeiteX, jLeiteY);
+          image(spriteJLeiteMovimento, playerX, playerY);
         }
         if (stepJLeiteMovimento == jLeiteMovimento.width) {
           stepJLeiteMovimento = 0;
         }
       }
 
-      if (jLeiteImune && !jLeiteUsoItem) {
+      if (isPlayerImmune && !jLeiteUsoItem) {
         if (millis() > tempoSpriteJLeiteDanoMovimento + 90) { 
           spriteJLeiteDanoMovimento = jLeiteDanoMovimento.get(stepJLeiteDanoMovimento, 0, 63, 126); 
           stepJLeiteDanoMovimento = stepJLeiteDanoMovimento % 378 + 63;
-          image(spriteJLeiteDanoMovimento, jLeiteX, jLeiteY); 
+          image(spriteJLeiteDanoMovimento, playerX, playerY); 
           tempoSpriteJLeiteDanoMovimento = millis();
         } else {
-          image(spriteJLeiteDanoMovimento, jLeiteX, jLeiteY);
+          image(spriteJLeiteDanoMovimento, playerX, playerY);
         }
 
         if (stepJLeiteDanoMovimento == jLeiteDanoMovimento.width) {
@@ -219,28 +219,28 @@ void jLeite() {
       }
     } else {
       if (jLeiteDireita || jLeiteEsquerda || jLeiteCima || jLeiteBaixo) {
-        if (!jLeiteUsoItem && !jLeiteImune) {
+        if (!jLeiteUsoItem && !isPlayerImmune) {
           if (millis() > tempoSpriteJLeiteMovimento + 75) { 
             spriteJLeiteMovimento = jLeiteMovimento.get(stepJLeiteMovimento, 0, 63, 126); 
             stepJLeiteMovimento = stepJLeiteMovimento % 378 + 63;
-            image(spriteJLeiteMovimento, jLeiteX, jLeiteY); 
+            image(spriteJLeiteMovimento, playerX, playerY); 
             tempoSpriteJLeiteMovimento = millis();
           } else {
-            image(spriteJLeiteMovimento, jLeiteX, jLeiteY);
+            image(spriteJLeiteMovimento, playerX, playerY);
           }
           if (stepJLeiteMovimento == jLeiteMovimento.width) {
             stepJLeiteMovimento = 0;
           }
         }
 
-        if (jLeiteImune && !jLeiteUsoItem) {
+        if (isPlayerImmune && !jLeiteUsoItem) {
           if (millis() > tempoSpriteJLeiteDanoMovimento + 90) { 
             spriteJLeiteDanoMovimento = jLeiteDanoMovimento.get(stepJLeiteDanoMovimento, 0, 63, 126); 
             stepJLeiteDanoMovimento = stepJLeiteDanoMovimento % 378 + 63;
-            image(spriteJLeiteDanoMovimento, jLeiteX, jLeiteY); 
+            image(spriteJLeiteDanoMovimento, playerX, playerY); 
             tempoSpriteJLeiteDanoMovimento = millis();
           } else {
-            image(spriteJLeiteDanoMovimento, jLeiteX, jLeiteY);
+            image(spriteJLeiteDanoMovimento, playerX, playerY);
           }
 
           if (stepJLeiteDanoMovimento == jLeiteDanoMovimento.width) {
@@ -248,28 +248,28 @@ void jLeite() {
           }
         }
       } else {
-        if (!jLeiteUsoItem && !jLeiteImune) {
+        if (!jLeiteUsoItem && !isPlayerImmune) {
           if (millis() > tempoSpriteJLeiteIdle + 75) { 
             spriteJLeiteIdle = jLeiteIdle.get(stepJLeiteIdle, 0, 63, 126); 
             stepJLeiteIdle = stepJLeiteIdle % 378 + 63;
-            image(spriteJLeiteIdle, jLeiteX, jLeiteY); 
+            image(spriteJLeiteIdle, playerX, playerY); 
             tempoSpriteJLeiteIdle = millis();
           } else {
-            image(spriteJLeiteIdle, jLeiteX, jLeiteY);
+            image(spriteJLeiteIdle, playerX, playerY);
           }
           if (stepJLeiteIdle == jLeiteIdle.width) {
             stepJLeiteIdle = 0;
           }
         }
 
-        if (jLeiteImune && !jLeiteUsoItem) {
+        if (isPlayerImmune && !jLeiteUsoItem) {
           if (millis() > tempoSpriteJLeiteDanoIdle + 90) { 
             spriteJLeiteDanoIdle = jLeiteDanoIdle.get(stepJLeiteDanoIdle, 0, 63, 126); 
             stepJLeiteDanoIdle = stepJLeiteDanoIdle % 378 + 63;
-            image(spriteJLeiteDanoIdle, jLeiteX, jLeiteY); 
+            image(spriteJLeiteDanoIdle, playerX, playerY); 
             tempoSpriteJLeiteDanoIdle = millis();
           } else {
-            image(spriteJLeiteDanoIdle, jLeiteX, jLeiteY);
+            image(spriteJLeiteDanoIdle, playerX, playerY);
           }
 
           if (stepJLeiteDanoIdle == jLeiteDanoIdle.width) {
@@ -284,10 +284,10 @@ void jLeite() {
         if (millis() > tempoSpriteJLeiteItem + 90) { 
           spriteJLeiteItem = jLeiteItem.get(stepJLeiteItem, 0, 94, 126); 
           stepJLeiteItem = stepJLeiteItem % 282 + 94;
-          image(spriteJLeiteItem, jLeiteX, jLeiteY); 
+          image(spriteJLeiteItem, playerX, playerY); 
           tempoSpriteJLeiteItem = millis();
         } else {
-          image(spriteJLeiteItem, jLeiteX, jLeiteY);
+          image(spriteJLeiteItem, playerX, playerY);
         }
 
         if (stepJLeiteItem == jLeiteItem.width) {
@@ -310,10 +310,10 @@ void jLeite() {
       if (millis() > tempoSpriteJLeiteMorte + 450) {
         spriteJLeiteMorte = jLeiteMorte.get(stepJLeiteMorte, 0, 126, 126);
         stepJLeiteMorte = stepJLeiteMorte % 378 + 126;
-        image(spriteJLeiteMorte, jLeiteX - 31, jLeiteY);
+        image(spriteJLeiteMorte, playerX - 31, playerY);
         tempoSpriteJLeiteMorte = millis();
       } else {
-        image(spriteJLeiteMorte, jLeiteX - 31, jLeiteY);
+        image(spriteJLeiteMorte, playerX - 31, playerY);
       }
 
       if (stepJLeiteMorte == jLeiteMorte.width) {
@@ -322,7 +322,7 @@ void jLeite() {
       }
     } else {
       spriteJLeiteMorte = jLeiteMorte.get(252, 0, 378, 125);
-      image(spriteJLeiteMorte, jLeiteX - 31, jLeiteY);
+      image(spriteJLeiteMorte, playerX - 31, playerY);
     }
   }
 }

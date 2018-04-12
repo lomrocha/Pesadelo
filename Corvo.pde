@@ -1,8 +1,8 @@
 PImage skeletonCrow;
 PImage skeletonCrowShadow;
 
-class Corvo extends Geral {
-  private PVector target = new PVector(jLeiteX, jLeiteY);
+class Corvo extends Inimigo {
+  private PVector target = new PVector(playerX, playerY);
   
   private int movementX;
 
@@ -25,10 +25,13 @@ class Corvo extends Geral {
   }
 
   private void setValues() {
-    setSpriteImage(skeletonCrow);
-    setSpriteInterval(75);
-    setSpriteWidth(121);
-    setSpriteHeight(86);
+    this.setSpriteImage(skeletonCrow);
+    this.setSpriteInterval(75);
+    this.setSpriteWidth(121);
+    this.setSpriteHeight(86);
+    
+    this.setDamage(3);
+    this.setType(TypeOfEnemy.SKELETON_CROW.ordinal());
   }
 
   void display() {
@@ -56,7 +59,7 @@ class Corvo extends Geral {
   void updateTarget() {
     if (getY() > 0) {
       if (!hasNewTarget) {
-        target.x = jLeiteX;
+        target.x = playerX;
         newTargetInterval = millis();
         hasNewTarget = true;
       }
@@ -68,7 +71,7 @@ class Corvo extends Geral {
   }
 
   boolean hasCollided() {
-    if (getX() + 95 > jLeiteX && getX() + 25 < jLeiteX + 63 && getY() + 86 > jLeiteY && getY() < jLeiteY + 126) {
+    if (getX() + 95 > playerX && getX() + 25 < playerX + 63 && getY() + 86 > playerY && getY() < playerY + 126) {
       return true;
     }
 

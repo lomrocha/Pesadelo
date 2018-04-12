@@ -64,33 +64,33 @@ void addItem() {
 
 void addItemBoss() {
   if (gameState == GameState.FIRSTBOSS.ordinal()) {
-    itemRandomMapPositionIndex = int(random(0, valoresXPrimeiroMapaBoss.length));
+    itemRandomMapPositionIndex = int(random(0, X_VALUES_FIRST_BOSS.length));
     if (itemIndex >= 0 && itemIndex <= 4) {
-      itens.add(new Pa(valoresXPrimeiroMapaBoss[itemRandomMapPositionIndex], valoresYPrimeiroMapaBoss[itemRandomMapPositionIndex]));
+      itens.add(new Pa(X_VALUES_FIRST_BOSS[itemRandomMapPositionIndex], Y_VALUES_FIRST_BOSS[itemRandomMapPositionIndex]));
     } else if (itemIndex >= 5 && itemIndex <= 9) {
-      itens.add(new Chicote(valoresXPrimeiroMapaBoss[itemRandomMapPositionIndex], valoresYPrimeiroMapaBoss[itemRandomMapPositionIndex]));
+      itens.add(new Chicote(X_VALUES_FIRST_BOSS[itemRandomMapPositionIndex], Y_VALUES_FIRST_BOSS[itemRandomMapPositionIndex]));
     }
 
     itemTotal++;
   }
 
   if (gameState == GameState.SECONDBOSS.ordinal()) {
-    itemRandomMapPositionIndex = int(random(0, valoresXSegundoMapaBoss.length));
+    itemRandomMapPositionIndex = int(random(0, X_VALUES_SECOND_BOSS.length));
     if (itemIndex >= 0 && itemIndex <= 4) {
-      itens.add(new Pa(valoresXSegundoMapaBoss[itemRandomMapPositionIndex], valoresYSegundoMapaBoss[itemRandomMapPositionIndex]));
+      itens.add(new Pa(X_VALUES_SECOND_BOSS[itemRandomMapPositionIndex], Y_VALUES_SECOND_BOSS[itemRandomMapPositionIndex]));
     } else if (itemIndex >= 5 && itemIndex <= 9) {
-      itens.add(new Chicote(valoresXSegundoMapaBoss[itemRandomMapPositionIndex], valoresYSegundoMapaBoss[itemRandomMapPositionIndex]));
+      itens.add(new Chicote(X_VALUES_SECOND_BOSS[itemRandomMapPositionIndex], Y_VALUES_SECOND_BOSS[itemRandomMapPositionIndex]));
     }
 
     itemTotal++;
   }
 
   if (gameState == GameState.THIRDBOSS.ordinal()) {
-    itemRandomMapPositionIndex = int(random(0, valoresXTerceiroMapaBoss.length));
+    itemRandomMapPositionIndex = int(random(0, X_VALUES_THIRD_BOSS.length));
     if (itemIndex >= 0 && itemIndex <= 4) {
-      itens.add(new Pa(valoresXTerceiroMapaBoss[itemRandomMapPositionIndex], valoresYTerceiroMapaBoss[itemRandomMapPositionIndex]));
+      itens.add(new Pa(X_VALUES_THIRD_BOSS[itemRandomMapPositionIndex], Y_VALUES_THIRD_BOSS[itemRandomMapPositionIndex]));
     } else if (itemIndex >= 5 && itemIndex <= 9) {
-      itens.add(new Chicote(valoresXTerceiroMapaBoss[itemRandomMapPositionIndex], valoresYTerceiroMapaBoss[itemRandomMapPositionIndex]));
+      itens.add(new Chicote(X_VALUES_THIRD_BOSS[itemRandomMapPositionIndex], Y_VALUES_THIRD_BOSS[itemRandomMapPositionIndex]));
     }
 
     itemTotal++;

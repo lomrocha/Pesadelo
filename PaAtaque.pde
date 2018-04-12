@@ -2,8 +2,8 @@ PImage shovelAttack;
 
 public class PaAtaque extends Arma {
   public PaAtaque() {
-    setX(jLeiteX - 70);
-    setY(jLeiteY - 44);
+    setX(playerX - 70);
+    setY(playerY - 44);
 
     setSpriteImage(shovelAttack);
     setSpriteInterval(90);
@@ -13,14 +13,14 @@ public class PaAtaque extends Arma {
     setDeleteWeapon(false);
     setDamageBoss(false);
 
-    setFirstCollisionX(jLeiteX + 160);
-    setSecondCollisionX(jLeiteX - 70);
-    setFirstCollisionY(jLeiteY + 56);
-    setSecondCollisionY(jLeiteY - 44);
+    setFirstCollisionX(playerX + 160);
+    setSecondCollisionX(playerX - 70);
+    setFirstCollisionY(playerY + 56);
+    setSecondCollisionY(playerY - 44);
   }
 
   void update() {
-    setX(jLeiteX - 70);
-    setY(jLeiteY - 44);
+    setX(playerX - 70);
+    setY(playerY - 44);
   }
 }

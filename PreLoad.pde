@@ -295,8 +295,8 @@ void variablesPreLoad() {
 
   totalInimigos = 0;
 
-  jLeiteX = 360;
-  jLeiteY = 345; 
+  playerX = 360;
+  playerY = 345; 
 
   playerCurrentHP = 15;
   prayerHPMaximum = 15; 

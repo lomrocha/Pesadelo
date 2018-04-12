@@ -1,7 +1,7 @@
 PImage skeletonDog;
 PImage skeletonDogShadow;
 
-final int SKELETONDOG = 2;
+final int SKELETON_DOG = 3;
 
 final int[] skeletonDogSpawnPointsSecondBoss = {70, 382, 695};
 
@@ -16,7 +16,7 @@ public class Cachorro extends Inimigo {
     setSpriteHeight(83);
 
     setDamage(2);
-    setIsHead(false);
+    setType(TypeOfEnemy.SKELETON_DOG.ordinal());
   }
 
   void display() {
@@ -28,6 +28,8 @@ public class Cachorro extends Inimigo {
   void updateMovement() {
     setMovementY(8);
   }
+  
+  void updateTarget(){}
 }
 
 ArrayList<Cachorro> cachorros = new ArrayList<Cachorro>();;
@@ -60,7 +62,7 @@ void cachorro() {
         cachorroC = int(random(0, 7));
         cachorroL = int(random(0, 4));
 
-        if (enemyPositionsSecondMap[cachorroC][cachorroL] == SKELETONDOG) {
+        if (ENEMY_POSITIONS_SECOND_MAP[cachorroC][cachorroL] == SKELETON_DOG) {
           cachorros.add(new Cachorro(100 + (cachorroC * (600 / 7)), -150 - (cachorroL * 150)));
           totalInimigos = totalInimigos + 1;
         }
@@ -70,7 +72,7 @@ void cachorro() {
         cachorroC = int(random(0, 7));
         cachorroL = int(random(0, 4));
 
-        if (enemyPositionsThirdMap[cachorroC][cachorroL] == SKELETONDOG) {
+        if (ENEMY_POSITIONS_THIRD_MAP[cachorroC][cachorroL] == SKELETON_DOG) {
           cachorros.add(new Cachorro(100 + (cachorroC * (600 / 7)), -150 - (cachorroL * 150)));
           totalInimigos = totalInimigos + 1;
         }
@@ -85,16 +87,16 @@ void cachorro() {
 }
 
 void skeletonDogPositions() {
-  enemyPositionsSecondMap [0][0] = SKELETONDOG;
-  enemyPositionsSecondMap [1][1] = SKELETONDOG;
-  enemyPositionsSecondMap [2][2] = SKELETONDOG;
-  enemyPositionsSecondMap [3][0] = SKELETONDOG;
-  enemyPositionsSecondMap [4][3] = SKELETONDOG;
-  enemyPositionsSecondMap [5][2] = SKELETONDOG;
-  enemyPositionsSecondMap [6][2] = SKELETONDOG;
+  ENEMY_POSITIONS_SECOND_MAP [0][0] = SKELETON_DOG;
+  ENEMY_POSITIONS_SECOND_MAP [1][1] = SKELETON_DOG;
+  ENEMY_POSITIONS_SECOND_MAP [2][2] = SKELETON_DOG;
+  ENEMY_POSITIONS_SECOND_MAP [3][0] = SKELETON_DOG;
+  ENEMY_POSITIONS_SECOND_MAP [4][3] = SKELETON_DOG;
+  ENEMY_POSITIONS_SECOND_MAP [5][2] = SKELETON_DOG;
+  ENEMY_POSITIONS_SECOND_MAP [6][2] = SKELETON_DOG;
 
-  enemyPositionsThirdMap  [1][0] = SKELETONDOG;
-  enemyPositionsThirdMap  [3][0] = SKELETONDOG;
-  enemyPositionsThirdMap  [5][2] = SKELETONDOG;
-  enemyPositionsThirdMap  [6][1] = SKELETONDOG;
+  ENEMY_POSITIONS_THIRD_MAP  [1][0] = SKELETON_DOG;
+  ENEMY_POSITIONS_THIRD_MAP  [3][0] = SKELETON_DOG;
+  ENEMY_POSITIONS_THIRD_MAP  [5][2] = SKELETON_DOG;
+  ENEMY_POSITIONS_THIRD_MAP  [6][1] = SKELETON_DOG;
 }

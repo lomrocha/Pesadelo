@@ -2,8 +2,8 @@ PImage whipAttack;
 
 public class ChicoteAtaque extends Arma {
   public ChicoteAtaque() {
-    setX(jLeiteX - 70);
-    setY(jLeiteY - 140);
+    setX(playerX - 70);
+    setY(playerY - 140);
 
     setSpriteImage(whipAttack);
     setSpriteInterval(110);
@@ -13,14 +13,14 @@ public class ChicoteAtaque extends Arma {
     setDeleteWeapon(false);
     setDamageBoss(false);
 
-    setFirstCollisionX(jLeiteX + 86);
-    setSecondCollisionX(jLeiteX + 20);
-    setFirstCollisionY(jLeiteY);
-    setSecondCollisionY(jLeiteY - 140);
+    setFirstCollisionX(playerX + 86);
+    setSecondCollisionX(playerX + 20);
+    setFirstCollisionY(playerY);
+    setSecondCollisionY(playerY - 140);
   }
 
   void update() {
-    setX(jLeiteX - 70);
-    setY(jLeiteY - 140);
+    setX(playerX - 70);
+    setY(playerY - 140);
   }
 }

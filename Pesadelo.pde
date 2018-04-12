@@ -7,25 +7,29 @@ AudioPlayer temaIgreja;
 AudioPlayer temaFazenda;
 AudioPlayer temaCidade;
 
-public enum GameState {
+enum GameState {
   FIRSTMAP, SECONDMAP, THIRDMAP, FIRSTBOSS, SECONDBOSS, THIRDBOSS, MAINMENU, CONTROLSMENU, CREDITSMENU, WIN, GAMEOVER
 }
 
 int gameState;
 int lastState;
 
-final int[][] enemyPositionsFirstMap = new int [7][4];
-final int[][] enemyPositionsSecondMap = new int [7][4];
-final int[][] enemyPositionsThirdMap  = new int [7][4];
+final int[][] ENEMY_POSITIONS_FIRST_MAP = new int [7][4];
+final int[][] ENEMY_POSITIONS_SECOND_MAP = new int [7][4];
+final int[][] ENEMY_POSITIONS_THIRD_MAP  = new int [7][4];
 
-int[] valoresXPrimeiroMapaBoss = {50, 720};
-int[] valoresYPrimeiroMapaBoss = {380, 380};
+final int[] ENEMY_MAXIMUM_FIRST_MAP = {2, 2, 3, 4, 5, 0};
+final int[] ENEMY_MAXIMUM_SECOND_MAP = {};
+final int[] ENEMY_MAXIMUM_THIRD_MAP = {};
 
-int[] valoresXSegundoMapaBoss = {45, 45, 735, 735};
-int[] valoresYSegundoMapaBoss = {200, 358, 200, 358};
+final int[] X_VALUES_FIRST_BOSS = {50, 720};
+final int[] Y_VALUES_FIRST_BOSS = {380, 380};
 
-int[] valoresXTerceiroMapaBoss = {62, 62, 710, 710};
-int[] valoresYTerceiroMapaBoss = {249, 401, 249, 401};
+final int[] X_VALUES_SECOND_BOSS = {45, 45, 735, 735};
+final int[] Y_VALUES_SECOND_BOSS = {200, 358, 200, 358};
+
+final int[] X_VALUES_THIRD_BOSS = {62, 62, 710, 710};
+final int[] Y_VALUES_THIRD_BOSS = {249, 401, 249, 401};
 
 boolean ativaBarraEspaco;
 
@@ -44,6 +48,8 @@ HitpointsLayout padreHP;
 HitpointsLayout madPadreHP;
 
 ItemBox ib;
+
+FirstMapEnemiesSpawnManager firstMapEnemiesSpawnManager;
 
 void setup() {
   size(800, 600);
@@ -68,6 +74,8 @@ void setup() {
   coveiro = new Coveiro();
   fazendeiro = new Fazendeiro();
   padre = new Padre();
+  
+  firstMapEnemiesSpawnManager = new FirstMapEnemiesSpawnManager(ENEMY_MAXIMUM_FIRST_MAP);
 }
 
 void draw() {

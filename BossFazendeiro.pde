@@ -344,7 +344,7 @@ public class Fazendeiro {
 
   void ataqueFoice() {
     if (!ataqueMimosaAcontecendo && !ataquePneuAcontecendo && !fazendeiroTomouDanoPneu && !fazendeiroMorreu) {
-      if (dist(fazendeiroX, fazendeiroY, jLeiteX, jLeiteY) < 100 && !ataqueFoiceLigado && millis() > tempoNovoAtaqueFoice + 1500) {
+      if (dist(fazendeiroX, fazendeiroY, playerX, playerY) < 100 && !ataqueFoiceLigado && millis() > tempoNovoAtaqueFoice + 1500) {
         tempoNovoAtaqueFoice = millis();
         tempoDanoFoice = millis();
         ataqueFoice = true;
@@ -357,12 +357,12 @@ public class Fazendeiro {
   }
 
   void colisaoFoice() {
-    if (ataqueFoiceAcontecendo && dist(fazendeiroX, fazendeiroY, jLeiteX, jLeiteY) < 100) {
+    if (ataqueFoiceAcontecendo && dist(fazendeiroX, fazendeiroY, playerX, playerY) < 100) {
       if (millis() > tempoDanoFoice + 310) {
-        if (!jLeiteImune) {
+        if (!isPlayerImmune) {
           playerCurrentHP -= 3;
-          jLeiteImune = true;
-          tempoImune = millis();
+          isPlayerImmune = true;
+          timeImmune = millis();
         }
       }
     }
@@ -438,7 +438,7 @@ public class Mimosa {
 
   private int movimentoMimosaX;
 
-  private int destinoX = jLeiteX;
+  private int destinoX = playerX;
 
   private int stepMimosa;
   private int tempoSpriteMimosa;
@@ -502,7 +502,7 @@ public class Mimosa {
   }
 
   boolean acertouJLeite() {
-    if (mimosaX + 94 > jLeiteX && mimosaX < jLeiteX + 63 && mimosaY + 101 > jLeiteY && mimosaY < jLeiteY + 126) {
+    if (mimosaX + 94 > playerX && mimosaX < playerX + 63 && mimosaY + 101 > playerY && mimosaY < playerY + 126) {
       acertouJLeite = true;
       return true;
     } else {
@@ -542,10 +542,10 @@ void mimosa() {
       }
     }
 
-    if (m.acertouJLeite() && !jLeiteImune) {
+    if (m.acertouJLeite() && !isPlayerImmune) {
       playerCurrentHP -= 2;
-      jLeiteImune = true;
-      tempoImune = millis();
+      isPlayerImmune = true;
+      timeImmune = millis();
       if (isSoundActive) {
         sonsMimosaHit[int(random(0, 2))].rewind();
         sonsMimosaHit[int(random(0, 2))].play();
@@ -618,9 +618,9 @@ public class Pneu {
 
     if (novoDestinoPneu) {
       if (totalRebatidasRestantes == 6) {
-        if (jLeiteY > 300) {
-          destinoPneuX = jLeiteX;
-          destinoPneuY = jLeiteY;
+        if (playerY > 300) {
+          destinoPneuX = playerX;
+          destinoPneuY = playerY;
         } else {
           destinoPneuX = 300;
           destinoPneuY = 515;
@@ -648,9 +648,9 @@ public class Pneu {
       }
 
       if (totalRebatidasRestantes == 2) {
-        if (jLeiteY > 300) {
-          destinoPneuX = jLeiteX;
-          destinoPneuY = jLeiteY;
+        if (playerY > 300) {
+          destinoPneuX = playerX;
+          destinoPneuY = playerY;
         } else {
           destinoPneuX = 300;
           destinoPneuY = 515;
@@ -691,7 +691,7 @@ public class Pneu {
   }
 
   boolean acertouJoaoLeite() {
-    if (pneuX + 66 > jLeiteX && pneuX < jLeiteX + 63 && pneuY + 69 > jLeiteY && pneuY < jLeiteY + 123) {
+    if (pneuX + 66 > playerX && pneuX < playerX + 63 && pneuY + 69 > playerY && pneuY < playerY + 123) {
       return true;
     } else {
       return false;
@@ -732,14 +732,14 @@ void pneu() {
       soltouPneu = false;
       pneus.remove(p);
     }
-    if (p.acertouJoaoLeite() && !jLeiteImune) {
+    if (p.acertouJoaoLeite() && !isPlayerImmune) {
       if (isSoundActive) {
         somAcertouPneuJLeite.rewind();
         somAcertouPneuJLeite.play();
       }
       playerCurrentHP -= 5;
-      jLeiteImune = true;
-      tempoImune = millis();
+      isPlayerImmune = true;
+      timeImmune = millis();
     }
     if (p.acertouFazendeiro()) {
       if (isSoundActive) {

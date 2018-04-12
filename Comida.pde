@@ -81,41 +81,45 @@ void addFood() {
   }
 }
 
+<Food extends Comida> void x(Food food, ArrayList<Food> foods){
+  foods.add(food);
+}
+
 void addFoodBoss() {
   if (gameState == GameState.FIRSTBOSS.ordinal()) {
-    foodRandomMapPositionIndex = int(random(0, valoresXPrimeiroMapaBoss.length));
+    foodRandomMapPositionIndex = int(random(0, X_VALUES_FIRST_BOSS.length));
     if (foodIndex >= 0 && foodIndex <= 4) {
-      comidas.add(new Brigadeiro(valoresXPrimeiroMapaBoss[foodRandomMapPositionIndex], valoresYPrimeiroMapaBoss[foodRandomMapPositionIndex]));
+      comidas.add(new Brigadeiro(X_VALUES_FIRST_BOSS[foodRandomMapPositionIndex], Y_VALUES_FIRST_BOSS[foodRandomMapPositionIndex]));
     } else if (foodIndex >= 5 && foodIndex <=7) {
-      comidas.add(new Queijo(valoresXPrimeiroMapaBoss[foodRandomMapPositionIndex], valoresYPrimeiroMapaBoss[foodRandomMapPositionIndex]));
+      comidas.add(new Queijo(X_VALUES_FIRST_BOSS[foodRandomMapPositionIndex], Y_VALUES_FIRST_BOSS[foodRandomMapPositionIndex]));
     } else if (foodIndex >= 8 && foodIndex <= 9) { 
-      comidas.add(new Coxinha(valoresXPrimeiroMapaBoss[foodRandomMapPositionIndex], valoresYPrimeiroMapaBoss[foodRandomMapPositionIndex]));
+      comidas.add(new Coxinha(X_VALUES_FIRST_BOSS[foodRandomMapPositionIndex], Y_VALUES_FIRST_BOSS[foodRandomMapPositionIndex]));
     }
 
     foodTotal++;
   }
 
   if (gameState == GameState.SECONDBOSS.ordinal()) {
-    foodRandomMapPositionIndex = int(random(0, valoresXSegundoMapaBoss.length));
+    foodRandomMapPositionIndex = int(random(0, X_VALUES_SECOND_BOSS.length));
     if (foodIndex >= 0 && foodIndex <= 4) {
-      comidas.add(new Brigadeiro(valoresXSegundoMapaBoss[foodRandomMapPositionIndex], valoresYSegundoMapaBoss[foodRandomMapPositionIndex]));
+      comidas.add(new Brigadeiro(X_VALUES_SECOND_BOSS[foodRandomMapPositionIndex], Y_VALUES_SECOND_BOSS[foodRandomMapPositionIndex]));
     } else if (foodIndex >= 5 && foodIndex <=7) {
-      comidas.add(new Queijo(valoresXSegundoMapaBoss[foodRandomMapPositionIndex], valoresYSegundoMapaBoss[foodRandomMapPositionIndex]));
+      comidas.add(new Queijo(X_VALUES_SECOND_BOSS[foodRandomMapPositionIndex], Y_VALUES_SECOND_BOSS[foodRandomMapPositionIndex]));
     } else if (foodIndex >= 8 && foodIndex <= 9) { 
-      comidas.add(new Coxinha(valoresXSegundoMapaBoss[foodRandomMapPositionIndex], valoresYSegundoMapaBoss[foodRandomMapPositionIndex]));
+      comidas.add(new Coxinha(X_VALUES_SECOND_BOSS[foodRandomMapPositionIndex], Y_VALUES_SECOND_BOSS[foodRandomMapPositionIndex]));
     }
     
     foodTotal++;
   }
 
   if (gameState == GameState.THIRDBOSS.ordinal()) {
-    foodRandomMapPositionIndex = int(random(0, valoresXTerceiroMapaBoss.length));
+    foodRandomMapPositionIndex = int(random(0, X_VALUES_THIRD_BOSS.length));
     if (foodIndex >= 0 && foodIndex <= 4) {
-      comidas.add(new Brigadeiro(valoresXTerceiroMapaBoss[foodRandomMapPositionIndex], valoresYTerceiroMapaBoss[foodRandomMapPositionIndex]));
+      comidas.add(new Brigadeiro(X_VALUES_THIRD_BOSS[foodRandomMapPositionIndex], Y_VALUES_THIRD_BOSS[foodRandomMapPositionIndex]));
     } else if (foodIndex >= 5 && foodIndex <=7) {
-      comidas.add(new Queijo(valoresXTerceiroMapaBoss[foodRandomMapPositionIndex], valoresYTerceiroMapaBoss[foodRandomMapPositionIndex]));
+      comidas.add(new Queijo(X_VALUES_THIRD_BOSS[foodRandomMapPositionIndex], Y_VALUES_THIRD_BOSS[foodRandomMapPositionIndex]));
     } else if (foodIndex >= 8 && foodIndex <= 9) { 
-      comidas.add(new Coxinha(valoresXTerceiroMapaBoss[foodRandomMapPositionIndex], valoresYTerceiroMapaBoss[foodRandomMapPositionIndex]));
+      comidas.add(new Coxinha(X_VALUES_THIRD_BOSS[foodRandomMapPositionIndex], Y_VALUES_THIRD_BOSS[foodRandomMapPositionIndex]));
     }
     foodTotal++;
   }
