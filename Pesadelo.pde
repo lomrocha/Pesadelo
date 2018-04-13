@@ -9,7 +9,7 @@ AudioPlayer temaCidade;
 
 enum GameState {
   FIRSTMAP, SECONDMAP, THIRDMAP, FIRSTBOSS, SECONDBOSS, THIRDBOSS, MAINMENU, CONTROLSMENU, CREDITSMENU, WIN, GAMEOVER
-}
+}    
 
 int gameState;
 int lastState;

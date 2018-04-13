@@ -4,19 +4,17 @@ PImage redSkeletonShadow;
 final int REDSKELETON = 4;
 
 public class EsqueletoRaiva extends Inimigo {
-  private int movementX = 3;
-
   public EsqueletoRaiva(int x, int y) {
     this.setX(x);
     this.setY(y);
 
-    setSpriteImage(redSkeleton);
-    setSpriteInterval(75);
-    setSpriteWidth(76);
-    setSpriteHeight(126);
+    this.setSpriteImage(redSkeleton);
+    this.setSpriteInterval(75);
+    this.setSpriteWidth(76);
+    this.setSpriteHeight(126);
 
-    setDamage(3);
-    setType(TypeOfEnemy.RED_SKELETON.ordinal());
+    this.setDamage(3);
+    this.setType(TypeOfEnemy.RED_SKELETON.ordinal());
   }
 
   void display() {
@@ -25,21 +23,15 @@ public class EsqueletoRaiva extends Inimigo {
     super.display();
   }
 
-  void update() {
-    super.update();
-
-    setX(getX() + movementX);
-  }
-
   void updateMovement() {
     if (getX() < 100) {
-      movementX = 2;
+      setMotionX(2);
     }
     if (getX() + 30 > 700) {
-      movementX = -2;
+      setMotionX(-2);
     }
 
-    setMovementY(3);
+    setMotionY(3);
   }
   
   void updateTarget(){}

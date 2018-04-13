@@ -3,20 +3,20 @@ PImage skeletonDogShadow;
 
 final int SKELETON_DOG = 3;
 
-final int[] skeletonDogSpawnPointsSecondBoss = {70, 382, 695};
+final int[] SKELETON_DOG_SPAWNPOINTS_BOSS = {70, 382, 695};
 
 public class Cachorro extends Inimigo {
   public Cachorro(int x, int y) {
-    this.setX(x);
-    this.setY(y);
+    this.setSelf(new PVector(x, y));
+    this.setTarget(new PVector(x, height + y));
 
-    setSpriteImage(skeletonDog);
-    setSpriteInterval(55);
-    setSpriteWidth(45);
-    setSpriteHeight(83);
+    this.setSpriteImage(skeletonDog);
+    this.setSpriteInterval(55);
+    this.setSpriteWidth(45);
+    this.setSpriteHeight(83);
 
-    setDamage(2);
-    setType(TypeOfEnemy.SKELETON_DOG.ordinal());
+    this.setDamage(2);
+    this.setType(TypeOfEnemy.SKELETON_DOG.ordinal());
   }
 
   void display() {
@@ -26,7 +26,7 @@ public class Cachorro extends Inimigo {
   }
 
   void updateMovement() {
-    setMovementY(8);
+    setMotionY(8);
   }
   
   void updateTarget(){}
@@ -43,8 +43,8 @@ void cachorro() {
     if (gameState == GameState.SECONDBOSS.ordinal()) {
       if (cachorros.size() == 0 && !fazendeiroTomouDanoPneu && !fazendeiro.fazendeiroMorreu) {
         for (int i = 0; i < 2; i = i + 1) {
-          indexRandomCachorroXMapaBoss = int(random(0, skeletonDogSpawnPointsSecondBoss.length));
-          cachorros.add(new Cachorro(skeletonDogSpawnPointsSecondBoss[indexRandomCachorroXMapaBoss], 0));
+          indexRandomCachorroXMapaBoss = int(random(0, SKELETON_DOG_SPAWNPOINTS_BOSS.length));
+          cachorros.add(new Cachorro(SKELETON_DOG_SPAWNPOINTS_BOSS[indexRandomCachorroXMapaBoss], 0));
         }
       }
     }

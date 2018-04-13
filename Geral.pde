@@ -92,17 +92,32 @@ public class MaisGeral {
 }
 
 public class Geral extends MaisGeral {
-  private int movementY;
+  private PVector motion = new PVector();
 
-  public int getMovementY() {
-    return this.movementY;
+  public PVector getMotion() {
+    return this.motion;
   }
-  protected void setMovementY(int movementY) {
-    this.movementY = movementY;
+  protected void setMotion(PVector motion) {
+    this.motion = motion;
+  }
+
+  public int getMotionX() {
+    return int(this.motion.x);
+  }
+  protected void setMotionX(int x) {
+    this.motion.x = x;
+  }
+
+  public int getMotionY() {
+    return int(this.motion.y);
+  }
+  protected void setMotionY(int y) {
+    this.motion.y = y;
   }
 
   void update() {
-    setY(getY() + getMovementY());
+    setY(getY() + getMotionY());
+    setX(getX() + getMotionX());
   }
 
   boolean hasCollided() {

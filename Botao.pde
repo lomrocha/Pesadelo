@@ -1,56 +1,81 @@
 boolean hasClickedOnce;
 
-public abstract class Button {
+abstract class Button {
   private PImage buttonPlain;
 
   private PVector button = new PVector();
-
-  private int firstXBoundary;
-  private int secondXBoundary;
-  private int firstYBoundary;
-  private int secondYBoundary;
+  
+  private PVector firstBoundary = new PVector();
+  private PVector secondBoundary = new PVector();
 
   public PImage getButtonPlain() {
-    return buttonPlain;
+    return this.buttonPlain;
   }
   protected void setButtonPlain(PImage buttonPlain) {
     this.buttonPlain = buttonPlain;
   }
 
   public PVector getButton() {
-    return button;
+    return this.button;
   }
-  protected void setButton(int x, int y) { 
+  public void setButton(PVector button) {
+    this.button = button;
+  }
+
+  public int getButtonX() {
+    return int(this.button.x);
+  }
+  public void setButtonX(int x) {
     this.button.x = x;
+  }
+
+  public int getButtonY() {
+    return int(this.button.y);
+  }
+  public void setButtonY(int y) {
     this.button.y = y;
   }
 
-  public int getFirstXBoundary() {
-    return firstXBoundary;
+  public PVector getFirstBoundary(){
+    return this.firstBoundary;
   }
-  protected void setFirstXBoundary(int firstXBoundary) {
-    this.firstXBoundary = firstXBoundary;
+  public void setFirstBoundary(PVector firstBoundary){
+    this.firstBoundary = firstBoundary;
+  }
+  
+  public int getFirstBoundaryX() {
+    return int(this.firstBoundary.x);
+  }
+  protected void setFirstBoundaryX(int x) {
+    this.firstBoundary.x = x;
+  }
+  
+  public int getFirstBoundaryY() {
+    return int(this.firstBoundary.y);
+  }
+  protected void setFirstBoundaryY(int y) {
+    this.firstBoundary.y = y;
   }
 
-  public int getSecondXBoundary() {
-    return secondXBoundary;
+  public PVector getSecondBoundary(){
+    return this.secondBoundary;
   }
-  protected void setSecondXBoundary(int secondXBoundary) {
-    this.secondXBoundary = secondXBoundary;
+  public void setSecondBoundary(PVector SecondBoundary){
+    this.secondBoundary = SecondBoundary;
   }
-
-  public int getFirstYBoundary() {
-    return firstYBoundary;
+  
+  public int getSecondBoundaryX() {
+    return int(this.secondBoundary.x);
   }
-  protected void setFirstYBoundary(int firstYBoundary) {
-    this.firstYBoundary = firstYBoundary;
+  protected void setSecondXBoundary(int x) {
+    this.secondBoundary.x = x;
   }
-
-  public int getSecondYBoundary() {
-    return secondYBoundary;
+  
+  public int getSecondBoundaryY() {
+    return int(this.secondBoundary.y);
   }
-  protected void setSecondYBoundary(int secondYBoundary) {
-    this.secondYBoundary = secondYBoundary;
+  protected void setSecondBoundaryY(int y) {
+    this.secondBoundary.y = y;
   }
 
   abstract void display();
@@ -58,7 +83,7 @@ public abstract class Button {
   abstract void setState();
 
   boolean isMouseOver() {
-    if (mouseX > firstXBoundary && mouseX < secondXBoundary && mouseY > firstYBoundary && mouseY < secondYBoundary) {
+    if (mouseX > firstBoundary.x && mouseX < secondBoundary.x && mouseY > firstBoundary.y && mouseY < secondBoundary.y) {
       return true;
     } 
 

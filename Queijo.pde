@@ -20,7 +20,7 @@ public class Queijo extends Comida {
     setSpriteInterval(75);
     setSpriteWidth(31);
     setSpriteHeight(29);
-    setMovementY(1);
+    setMotionY(1);
 
     setAmountHeal(4);
     setAmountRecovered(0);

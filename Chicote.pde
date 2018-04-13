@@ -24,7 +24,7 @@ public class Chicote extends Item {
     setSpriteInterval(75);
     setSpriteWidth(101);
     setSpriteHeight(91);
-    setMovementY(1);
+    setMotionY(1);
 
     setItemIndex(WHIP);
     setItemTotal(WHIPTOTAL);

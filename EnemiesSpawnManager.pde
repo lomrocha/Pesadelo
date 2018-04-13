@@ -6,7 +6,7 @@ public abstract class EnemiesSpawnManager {
 
   private int[] maximumModifier;
 
-  public int getSpawnState()  {
+  public int getSpawnState() {
     return this.spawnState;
   }
   public void setSpawnState(int spawnState)
@@ -34,11 +34,7 @@ public abstract class EnemiesSpawnManager {
   public void setMaximumModifier(int[] maximumModifier) {
     this.maximumModifier = maximumModifier;
   }
-
-  EnemiesSpawnManager(int[] maximumModifier) {
-    this.maximumModifier = maximumModifier;
-  }
-
+  
   void setVariables() {
     spawnState = (numberOfSceneries % 7 == 0 && numberOfSceneries != 0) ? (numberOfSceneries / 7) + 1 : spawnState;
 
@@ -46,25 +42,27 @@ public abstract class EnemiesSpawnManager {
   }
 
   void states() {
-    switch (spawnState) {
-    case 1:
-      firstBatch();
-      break;
-    case 2:
-      secondBatch();
-      break;
-    case 3:
-      thirdBatch();
-      break;
-    case 4:
-      fourthBatch();
-      break;
-    case 5:
-      fifthBatch();
-      break;
-    case 6:
-      sixthBatch();
-      break;
+    if (!movementTutorialScreenActive) {
+      switch (spawnState) {
+      case 1:
+        firstBatch();
+        break;
+      case 2:
+        secondBatch();
+        break;
+      case 3:
+        thirdBatch();
+        break;
+      case 4:
+        fourthBatch();
+        break;
+      case 5:
+        fifthBatch();
+        break;
+      case 6:
+        sixthBatch();
+        break;
+      }
     }
   }
 

@@ -20,7 +20,7 @@ public class Coxinha extends Comida {
     setSpriteInterval(75);
     setSpriteWidth(28);
     setSpriteHeight(30);
-    setMovementY(1);
+    setMotionY(1);
 
     setAmountHeal(5);
     setAmountRecovered(0);

@@ -19,20 +19,15 @@ public class MenuButton extends Button {
     this.offsetX = offsetX;
   }
 
-  MenuButton(PImage buttonPlain, PImage buttonOther, int y, int firstYBoundary, int secondYBoundary, int ordinal) {
+  MenuButton(PImage buttonPlain, PImage buttonOther, int y, int firstBoundaryY, int secondBoundaryY, int ordinal) {
     this.setButtonPlain(buttonPlain);
     this.buttonOther = buttonOther;
-    this.setButton(271, y);
-    this.setFirstXBoundary(300);
-    this.setSecondXBoundary(500);
-    this.setFirstYBoundary(firstYBoundary);
-    this.setSecondYBoundary(secondYBoundary);
+    this.setButton(new PVector(271, y));
+    this.setFirstBoundary(new PVector(300, firstBoundaryY));
+    this.setSecondBoundary(new PVector(500, secondBoundaryY));
     this.ordinal = ordinal;
     this.offsetX = 29;
   }
-
-  MenuButton() {
-  };
 
   void display() {
     if (isMouseOver()) {

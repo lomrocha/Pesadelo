@@ -4,12 +4,12 @@ public class TutorialSprite extends MaisGeral {
     this.setY(y);
 
     switch (index) {
-    case 0:
+    case WALKING_SPRITE:
       this.setSpriteImage(jLeiteMovimento);
       this.setSpriteInterval(75);
       this.setSpriteWidth(63);
       break;
-    case 1:
+    case ATTACKING_SPRITE:
       this.setSpriteImage(jLeiteItem);
       this.setSpriteInterval(150);
       this.setSpriteWidth(94);

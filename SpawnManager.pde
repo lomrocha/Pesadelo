@@ -14,7 +14,7 @@ class FirstMapEnemiesSpawnManager extends EnemiesSpawnManager {
   private int kickingSkeletonTotal;
 
   FirstMapEnemiesSpawnManager(int[] maximumModifier) {
-    super(maximumModifier);
+    setMaximumModifier(maximumModifier);
   }
 
   void setSkeletonPosition() {    
@@ -113,7 +113,7 @@ class FirstMapEnemiesSpawnManager extends EnemiesSpawnManager {
 class SecondMapEnemiesSpawnManager extends EnemiesSpawnManager {
 
   SecondMapEnemiesSpawnManager(int[] maximumModifier) {
-    super(maximumModifier);
+    setMaximumModifier(maximumModifier);
   }
 
   void firstBatch() {
@@ -138,7 +138,7 @@ class SecondMapEnemiesSpawnManager extends EnemiesSpawnManager {
 class ThirdMapEnemiesSpawnManager extends EnemiesSpawnManager {
 
   ThirdMapEnemiesSpawnManager(int[] maximumModifier) {
-    super(maximumModifier);
+    setMaximumModifier(maximumModifier);
   }
 
   void firstBatch() {

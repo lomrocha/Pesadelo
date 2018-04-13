@@ -6,31 +6,29 @@ public class AudioButton extends Button {
 
   private boolean isXActive;
 
-  AudioButton(PImage buttonPlain, int x, int firstXBoundary, int secondXBoundary, boolean isAudioActive, int index) {
+  AudioButton(PImage buttonPlain, int x, int firstBoundaryX, int secondBoundaryX, boolean isAudioActive, int index) {
     this.setButtonPlain(buttonPlain);
-    this.setButton(x, 10);
-    this.setFirstXBoundary(firstXBoundary);
-    this.setSecondXBoundary(secondXBoundary);
-    this.setFirstYBoundary(10);
-    this.setSecondYBoundary(60);
+    this.setButton(new PVector(x, 10));
+    this.setFirstBoundary(new PVector(firstBoundaryX, 10));
+    this.setSecondBoundary(new PVector(secondBoundaryX, 60));
     this.isXActive = !isAudioActive;
     this.index = index;
   }
 
   void display() {
-    image(getButtonPlain(), getButton().x, getButton().y);
+    image(getButtonPlain(), getButtonX(), getButtonY());
 
     if (isXActive) {
-      image(botaoX, getButton().x, getButton().y);
+      image(botaoX, getButtonX(), getButtonY());
     }
   } 
 
   void setBooleans(boolean setter) {
     switch(index) {
-    case 0:
+    case SOUND:
       isSoundActive = !setter;
       break;
-    case 1:
+    case MUSIC:
       isMusicActive = !setter;
       break;
     }

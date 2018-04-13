@@ -48,18 +48,41 @@ enum TypeOfEnemy {
 }
 
 public abstract class Inimigo extends Geral {
+  private PVector target = new PVector();
+
   private int damage;
   private int type;
 
+  public PVector getTarget() {
+    return this.target;
+  }
+  protected void setTarget(PVector target) {
+    this.target = target;
+  }
+
+  public int getTargetX() {
+    return int(this.target.x);
+  }
+  protected void setTargetX(int x) {
+    this.target.x = x;
+  }
+
+  public int getTargetY() {
+    return int(this.target.y);
+  }
+  protected void setTargetY(int y) {
+    this.target.y = y;
+  } 
+
   public int getDamage() {
-    return damage;
+    return this.damage;
   }
   protected void setDamage(int damage) {
     this.damage = damage;
   }
 
   public int getType() {
-    return type;
+    return this.type;
   }
   protected void setType(int type) {
     this.type = type;

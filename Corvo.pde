@@ -3,8 +3,6 @@ PImage skeletonCrowShadow;
 
 class Corvo extends Inimigo {
   private PVector target = new PVector(playerX, playerY);
-  
-  private int movementX;
 
   private int newTargetInterval;
 
@@ -40,20 +38,14 @@ class Corvo extends Inimigo {
     image(skeletonCrowShadow, getX() + 24, getY() + 86);
   } 
 
-  void update() {
-    super.update();
-
-    setX(getX() + movementX);
-  }
-
   void updateMovement() {
-    setMovementY(3);
+    setMotionY(3);
     if (getX() != target.x) {
-      movementX = (getX() < target.x) ? 3 : -3;
+      setMotionX((getX() < target.x) ? 3 : -3);
       return;
     }
 
-    movementX = 0;
+     setMotionX(0);
   }
 
   void updateTarget() {
@@ -104,20 +96,7 @@ void corvo() {
   }
 
   if (corvos.size() > 0) {
-    for (int i = corvos.size() - 1; i >= 0; i = i - 1) {
-      Corvo c = corvos.get(i);
-      c.updateTarget();
-      c.updateMovement();
-      c.update();
-      c.display();
-      if (c.hasExitScreen()) {
-        corvos.remove(c);
-      }
-      if (c.hasCollided()) {
-        damage(3);
-      }
-    }
-
+    computeEnemy(corvos);
     deleteEnemy(corvos);
   }
 }

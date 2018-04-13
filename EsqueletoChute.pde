@@ -7,10 +7,6 @@ final int KICKING_SKELETON = 2;
 public class EsqueletoChute extends Inimigo {
   private PImage kickingSkeletonSprite;
 
-  private int movementX;
-
-  private PVector target = new PVector();
-
   private int kickingSkeletonStep;
   private int kickingSkeletonSpriteTime;
 
@@ -21,8 +17,9 @@ public class EsqueletoChute extends Inimigo {
   private boolean hasTarget;
 
   public EsqueletoChute(int x, int y) {
-    this.setX(x);
-    this.setY(y);
+    this.setSelf(new PVector(x, y));
+    
+    this.setTarget(new PVector(0, 0));
 
     this.setSpriteImage(headlessKickingSkeleton);
     this.setSpriteInterval(200);
@@ -65,37 +62,29 @@ public class EsqueletoChute extends Inimigo {
     super.display();
   }
 
-  void update() {
-    super.update();
-
-    setX(getX() + movementX);
-
-    println("X :" + getX() + "\nTargetX: " + target.x);
-  }
-
   void updateMovement() {
     if (!hasLostHead) {
-      setMovementY(SCENERY_MOVEMENT / 2);
-      movementX = 0;
+      setMotionY((getY() < 0) ? 4 : SCENERY_VELOCITY_Y / 2);
+      setMotionX(0);
     } else {
-      int distanceToTarget = (target.x > getX()) ? int(target.x) - getX() : getX() - int(target.x);
-      setMovementY(int(map(distanceToTarget, 0, 579, 3, 1)));
-      movementX = (getX() < target.x) ? 3 : -3;
+      setMotionY(SCENERY_VELOCITY_Y);
+      setMotionX((getX() < getTargetX()) ? 3 : -3);
     }
+    
+    println(getTargetX());
   }
 
   void updateTarget() {
-    if (getX() == target.x) {
+    if (getX() == getTargetX()) {
       hasTarget = false;
     }
 
     if (!hasTarget) {
       int randomX = 1;
       while (randomX % 3 != 0) {
-        randomX = (getX() > 410) ? int(random(120, 410)) : int(random(410, 700));
+        randomX = (getX() < 386) ? int(random(120, 386)) : int(random(386, 652));
         if (randomX % 3 == 0) {
-          target.x = randomX;
-          target.y = target.y + 30;
+          setTarget(new PVector(randomX, getTargetY() + 16));
           hasTarget = true;
         }
       }

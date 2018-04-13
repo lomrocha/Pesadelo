@@ -4,19 +4,18 @@ PImage[] bossSceneryImages =  new PImage [3];
 PImage door;
 PImage fence;
 
-final int SCENERY_MOVEMENT = 2;
+final int SCENERY_VELOCITY_Y = 2;
 
 int numberOfSceneries;
 
 public class Scenery {
   private PVector scenery = new PVector();
-  private int movementY;
+  private PVector motion = new PVector();
 
   private int sceneryIndex;
 
   public Scenery(int y, int sceneryIndex) {
-    this.scenery.x = 0;
-    this.scenery.y = y;
+    this.scenery = new PVector(0, y);
     this.sceneryIndex = sceneryIndex;
   }
 
@@ -27,14 +26,14 @@ public class Scenery {
   void update() {
     if (scenery.y > height) {
       scenery.y = -600;
-      numberOfSceneries++;
+      numberOfSceneries = (!movementTutorialScreenActive) ? numberOfSceneries + 1 : 0;
     }
 
-    scenery.y += movementY;
+    scenery.y += motion.y;
   }
 
   void updateMovement() {
-    movementY = (numberOfSceneries < 35) ? SCENERY_MOVEMENT : 0;
+    motion.y = (numberOfSceneries < 35) ? SCENERY_VELOCITY_Y : 0;
   }
 }
 

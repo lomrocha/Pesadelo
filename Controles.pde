@@ -1,6 +1,9 @@
+final int WALKING_SPRITE = 0;
+final int ATTACKING_SPRITE = 1;
+
 public class Controls {
-  private TutorialSprite walking = new TutorialSprite(250, 90, 0);
-  private TutorialSprite attacking = new TutorialSprite(540, 60, 1);
+  private TutorialSprite walking = new TutorialSprite(250, 90, WALKING_SPRITE);
+  private TutorialSprite attacking = new TutorialSprite(540, 60, ATTACKING_SPRITE);
 
   private HandsButton handButton = new HandsButton(menuThumbsUp, menuPointingBack);
 

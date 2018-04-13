@@ -7,16 +7,15 @@ final int[] valoresEsqueletoXPrimeiroMapaBoss = {200, 520};
 
 public class Esqueleto extends Inimigo {
   public Esqueleto(int x, int y) {
-    this.setX(x);
-    this.setY(y);
+    this.setSelf(new PVector(x, y));
 
-    setSpriteImage(skeleton);
-    setSpriteInterval(155);
-    setSpriteWidth(76);
-    setSpriteHeight(126);
+    this.setSpriteImage(skeleton);
+    this.setSpriteInterval(155);
+    this.setSpriteWidth(76);
+    this.setSpriteHeight(126);
 
-    setDamage(2);
-    setType(TypeOfEnemy.SKELETON.ordinal());
+    this.setDamage(2);
+    this.setType(TypeOfEnemy.SKELETON.ordinal());
   }
 
   void display() {
@@ -26,7 +25,7 @@ public class Esqueleto extends Inimigo {
   }
 
   void updateMovement() {
-    setMovementY(3);
+    setMotionY(3);
   }
   
   void updateTarget(){}

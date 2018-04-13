@@ -24,7 +24,7 @@ public class Pa extends Item {
     setSpriteInterval(75);
     setSpriteWidth(84);
     setSpriteHeight(91);
-    setMovementY(1);
+    setMotionY(1);
 
     setItemIndex(SHOVEL);
     setItemTotal(SHOVELTOTAL);
