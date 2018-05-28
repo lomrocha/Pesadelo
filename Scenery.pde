@@ -4,11 +4,11 @@ PImage[] bossSceneryImages =  new PImage [3];
 PImage door;
 PImage fence;
 
-final int SCENERY_VELOCITY_Y = 2;
+final int SCENERY_VELOCITY = 2;
 
 int numberOfSceneries;
 
-public class Scenery {
+private class Scenery {
   private PVector scenery = new PVector();
   private PVector motion = new PVector();
 
@@ -33,7 +33,7 @@ public class Scenery {
   }
 
   void updateMovement() {
-    motion.y = (numberOfSceneries < 35) ? SCENERY_VELOCITY_Y : 0;
+    motion.y = (numberOfSceneries < 35) ? SCENERY_VELOCITY : 0;
   }
 }
 

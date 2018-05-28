@@ -1,11 +1,12 @@
-public class Background extends MaisGeral {
+private class Background extends MaisGeral {
   Background() {
-    setX(0);
-    setY(0);
+    this.setSelf(new PVector(0, 0));
 
-    setSpriteImage(backgroundMenu);
-    setSpriteInterval(140);
-    setSpriteWidth(800);
-    setSpriteHeight(600);
+    this.setTypeOfObject(OBJECT_WITHOUT_SHADOW);
+
+    this.setSpriteImage(backgroundMenu);
+    this.setSpriteInterval(140);
+    this.setSpriteWidth(800);
+    this.setSpriteHeight(600);
   }
 }

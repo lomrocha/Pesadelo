@@ -291,7 +291,7 @@ void variablesPreLoad() {
   skeletonDogPositions();
   redSkeletonPositions();
 
-  gameState = GameState.MAINMENU.ordinal();
+  gameState = GameState.MAIN_MENU.getValue();
 
   totalInimigos = 0;
 
@@ -299,10 +299,8 @@ void variablesPreLoad() {
   playerY = 345; 
 
   playerCurrentHP = 15;
-  prayerHPMaximum = 15; 
+  playerHPMaximum = 15; 
   playerHPMinimum = 0;
-
-  foodIndex = 10;
 
   coveiroCurrentHP = 40;
   coveiroHitpointsMinimum = 0;
@@ -334,6 +332,4 @@ void variablesPreLoad() {
   jLeiteUsoItem = false;
 
   hitInimigosMostrando = true;
-
-  hasFoodIndexChanged = false;
 }

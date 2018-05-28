@@ -5,7 +5,7 @@ PImage[] bossBonesLayout = new PImage [4];
 final int bossHPBackgroundX = 0;
 final int bossHPBackgroundY = 0;
 
-final int bossHPBarx = 230;
+final int bossHPBarX = 230;
 final int bossHPBarY = 23;
 final int bossHPBarXStart = 230;
 

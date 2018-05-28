@@ -7,20 +7,16 @@ AudioPlayer temaIgreja;
 AudioPlayer temaFazenda;
 AudioPlayer temaCidade;
 
-enum GameState {
-  FIRSTMAP, SECONDMAP, THIRDMAP, FIRSTBOSS, SECONDBOSS, THIRDBOSS, MAINMENU, CONTROLSMENU, CREDITSMENU, WIN, GAMEOVER
-}    
-
 int gameState;
 int lastState;
 
-final int[][] ENEMY_POSITIONS_FIRST_MAP = new int [7][4];
+final int[][] ENEMY_POSITIONS_FIRST_MAP  = new int [7][4];
 final int[][] ENEMY_POSITIONS_SECOND_MAP = new int [7][4];
 final int[][] ENEMY_POSITIONS_THIRD_MAP  = new int [7][4];
 
-final int[] ENEMY_MAXIMUM_FIRST_MAP = {2, 2, 3, 4, 5, 0};
-final int[] ENEMY_MAXIMUM_SECOND_MAP = {};
-final int[] ENEMY_MAXIMUM_THIRD_MAP = {};
+final int[] ENEMIES_MAXIMUM_FIRST_MAP  = {2, 2, 3, 4, 5, 0};
+final int[] ENEMIES_MAXIMUM_SECOND_MAP = {};
+final int[] ENEMIES_MAXIMUM_THIRD_MAP  = {};
 
 final int[] X_VALUES_FIRST_BOSS = {50, 720};
 final int[] Y_VALUES_FIRST_BOSS = {380, 380};
@@ -36,10 +32,11 @@ boolean ativaBarraEspaco;
 boolean isMusicActive = true;
 boolean isSoundActive = true;
 
-Handler handler;
 MainMenu mm;
 Controls ctrl;
 Credits cre;
+
+FirstMap firstMap;
 
 HitpointsLayout playerHP;
 HitpointsLayout coveiroHP;
@@ -61,8 +58,6 @@ void setup() {
 
   variablesPreLoad();
 
-  handler = new Handler();
-
   playerHP = new HitpointsLayout(0);
   coveiroHP = new HitpointsLayout(1);
   fazendeiroHP = new HitpointsLayout(2);
@@ -74,15 +69,15 @@ void setup() {
   coveiro = new Coveiro();
   fazendeiro = new Fazendeiro();
   padre = new Padre();
-  
-  firstMapEnemiesSpawnManager = new FirstMapEnemiesSpawnManager(ENEMY_MAXIMUM_FIRST_MAP);
+
+  firstMapEnemiesSpawnManager = new FirstMapEnemiesSpawnManager(ENEMIES_MAXIMUM_FIRST_MAP);
 }
 
 void draw() {
-  if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal()) {
+  if (gameState >= GameState.FIRST_MAP.getValue() && gameState <= GameState.THIRD_MAP.getValue()) {
     jogando();
     if (!movementTutorialScreenActive) {
-      noCursor();
+      //noCursor();
       //weaponTutorialScreen();
     }
   } else {
@@ -95,7 +90,7 @@ void keyPressed() {
   if (key == ESC) {
     key = 0;
     variablesPreLoad();
-    gameState = GameState.MAINMENU.ordinal();
+    gameState = GameState.MAIN_MENU.getValue();
     if (temaBoss.isPlaying()) {
       temaBoss.pause();
     }
@@ -111,45 +106,41 @@ void keyPressed() {
   }
 
   if (key == 'i') {
-    if (!imortalidade) {
-      imortalidade = true;
-    } else {
-      imortalidade = false;
-    }
+    imortalidade = !imortalidade;
   }
 
   if (key == ENTER) {
-    if (gameState == GameState.FIRSTMAP.ordinal()) {
+    if (gameState == GameState.FIRST_MAP.getValue()) {
       if (movementTutorialScreenActive) {
         movementTutorialScreenActive = false;
       }
     }
-    if (gameState == GameState.FIRSTMAP.ordinal()) {
+    if (gameState == GameState.FIRST_MAP.getValue()) {
       if (weaponTutorialScreenActive) {
         loop();
       }
     }
   }
 
-  if (gameState == GameState.MAINMENU.ordinal()) {
+  if (gameState == GameState.MAIN_MENU.getValue()) {
     switch(key) {
     case '1':
-      gameState = GameState.FIRSTMAP.ordinal();
+      gameState = GameState.FIRST_MAP.getValue();
       break;
     case '2':
-      gameState = GameState.SECONDMAP.ordinal();
+      gameState = GameState.SECOND_MAP.getValue();
       break;
     case '3':
-      gameState = GameState.THIRDMAP.ordinal();
+      gameState = GameState.THIRD_MAP.getValue();
       break;
     case '4':
-      gameState = GameState.FIRSTBOSS.ordinal();
+      gameState = GameState.FIRST_BOSS.getValue();
       break;
     case '5':
-      gameState = GameState.SECONDBOSS.ordinal();
+      gameState = GameState.SECOND_BOSS.getValue();
       break;
     case '6':
-      gameState = GameState.THIRDBOSS.ordinal();
+      gameState = GameState.THIRD_BOSS.getValue();
       break;
     }
   }
@@ -167,7 +158,7 @@ void keyPressed() {
     jLeiteBaixo = true;
   }
 
-  if (gameState != GameState.GAMEOVER.ordinal()) {
+  if (gameState != GameState.GAMEOVER.getValue()) {
     if (key == ' ' && !ativaBarraEspaco && !jLeiteUsoItemConfirma && !finalMapa) {
       if (item != 0) {
         jLeiteUsoItem = true;
@@ -176,8 +167,8 @@ void keyPressed() {
         ativaBarraEspaco = true;
         jLeiteUsoItemConfirma = true;
         oneWeapon = false;
-        if (weaponTotal == 1) {
-          generateItem(15000);
+        if (firstMap.weaponSpawnManager.getWeaponTotal() == 1) {
+          firstMap.regularMapItemSpawnManager.setSpawnVariables(7000);
         }
       }
     }
@@ -189,15 +180,15 @@ void keyPressed() {
   if (key == 'p' || key == 'P') {
     if (looping) {
       noLoop();
-      timeRemainingFood = (timeToGenerateFood + intervalToGenerateFood) - millis();
+      timeRemainingFood = (firstMap.regularMapFoodSpawnManager.getTimeToGenerateFood() + firstMap.regularMapFoodSpawnManager.getIntervalToGenerateFood()) - millis();
       timeRemainingItem = (timeToGenerateItem + intervalToGenerateItem) - millis();
     } else {
       loop();
-      if (comidas.size() == 0) {
-        generateFood(timeRemainingFood);
+      if (firstMap.regularMapFoodSpawnManager.foods.size() == 0) {
+        firstMap.regularMapFoodSpawnManager.setSpawnVariables(timeRemainingFood);
       }
-      if (itens.size() == 0 && item == 0) {
-        generateItem(timeRemainingItem);
+      if (firstMap.regularMapItemSpawnManager.items.size() == 0 && item == 0) {
+        firstMap.regularMapItemSpawnManager.setSpawnVariables(timeRemainingItem);
       }
     }
   }
@@ -226,7 +217,7 @@ void keyReleased() {
 }
 
 void mouseClicked() {
-  if (gameState == GameState.FIRSTMAP.ordinal()) {
+  if (gameState == GameState.FIRST_MAP.getValue()) {
     if (movementTutorialScreenActive) {
       if (mouseX > 584 && mouseX < 620 && mouseY > 139 && mouseY < 175) {
         movementTutorialScreenActive = false;

@@ -1,57 +1,58 @@
 PImage skeletonCrow;
 PImage skeletonCrowShadow;
 
-class Corvo extends Inimigo {
-  private PVector target = new PVector(playerX, playerY);
+final int SKELETON_CROW = 5;
 
+private class Corvo extends Enemy {
   private int newTargetInterval;
 
   private boolean hasNewTarget;
 
-  Corvo() {
-    this.setX(360);
-    this.setY(int(random(-300, -1000)));
-
-    setValues();
-  }
-
   Corvo(int x, int y) {
-    this.setX(x);
-    this.setY(y);
-
-    setValues();
+    setValues(x, y);
   }
 
-  private void setValues() {
+  Corvo() {
+    setValues(360, int(random(-300, -1000)));
+  }
+
+  private void setValues(int x, int y) {
+    this.setSelf(new PVector(x, y));
+    this.setTarget(new PVector(playerX, playerY));
+    
+    this.setTypeOfObject(OBJECT_WITH_SHADOW);
+
+    this.setShadowImage(skeletonCrowShadow);
+    this.setShadowOffset(new PVector(24, 86));
+
     this.setSpriteImage(skeletonCrow);
     this.setSpriteInterval(75);
     this.setSpriteWidth(121);
     this.setSpriteHeight(86);
-    
+
     this.setDamage(3);
-    this.setType(TypeOfEnemy.SKELETON_CROW.ordinal());
+    this.setType(SKELETON_CROW);
+    this.setBools(new boolean[] {hasNewTarget});
   }
 
-  void display() {
-    super.display();
-
-    image(skeletonCrowShadow, getX() + 24, getY() + 86);
-  } 
+  void updateBools() {
+    this.setBools(new boolean[] {hasNewTarget});
+  }
 
   void updateMovement() {
     setMotionY(3);
-    if (getX() != target.x) {
-      setMotionX((getX() < target.x) ? 3 : -3);
+    if (getX() != getTargetX()) {
+      setMotionX((getX() < getTargetX()) ? 3 : -3);
       return;
     }
 
-     setMotionX(0);
+    setMotionX(0);
   }
 
   void updateTarget() {
-    if (getY() > 0) {
+    if (isOnScreen()) {
       if (!hasNewTarget) {
-        target.x = playerX;
+        setTargetX(playerX);
         newTargetInterval = millis();
         hasNewTarget = true;
       }
@@ -77,7 +78,7 @@ int indexRandomCorvoXMapaBoss;
 
 void corvo() {
   if (indexInimigos == 3) {
-    if (gameState == GameState.THIRDBOSS.ordinal()) {
+    if (gameState == GameState.THIRD_BOSS.getValue()) {
       if (corvos.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
         indexRandomCorvoXMapaBoss = int(random(0, valoresInimigosXTerceiroMapaBoss.length));
         corvos.add(new Corvo(valoresInimigosXTerceiroMapaBoss[indexRandomCorvoXMapaBoss], 0));
@@ -85,18 +86,18 @@ void corvo() {
     }
 
     if (!movementTutorialScreenActive) {
-      if (gameState == GameState.SECONDMAP.ordinal() && corvos.size() < 1) {
+      if (gameState == GameState.SECOND_MAP.getValue() && corvos.size() < 1) {
         corvos.add(new Corvo());
       }
 
-      if (gameState == GameState.THIRDMAP.ordinal() && corvos.size() < 1) {
+      if (gameState == GameState.THIRD_MAP.getValue() && corvos.size() < 1) {
         corvos.add(new Corvo());
       }
     }
   }
 
   if (corvos.size() > 0) {
-    computeEnemy(corvos);
+    computeEnemy(corvos, firstMapEnemiesSpawnManager);
     deleteEnemy(corvos);
   }
 }

@@ -1,22 +1,12 @@
-public class MenuButton extends Button {
+private class MenuButton extends Button {
   private PImage buttonOther;
 
-  private int offsetX;
+  private int offset;
   private int ordinal;
 
-  public PImage getButtonOther() {
-    return buttonOther;
-  }
-  protected void setButtonOther(PImage buttonOther) {
-    this.buttonOther = buttonOther;
-  }
-
-  protected void setOrdinal(int ordinal) {
-    this.ordinal = ordinal;
-  }
-
-  protected void setOffsetX(int offsetX) {
-    this.offsetX = offsetX;
+  // OFFSET
+  protected void setOffset(int offset) {
+    this.offset = offset;
   }
 
   MenuButton(PImage buttonPlain, PImage buttonOther, int y, int firstBoundaryY, int secondBoundaryY, int ordinal) {
@@ -26,7 +16,7 @@ public class MenuButton extends Button {
     this.setFirstBoundary(new PVector(300, firstBoundaryY));
     this.setSecondBoundary(new PVector(500, secondBoundaryY));
     this.ordinal = ordinal;
-    this.offsetX = 29;
+    this.offset = 29;
   }
 
   void display() {
@@ -36,7 +26,7 @@ public class MenuButton extends Button {
       return;
     }
 
-    image(getButtonPlain(), getButton().x + offsetX, getButton().y);
+    image(getButtonPlain(), getButton().x + offset, getButton().y);
   }
 
   void setState() {

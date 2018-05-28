@@ -25,7 +25,7 @@ PImage telaGameOver;
 
 void menu() {
   winLose();
-  if (gameState == GameState.MAINMENU.ordinal()) {
+  if (gameState == GameState.MAIN_MENU.getValue()) {
     if (mm == null) {
       mm = new MainMenu();
     } else {
@@ -35,7 +35,7 @@ void menu() {
   }
 
   // Botões.
-  if (gameState == GameState.CONTROLSMENU.ordinal()) {
+  if (gameState == GameState.CONTROLS_MENU.getValue()) {
     if (ctrl == null) {
       ctrl = new Controls();
     } else {
@@ -47,7 +47,7 @@ void menu() {
   }
 
   // Créditos
-  if (gameState == GameState.CREDITSMENU.ordinal()) {
+  if (gameState == GameState.CREDITS_MENU.getValue()) {
     if (cre == null) {
       cre = new Credits();
     } else {
@@ -57,7 +57,7 @@ void menu() {
   }
 
   // Bosses
-  if (gameState == GameState.FIRSTBOSS.ordinal()) {
+  if (gameState == GameState.FIRST_BOSS.getValue()) {
     if (isMusicActive) {
       temaBoss.play();
     }
@@ -67,12 +67,11 @@ void menu() {
     armas();
     jLeite();
     playerHitpoints();
-    foodAll();
     ib.updateItemImage();
     ib.display();
   }
 
-  if (gameState == GameState.SECONDBOSS.ordinal()) {
+  if (gameState == GameState.SECOND_BOSS.getValue()) {
     if (isMusicActive) {
       temaBoss.play();
     }
@@ -81,12 +80,11 @@ void menu() {
     armas(); 
     jLeite();
     playerHitpoints();
-    foodAll();
     ib.updateItemImage();
     ib.display();
   }
 
-  if (gameState == GameState.THIRDBOSS.ordinal()) {
+  if (gameState == GameState.THIRD_BOSS.getValue()) {
     if (isMusicActive) {
       temaBoss.play();
     }
@@ -96,12 +94,11 @@ void menu() {
     armas();
     jLeite();
     playerHitpoints();
-    foodAll();
     ib.updateItemImage();
     ib.display();
   }
 
-  if (gameState >= GameState.WIN.ordinal() && gameState <= GameState.GAMEOVER.ordinal()) {
+  if (gameState >= GameState.WIN.getValue() && gameState <= GameState.GAMEOVER.getValue()) {
     menuHand();
   }
 }
@@ -147,7 +144,7 @@ void menuHand() {
   if (mouseX > 20 && mouseX < 125 && mouseY > 520 && mouseY < 573) {
     image(menuThumbsUp, 20, 520);
     if (mousePressed) {
-      gameState = GameState.MAINMENU.ordinal();
+      gameState = GameState.MAIN_MENU.getValue();
     }
   } else {
     image(menuPointingBack, 20, 520);

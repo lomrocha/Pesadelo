@@ -4,29 +4,13 @@ PImage[] itemNumbers = new PImage [15];
 PImage shovelBox;
 PImage whipBox;
 
-public class FirstMap {
-  Scenery firstScenery;
-  Scenery secondScenery;
+//private class TutorialScreen {
+//}
 
-  TransitionGate door;
+//private class Player {
+//}
 
-  HUD hud;
-
-  Player player;
-
-  FirstMapEnemiesSpawnManager firstMapEnemiesSpawnManager;
-
-  TutorialScreen movement;
-  TutorialScreen attack;
-}
-
-public class TutorialScreen {
-}
-
-public class Player {
-}
-
-public class ItemBox {
+private class ItemBox {
   private PImage itemImage;
 
   void display() {
@@ -51,34 +35,7 @@ public class ItemBox {
   }
 }
 
-public class HUD {
-  private HitpointsLayout p;
-
-  void display() {
-    switch(gameState) {
-    case 3:
-      coveiroHP.update();
-      coveiroHP.display();
-      break;
-    case 4:
-      fazendeiroHP.update();
-      fazendeiroHP.display();
-      break;
-    case 5:
-      p = (padre.padreMudouForma) ? madPadreHP : padreHP;
-      p.update();
-      p.display();
-      break;
-    }
-
-    playerHP.update();
-    playerHP.display();
-    ib.updateItemImage();
-    ib.display();
-  }
-}
-
-public class HitpointsLayout {
+private class HitpointsLayout {
   private PImage layoutBackground;
   private PImage hitpointsLayout;
   private PImage hitpointsBar;
@@ -150,7 +107,7 @@ public class HitpointsLayout {
 
     this.background = new PVector(bossHPBackgroundX, bossHPBackgroundY);
     this.layout = new PVector(bossHPLayoutX, bossHPLayoutY);
-    this.bar = new PVector(bossHPBarx, bossHPBarY);
+    this.bar = new PVector(bossHPBarX, bossHPBarY);
 
     this.barXStart = bossHPBarXStart;
     this.interval = bossHPInterval;

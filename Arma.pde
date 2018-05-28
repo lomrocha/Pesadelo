@@ -18,16 +18,6 @@ void armas() {
     itemTotal = 0;
   }
 
-  if (itemTotal == 0 && hasItemIndexChanged && millis() > timeToGenerateItem + intervalToGenerateItem && itens.size() == 0) {
-    if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal()) {
-      addItem();
-    } else if (gameState >= GameState.FIRSTBOSS.ordinal() && gameState <= GameState.THIRDBOSS.ordinal()) {
-      addItemBoss();
-    }
-  }
-
-  generateItemIndex();
-  item();
   if (armas.size() > 0) {
     arma();
   }
@@ -37,18 +27,9 @@ void armas() {
   }
 }
 
-void generateItemIndex() {
-  if (!movementTutorialScreenActive) {
-    if (!hasItemIndexChanged) {
-      itemIndex = int(random(0, 10));
-      hasItemIndexChanged = true;
-    }
-  }
-}
-
 ArrayList<Arma> armas = new ArrayList<Arma>();
 
-public abstract class Arma extends MaisGeral {
+abstract private class Arma extends MaisGeral {
   private int firstCollisionX;
   private int secondCollisionX;
   private int firstCollisionY;
@@ -57,41 +38,35 @@ public abstract class Arma extends MaisGeral {
   private boolean deleteWeapon;
   private boolean damageBoss;
 
-  public int getFirstCollisionX() {
-    return firstCollisionX;
-  }
+  // FIRST_COLLISION_X
   protected void setFirstCollisionX(int firstCollisionX) {
     this.firstCollisionX = firstCollisionX;
   }
 
-  public int getSecondCollisionX() {
-    return secondCollisionX;
-  }
+  // SECOND_COLLISION_X
   protected void setSecondCollisionX(int secondCollisionX) {
     this.secondCollisionX = secondCollisionX;
   }
 
-  public int getFirstCollisionY() {
-    return firstCollisionY;
-  }
+  // FIRST_COLLISION_Y
   protected void setFirstCollisionY(int firstCollisionY) {
     this.firstCollisionY = firstCollisionY;
   }
 
-  public int getSecondCollisionY() {
-    return secondCollisionY;
-  }
+  // SECOND_COLLISION_Y
   protected void setSecondCollisionY(int secondCollisionY) {
     this.secondCollisionY = secondCollisionY;
   }
-
+  
+  // DELETE_WEAPON
   public boolean getDeleteWeapon() {
     return deleteWeapon;
   } 
   protected void setDeleteWeapon(boolean deleteWeapon) {
     this.deleteWeapon = deleteWeapon;
   }
-
+  
+  // DAMAGE_BOSS
   public boolean getDamageBoss() {
     return damageBoss;
   }
@@ -109,15 +84,6 @@ public abstract class Arma extends MaisGeral {
 
   boolean hasHit(Geral g) {
     if (firstCollisionX > g.getX() && secondCollisionX < g.getX() + g.getSpriteWidth() && firstCollisionY > g.getY() && secondCollisionY < g.getY() + g.getSpriteHeight()) {
-      hitInimigosMostrando = true;
-      return true;
-    }
-
-    return false;
-  }
-
-  boolean hasHitCrow(Corvo c) {
-    if (firstCollisionX > c.getX() + 45 && secondCollisionX < c.getX() + 75 && firstCollisionY > c.getY() && secondCollisionY < c.getY() + 86) {
       hitInimigosMostrando = true;
       return true;
     }
@@ -188,7 +154,7 @@ void arma() {
     if (a.getDeleteWeapon()) {
       armas.remove(a);
     }
-    if (gameState == GameState.FIRSTBOSS.ordinal()) {
+    if (gameState == GameState.FIRST_BOSS.getValue()) {
       if (a.hasHitCoveiro() && !a.getDamageBoss()) {
         if (isSoundActive) {
           indexRandomSomCoveiroTomandoDano = int(random(0, sonsCoveiroTomandoDano.length));
@@ -199,7 +165,7 @@ void arma() {
         a.setDamageBoss(true);
       }
     }
-    if (gameState == GameState.SECONDBOSS.ordinal()) {
+    if (gameState == GameState.SECOND_BOSS.getValue()) {
       if (a.hasHitFazendeiro() && !a.getDamageBoss()) {
         if (isSoundActive) {
           indexRandomSomFazendeiroTomandoDano = int(random(0, sonsFazendeiroTomandoDano.length));
@@ -210,7 +176,7 @@ void arma() {
         a.setDamageBoss(true);
       }
     }
-    if (gameState == GameState.THIRDBOSS.ordinal()) {
+    if (gameState == GameState.THIRD_BOSS.getValue()) {
       if (a.hasHitPadre() && !a.getDamageBoss()) {
         if (padreCurrentHP > 0) {
           if (isSoundActive) {

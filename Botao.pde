@@ -1,6 +1,6 @@
 boolean hasClickedOnce;
 
-abstract class Button {
+abstract private class Button {
   private PImage buttonPlain;
 
   private PVector button = new PVector();
@@ -8,6 +8,7 @@ abstract class Button {
   private PVector firstBoundary = new PVector();
   private PVector secondBoundary = new PVector();
 
+  // BUTTON_PLAIN
   public PImage getButtonPlain() {
     return this.buttonPlain;
   }
@@ -15,13 +16,14 @@ abstract class Button {
     this.buttonPlain = buttonPlain;
   }
 
+  // BUTTON
   public PVector getButton() {
     return this.button;
   }
   public void setButton(PVector button) {
     this.button = button;
   }
-
+  
   public int getButtonX() {
     return int(this.button.x);
   }
@@ -32,50 +34,16 @@ abstract class Button {
   public int getButtonY() {
     return int(this.button.y);
   }
-  public void setButtonY(int y) {
-    this.button.y = y;
-  }
+  
 
-  public PVector getFirstBoundary(){
-    return this.firstBoundary;
-  }
+  // FIRST_BOUNDARY
   public void setFirstBoundary(PVector firstBoundary){
     this.firstBoundary = firstBoundary;
   }
   
-  public int getFirstBoundaryX() {
-    return int(this.firstBoundary.x);
-  }
-  protected void setFirstBoundaryX(int x) {
-    this.firstBoundary.x = x;
-  }
-  
-  public int getFirstBoundaryY() {
-    return int(this.firstBoundary.y);
-  }
-  protected void setFirstBoundaryY(int y) {
-    this.firstBoundary.y = y;
-  }
-
-  public PVector getSecondBoundary(){
-    return this.secondBoundary;
-  }
+  // SECOND_BOUNDARY
   public void setSecondBoundary(PVector SecondBoundary){
     this.secondBoundary = SecondBoundary;
-  }
-  
-  public int getSecondBoundaryX() {
-    return int(this.secondBoundary.x);
-  }
-  protected void setSecondXBoundary(int x) {
-    this.secondBoundary.x = x;
-  }
-  
-  public int getSecondBoundaryY() {
-    return int(this.secondBoundary.y);
-  }
-  protected void setSecondBoundaryY(int y) {
-    this.secondBoundary.y = y;
   }
 
   abstract void display();

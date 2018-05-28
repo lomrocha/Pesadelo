@@ -45,7 +45,7 @@ int tempoBossMorreu;
 boolean ataqueMimosaAcontecendo;
 boolean soltouPneu, ataquePneuAcontecendo, fazendeiroTomouDanoPneu;
 
-public class Fazendeiro {
+private class Fazendeiro {
   private PImage spriteFazendeiroIdle;
   private PImage spriteFazendeiroMovimento;
   private PImage spriteFazendeiroFoice;
@@ -430,7 +430,7 @@ AudioPlayer somMimosaErra;
 
 PImage mimosa, mimosaDireita, mimosaEsquerda;
 
-public class Mimosa {
+private class Mimosa {
   private PImage spriteMimosa;
 
   private int mimosaX = fazendeiroX + 66;
@@ -560,7 +560,7 @@ PImage pneuEsquerdaDesce, pneuEsquerdaSobe, pneuDireitaDesce, pneuDireitaSobe;
 
 boolean pneuRolandoPrimeiraVez;
 
-public class Pneu {
+private class Pneu {
   private PImage spritePneu;
 
   private int pneuX = fazendeiroX - 30;

@@ -1,53 +1,25 @@
-class Projectile extends Inimigo {
+private class Projectile extends Enemy {
   private PVector start = new PVector();
   private PVector velocity = new PVector();
 
+  private boolean hasNewTarget;
+
   // START
-  public PVector getStart() {
-    return this.start;
-  }
   public void setStart(PVector start) {
     this.start = start;
   }
 
-  public int getStartX() {
-    return int(this.start.x);
-  }
-  public void setStartX(int x) {
-    this.start.x = x;
-  }
-
-  public int getStartY() {
-    return int(this.start.y);
-  }
-  public void setStartY(int y) {
-    this.start.y = y;
-  }
-  
   // VELOCITY
-  public PVector getVelocity() {
-    return this.velocity;
-  }
   public void setVelocity(PVector velocity) {
     this.velocity = velocity;
   }
 
-  public int getVelocityX() {
-    return int(this.velocity.x);
-  }
-  public void setVelocityX(int x) {
-    this.velocity.x = x;
-  }
-
-  public int getVelocityY() {
-    return int(this.velocity.y);
-  }
-  public void setVelocityY(int y) {
-    this.velocity.y = y;
-  }
-
   void display() {
     image(getSpriteImage(), getX(), getY());
+  }
+
+  void updateBools() {
+    this.setBools(new boolean[] {hasNewTarget});
   }
 
   void updateMovement() {
@@ -62,7 +34,10 @@ class Projectile extends Inimigo {
   }
 
   void updateTarget() {
-    int distance = (getTargetX() > start.x) ? getTargetX() - int(start.x) : int(start.x) - getTargetX();
-    velocity.x = int(map(distance, 0, 579, 1, 9));
+    int distanceX = (getTargetX() > start.x) ? getTargetX() - (int)start.x : (int)start.x - getTargetX();
+    velocity.x = (int)map(distanceX, 0, 500, 1, 12);
+    
+    int distanceY = getTargetY() - (int)start.y;
+    velocity.y = (int)map(distanceY, 75, 474, 4, 12);
   }
 }

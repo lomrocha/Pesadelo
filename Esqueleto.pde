@@ -5,9 +5,16 @@ final int SKELETON = 1;
 
 final int[] valoresEsqueletoXPrimeiroMapaBoss = {200, 520};
 
-public class Esqueleto extends Inimigo {
-  public Esqueleto(int x, int y) {
+private class Esqueleto extends Enemy {
+  private boolean hasNewTarget;
+  
+  Esqueleto(int x, int y) {
     this.setSelf(new PVector(x, y));
+    
+    this.setTypeOfObject(OBJECT_WITH_SHADOW);
+    
+    this.setShadowImage(skeletonShadow);
+    this.setShadowOffset(new PVector(16, 114));
 
     this.setSpriteImage(skeleton);
     this.setSpriteInterval(155);
@@ -15,20 +22,20 @@ public class Esqueleto extends Inimigo {
     this.setSpriteHeight(126);
 
     this.setDamage(2);
-    this.setType(TypeOfEnemy.SKELETON.ordinal());
+    this.setType(SKELETON);
+    this.setBools(new boolean[] {hasNewTarget});
   }
-
-  void display() {
-    image (skeletonShadow, getX() + 16, getY() + 114);
-
-    super.display();
+  
+  void updateBools() {
+    this.setBools(new boolean[] {hasNewTarget});
   }
 
   void updateMovement() {
     setMotionY(3);
   }
-  
-  void updateTarget(){}
+
+  void updateTarget() {
+  }
 }
 
 int esqueletoC, esqueletoL;
@@ -36,7 +43,7 @@ int indexRandomEsqueletoXMapaBoss;
 
 void esqueleto() {
   //if (indexInimigos == 0) {
-  //  if (gameState == GameState.FIRSTBOSS.ordinal()) {
+  //  if (gameState == GameState.FIRSTBOSS.getValue()) {
   //    if (esqueletos.size() == 0 && !coveiro.coveiroMorreu && !coveiroTomouDanoAgua) {
   //      for (int i = 0; i < 2; i = i + 1) {
   //        indexRandomEsqueletoXMapaBoss = int(random(0, 2));
@@ -45,7 +52,7 @@ void esqueleto() {
   //    }
   //  }
 
-  //  if (gameState == GameState.THIRDBOSS.ordinal()) { 
+  //  if (gameState == GameState.THIRDBOSS.getValue()) { 
   //    if (esqueletos.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
   //      indexRandomEsqueletoXMapaBoss = int(random(0, valoresInimigosXTerceiroMapaBoss.length));
   //      esqueletos.add(new Esqueleto(valoresInimigosXTerceiroMapaBoss[indexRandomEsqueletoXMapaBoss], 0));
@@ -54,7 +61,7 @@ void esqueleto() {
   //  }
 
   //if (!movementTutorialScreenActive) {
-  //  /*if (gameState == GameState.FIRSTMAP.ordinal() && esqueletos.size() < 2 && totalInimigos < 6) {
+  //  /*if (gameState == GameState.FIRSTMAP.getValue() && esqueletos.size() < 2 && totalInimigos < 6) {
   //   esqueletoC = int(random(0, 7));
   //   esqueletoL = int(random(0, 4));
 
@@ -64,7 +71,7 @@ void esqueleto() {
   //   }
   //   }*/
 
-  //  if (gameState == GameState.SECONDMAP.ordinal() && esqueletos.size() < 2 && totalInimigos < 6) {
+  //  if (gameState == GameState.SECONDMAP.getValue() && esqueletos.size() < 2 && totalInimigos < 6) {
   //    esqueletoC = int(random(0, 7));
   //    esqueletoL = int(random(0, 4));
 
@@ -74,7 +81,7 @@ void esqueleto() {
   //    }
   //  }
 
-  //  if (gameState == GameState.THIRDMAP.ordinal() && esqueletos.size() < 2 && totalInimigos < 6) {
+  //  if (gameState == GameState.THIRDMAP.getValue() && esqueletos.size() < 2 && totalInimigos < 6) {
   //    esqueletoC = int(random(0, 7));
   //    esqueletoL = int(random(0, 4));
 
@@ -86,7 +93,7 @@ void esqueleto() {
   //}
 
   if (firstMapEnemiesSpawnManager.skeletons.size() > 0) {
-    computeEnemy(firstMapEnemiesSpawnManager.skeletons);
+    computeEnemy(firstMapEnemiesSpawnManager.skeletons, firstMapEnemiesSpawnManager);
     deleteEnemy(firstMapEnemiesSpawnManager.skeletons);
   }
 }

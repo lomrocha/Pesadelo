@@ -1,22 +1,22 @@
 PImage backgroundMenu; 
 PImage pesadeloLogo;
 
-public class MainMenu {
+private class MainMenu {
   private Background background = new Background();
 
-  private MenuButton play = new MenuButton(playButton, playHands, 300, 300, 377, GameState.FIRSTMAP.ordinal());
-  private MenuButton controls = new MenuButton (controlsButton, controlsHands, 400, 400, 477, GameState.CONTROLSMENU.ordinal());
-  private MenuButton credits = new MenuButton (creditsButton, creditsHands, 500, 500, 577, GameState.CREDITSMENU.ordinal());
+  private MenuButton play = new MenuButton(playButton, playHands, 300, 300, 377, GameState.FIRST_MAP.getValue());
+  private MenuButton controls = new MenuButton (controlsButton, controlsHands, 400, 400, 477, GameState.CONTROLS_MENU.getValue());
+  private MenuButton credits = new MenuButton (creditsButton, creditsHands, 500, 500, 577, GameState.CREDITS_MENU.getValue());
 
   private AudioButton sound = new AudioButton(soundButton, 660, 660, 720, isSoundActive, SOUND);
   private AudioButton music = new AudioButton(musicButton, 730, 730, 790, isMusicActive, MUSIC);
 
-  private Button[] buttons = new Button [5];
+  private Button[] buttons = new Button[5];
 
   MainMenu() {
     addButtons();
   }
-
+  
   void addButtons() {
     buttons[0] = play;
     buttons[1] = controls;

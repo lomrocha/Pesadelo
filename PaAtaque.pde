@@ -1,22 +1,23 @@
 PImage shovelAttack;
 
-public class PaAtaque extends Arma {
-  public PaAtaque() {
-    setX(playerX - 70);
-    setY(playerY - 44);
+private class PaAtaque extends Arma {
+  PaAtaque() {
+    this.setSelf(new PVector(playerX - 70, playerY - 44));
 
-    setSpriteImage(shovelAttack);
-    setSpriteInterval(90);
-    setSpriteWidth(234);
-    setSpriteHeight(173);
+    this.setTypeOfObject(OBJECT_WITHOUT_SHADOW);
 
-    setDeleteWeapon(false);
-    setDamageBoss(false);
+    this.setSpriteImage(shovelAttack);
+    this.setSpriteInterval(90);
+    this.setSpriteWidth(234);
+    this.setSpriteHeight(173);
 
-    setFirstCollisionX(playerX + 160);
-    setSecondCollisionX(playerX - 70);
-    setFirstCollisionY(playerY + 56);
-    setSecondCollisionY(playerY - 44);
+    this.setDeleteWeapon(false);
+    this.setDamageBoss(false);
+
+    this.setFirstCollisionX(playerX + 160);
+    this.setSecondCollisionX(playerX - 70);
+    this.setFirstCollisionY(playerY + 56);
+    this.setSecondCollisionY(playerY - 44);
   }
 
   void update() {

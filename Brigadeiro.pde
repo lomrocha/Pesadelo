@@ -1,16 +1,21 @@
 PImage brigadeiro;
 
-public class Brigadeiro extends Comida {
-  public Brigadeiro(int x, int y) {
+private class Brigadeiro extends Comida {
+  Brigadeiro(int x, int y) {
     setValues(x, y);
   }
 
-  public Brigadeiro() {
+  Brigadeiro() {
     setValues(int(random(100, 670)), -50);
   }
 
-  void setValues(int x, int y) {
+  private void setValues(int x, int y) {
     this.setSelf(new PVector(x, y));
+    
+    this.setTypeOfObject(OBJECT_WITH_SHADOW);
+    
+    this.setShadowImage(foodShadow);
+    this.setShadowOffset(new PVector(0, 20));
     
     this.setSpriteImage(brigadeiro);
     this.setSpriteInterval(75);
@@ -20,11 +25,5 @@ public class Brigadeiro extends Comida {
 
     this.setAmountHeal(3);
     this.setAmountRecovered(0);
-  }
-
-  void display() {
-    image (foodShadow, getX(), getY() + 20);
-
-    super.display();
   }
 }

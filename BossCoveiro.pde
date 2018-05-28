@@ -41,7 +41,7 @@ int tempoCoveiroTomouDanoAgua, tempoCoveiroDelayTomouDanoAgua;
 boolean abriuFenda, ataqueFendaAcontecendo;
 boolean ataqueLapideAcontecendo, coveiroTomouDanoAgua, coveiroDelayTomouDanoAgua;
 
-public class Coveiro {
+private class Coveiro {
   private PImage spriteCoveiroIdle;
   private PImage spriteCoveiroMovimento;
   private PImage spriteCoveiroPa;
@@ -404,7 +404,7 @@ PImage fendaAbrindo;
 PImage fendaAberta;
 PImage fendaFechando;
 
-public class Fenda {
+private class Fenda {
   private PImage spriteFendaAbrindo;
   private PImage spriteFendaFechando;
 
@@ -506,7 +506,7 @@ int indexLapideAtaque;
 
 boolean lapideAtaqueSumiu = true;
 
-public class LapideAtaque {
+private class LapideAtaque {
   private PImage spriteLapideAtaque;
 
   private int lapideX = coveiroX;
@@ -585,7 +585,7 @@ void lapideAtaque() {
 
 PImage[] imagensLapidesCenario = new PImage [3];
 
-public class LapideCenario {
+private class LapideCenario {
   private PImage spriteLapideCenario;
 
   private int lapideX;
@@ -659,7 +659,7 @@ void lapideCenario() {
 
 PImage aguaPoca;
 
-public class AguaPocaCenario {
+private class AguaPocaCenario {
   private PImage spriteAguaPoca;
 
   private float aguaPocaX;
@@ -706,7 +706,7 @@ void aguaPocaCenario() {
 PImage[] imagensPocaCenarioCheia = new PImage [3];
 PImage[] imagensPocaCenarioVazia = new PImage [3];
 
-public class PocaCenario {
+private class PocaCenario {
   private float pocaCenarioX;
   private float pocaCenarioY;
 

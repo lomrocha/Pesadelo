@@ -1,7 +1,8 @@
-public class TutorialSprite extends MaisGeral {
+private class TutorialSprite extends MaisGeral {
   TutorialSprite(int x, int y, int index) {
-    this.setX(x);
-    this.setY(y);
+    this.setSelf(new PVector(x, y));
+    
+    this.setTypeOfObject(OBJECT_WITHOUT_SHADOW);
 
     switch (index) {
     case WALKING_SPRITE:

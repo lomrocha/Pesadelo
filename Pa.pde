@@ -4,35 +4,30 @@ PImage shovelShadow;
 final int SHOVEL = 1;
 final int SHOVELTOTAL = 5;
 
-public class Pa extends Item {
-  public Pa() {
-    setX(int(random(100, 616)));
-    setY(int(random(-300, -1000)));
-
-    setValues();
+private class Pa extends Item {
+  Pa(int x, int y) {
+    setValues(x, y, 1);
   }
 
-  public Pa(int x, int y) {
-    this.setX(x);
-    this.setY(y);
-
-    setValues();
+  Pa() {
+    setValues(int(random(100, 610)), -50, 0);
   }
 
-  void setValues() {
-    setSpriteImage(shovel);
-    setSpriteInterval(75);
-    setSpriteWidth(84);
-    setSpriteHeight(91);
-    setMotionY(1);
+  private void setValues(int x, int y, int index) {
+    this.setSelf(new PVector(x, y));
+    
+    this.setTypeOfObject((index == 0) ? OBJECT_WITH_SHADOW : OBJECT_WITHOUT_SHADOW);
+    
+    this.setShadowImage(shovelShadow);
+    this.setShadowOffset(new PVector(1, 85));
+    
+    this.setSpriteImage(shovel);
+    this.setSpriteInterval(75);
+    this.setSpriteWidth(84);
+    this.setSpriteHeight(91);
+    this.setMotionY(SCENERY_VELOCITY / 2);
 
-    setItemIndex(SHOVEL);
-    setItemTotal(SHOVELTOTAL);
-  }
-
-  void display() {
-    image (shovelShadow, getX() + 1, getY() + 85);
-
-    super.display();
+    this.setItemIndex(SHOVEL);
+    this.setItemTotal(SHOVELTOTAL);
   }
 }

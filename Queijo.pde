@@ -1,34 +1,29 @@
 PImage queijo;
 
-public class Queijo extends Comida {
-  public Queijo(int x, int y) {
-    this.setX(x);
-    this.setY(y);
-
-    setValues();
+private class Queijo extends Comida {
+  Queijo(int x, int y) {
+    setValues(x, y);
   }
 
   public Queijo() {
-    this.setX(int(random(200, 500)));
-    this.setY(int(random(-300, -1000)));
-
-    setValues();
+    setValues(int(random(100, 670)), -50);
   }
 
-  void setValues() {    
-    setSpriteImage(queijo);
-    setSpriteInterval(75);
-    setSpriteWidth(31);
-    setSpriteHeight(29);
-    setMotionY(1);
+  private void setValues(int x, int y) {
+    this.setSelf(new PVector(x, y));
 
-    setAmountHeal(4);
-    setAmountRecovered(0);
-  }
+    this.setShadowImage(foodShadow);
+    this.setShadowOffset(new PVector(0, 19));
+    
+    this.setTypeOfObject(OBJECT_WITH_SHADOW);
 
-  void display() {
-    image (foodShadow, getX(), getY() + 19);
+    this.setSpriteImage(queijo);
+    this.setSpriteInterval(75);
+    this.setSpriteWidth(31);
+    this.setSpriteHeight(29);
+    this.setMotionY(1);
 
-    super.display();
+    this.setAmountHeal(4);
+    this.setAmountRecovered(0);
   }
 }

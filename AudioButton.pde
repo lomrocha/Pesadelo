@@ -1,7 +1,7 @@
 final int SOUND = 0;
 final int MUSIC = 1;
 
-public class AudioButton extends Button {
+private class AudioButton extends Button {
   private int index;
 
   private boolean isXActive;

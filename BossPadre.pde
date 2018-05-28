@@ -61,7 +61,7 @@ int indexRandomSomPadreTomandoDano;
 boolean ataqueLevantemAcontecendo;
 boolean ataqueCaveiraAcontecendo, padreCaveiraCaiuCabeca, umOsso = true;
 
-public class Padre {
+private class Padre {
   private PImage spritePadreMovimentoIdle;
   private PImage spritePadreCruz;
   private PImage spritePadreLevantem;
@@ -657,7 +657,7 @@ PImage caveiraPadreRaivaAparecendo;
 PImage caveiraPadreRaivaFlutuando;
 PImage caveiraPadreRaivaAtaque;
 
-public class CaveiraPadre {
+private class CaveiraPadre {
   private PImage spriteCaveiraPadreAparecendo;
   private PImage spriteCaveiraPadreFlutuando;
   private PImage spriteCaveiraPadreRaivaAparecendo;
@@ -907,7 +907,7 @@ void caveiraPadre() {
 
 PImage raioPadre;
 
-public class Raio {
+private class Raio {
   private PImage spriteRaioPadre;
 
   private int raioX = 145;

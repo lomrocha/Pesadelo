@@ -4,7 +4,7 @@ final int CLOSINGCREDITMOVEMENT = 1;
 
 int timeToMoveClosingCredit;
 
-public class ClosingCredit {
+private class ClosingCredit {
   private PVector closingCredit = new PVector();
   private int movementY;
 

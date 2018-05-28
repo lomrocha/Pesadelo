@@ -1,49 +1,55 @@
 boolean isFirstMapSet;
 
 void jogando() {
-  if (gameState == GameState.FIRSTMAP.ordinal()) {
+  if (gameState == GameState.FIRST_MAP.getValue()) {
     if (!isFirstMapSet) {
-      movementTutorialScreenActive = true;
-      cenarios.add(new Scenery(0, 0));
-      cenarios.add(new Scenery(-600, 0));
-      generateItem(5000);
-      generateFood(5000);
-      isFirstMapSet = true;
+      if (firstMap == null) {
+        firstMap = new FirstMap();
+      } else {
+        movementTutorialScreenActive = true;
+        firstMap.regularMapItemSpawnManager.setSpawnVariables(7000);
+        firstMap.regularMapFoodSpawnManager.setSpawnVariables(7000);
+        isFirstMapSet = true;
+      }
+    } else {
+      firstMap.scenery();
+      firstMap.foodManager();
+      firstMap.enemies();
+      firstMap.hud();
     }
     if (isMusicActive) {
       temaIgreja.play();
     }
   }
 
-  if (gameState == GameState.SECONDMAP.ordinal()) {
+  if (gameState == GameState.SECOND_MAP.getValue()) {
     if (isMusicActive) {
       temaFazenda.play();
     }
   }
 
-  if (gameState == GameState.THIRDMAP.ordinal()) {
+  if (gameState == GameState.THIRD_MAP.getValue()) {
     if (isMusicActive) {
       temaCidade.play();
     }
   }
 
   if (millis() > tempoBossMorreu + 3000 && coveiro.coveiroMorreu) {
-    gameState = GameState.SECONDMAP.ordinal();
+    gameState = GameState.SECOND_MAP.getValue();
   }
 
   if (millis() > tempoBossMorreu + 3000 && fazendeiro.fazendeiroMorreu) {
-    gameState = GameState.THIRDMAP.ordinal();
+    gameState = GameState.THIRD_MAP.getValue();
   }
 
   if (millis() > tempoBossMorreu + 7000 && padre.padreMorreu) {
-    gameState = GameState.WIN.ordinal();
+    gameState = GameState.WIN.getValue();
   }
 
   cenario();
   inimigosTodos();
   armas(); 
   jLeite(); 
-  foodAll();
   playerHitpoints();
   ib.updateItemImage();
   ib.display();

@@ -1,4 +1,4 @@
-public class Credits {
+private class Credits {
   private ClosingCredit firstCredit = new ClosingCredit(FIRSTCLOSINGCREDITY);
   private ClosingCredit secondCredit = new ClosingCredit(SECONDCLOSINGCREDITY);
 

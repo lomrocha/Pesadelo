@@ -1,9 +1,13 @@
-public class TransitionGate extends MaisGeral {
+final int DOOR  = 0;
+final int FENCE = 1;
+
+private class TransitionGate extends MaisGeral {
   private boolean hasOpened;
 
   TransitionGate(int x, int y, int index) {
-    this.setX(x); // 230 para porta, 188 para cerca.
-    this.setY(y); // cenarioY para porta, cenarioY + 20 para cerca.
+    this.setSelf(new PVector(x, y)); // X: 230 para porta, 188 para cerca. Y: cenarioY para porta, cenarioY + 20 para cerca.
+    
+    this.setTypeOfObject(OBJECT_WITHOUT_SHADOW);
 
     switch (index) {
     case 0:

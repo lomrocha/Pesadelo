@@ -1,26 +1,20 @@
-class EnemiesManager {
-
-  <Enemy extends Inimigo, KickingSkeleton extends EsqueletoChute> void computeEnemy(ArrayList<Enemy> inimigos, ArrayList<KickingSkeleton> kicks) {
+private class EnemiesManager {
+  private <E extends Enemy> void computeEnemy(ArrayList<E> inimigos, EnemiesSpawnManager spawnManager) {
     for (int i = inimigos.size() - 1; i >= 0; i = i - 1) {
-      Enemy enemy = inimigos.get(i);
-      KickingSkeleton kick = kicks.get(i);
+      E enemy = inimigos.get(i);
+      if (enemy.getType() == KICKING_SKELETON) {
+        if (enemy.getBools()[0]) {
+          cabecasEsqueleto.add(new CabecaEsqueleto(enemy.getX(), enemy.getY()));
+        }
+      }
+      enemy.updateBools();
+      enemy.updateTarget();
       enemy.updateMovement();
       enemy.update();
       enemy.display();
-      if(enemy == kick){
-        println("igual");
-      }
       if (enemy.hasExitScreen()) {
+        handleSpawnManagerVariables(enemy, spawnManager);
         inimigos.remove(enemy);
-        if (enemy.getType() != TypeOfEnemy.SKELETON_HEAD.ordinal()) {
-          if (enemy.getType() == TypeOfEnemy.SKELETON.ordinal()) {
-            firstMapEnemiesSpawnManager.skeletonTotal--;
-          }
-          if (enemy.getType() == TypeOfEnemy.KICKING_SKELETON.ordinal()) {
-            firstMapEnemiesSpawnManager.kickingSkeletonTotal--;
-          }
-          firstMapEnemiesSpawnManager.setEnemiesTotal(firstMapEnemiesSpawnManager.getEnemiesTotal() - 1);
-        }
       }
       if (enemy.hasCollided()) {
         damage(enemy.getDamage());
@@ -28,7 +22,44 @@ class EnemiesManager {
     }
   }
 
-  void damage(int amount) {
+  private <E extends Enemy> void deleteEnemy(ArrayList<E> inimigos, EnemiesSpawnManager spawnManager) {
+    for (int i = inimigos.size() - 1; i >= 0; i--) {
+      E enemy = inimigos.get(i);
+      for (int j = armas.size() - 1; j >= 0; j--) {
+        Arma arma = armas.get(j);
+        if (arma.hasHit(enemy)) {
+          handleSpawnManagerVariables(enemy, spawnManager);
+          hitInimigos(enemy.getX() - 40, enemy.getY() - 20);
+          inimigos.remove(enemy);
+        }
+      }
+    }
+  }
+
+  private void handleSpawnManagerVariables(Enemy enemy, EnemiesSpawnManager spawnManager) {
+    if (enemy.getType() != SKELETON_HEAD) {
+      switch(enemy.getType()) {
+      case SKELETON:
+        spawnManager.setSkeletonTotal(spawnManager.getSkeletonTotal() - 1);
+        break;
+      case KICKING_SKELETON:
+        spawnManager.setKickingSkeletonTotal(spawnManager.getKickingSkeletonTotal() - 1);
+        break;
+      case SKELETON_DOG:
+        spawnManager.setSkeletonDogTotal(spawnManager.getSkeletonDogTotal() - 1);
+        break;
+      case SKELETON_CROW:
+        spawnManager.setSkeletonCrowTotal(spawnManager.getSkeletonCrowTotal() - 1);
+        break;
+      case RED_SKELETON:
+        spawnManager.setRedSkeletonTotal(spawnManager.getRedSkeletonTotal() - 1);
+        break;
+      }
+      spawnManager.setEnemiesTotal(spawnManager.getEnemiesTotal() - 1);
+    }
+  }
+
+  private void damage(int amount) {
     if (!isPlayerImmune) {
       playerCurrentHP -= amount;
       isPlayerImmune = true;

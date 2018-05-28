@@ -1,7 +1,7 @@
-class FirstMapEnemiesSpawnManager extends EnemiesSpawnManager {
+private class FirstMapEnemiesSpawnManager extends EnemiesSpawnManager {
   private ArrayList<Esqueleto> skeletons = new ArrayList<Esqueleto>();
   private ArrayList<EsqueletoChute> kickingSkeletons = new ArrayList<EsqueletoChute>();
-  
+
   final int[] SKELETON_MAXIMUM = {2, 1, 2, 2, 3};
   final int[] KICKING_SKELETON_MAXIMUM = {0, 1, 1, 2, 2};
 
@@ -10,8 +10,8 @@ class FirstMapEnemiesSpawnManager extends EnemiesSpawnManager {
   private int kickingSkeletonRow = 0;
   private int kickingSkeletonColumn = 0;
 
-  private int skeletonTotal;
-  private int kickingSkeletonTotal;
+  private PVector skeletonLastPosition = new PVector(1, 1);
+  private PVector kickingSkeletonLastPosition = new PVector(1, 1);
 
   FirstMapEnemiesSpawnManager(int[] maximumModifier) {
     setMaximumModifier(maximumModifier);
@@ -21,6 +21,12 @@ class FirstMapEnemiesSpawnManager extends EnemiesSpawnManager {
     while (SKELETON_POSITIONS[skeletonRow][skeletonColumn] != SKELETON) {
       skeletonRow = int(random(0, 5));
       skeletonColumn = int(random(0, 8));
+
+      PVector newPosition = new PVector(skeletonRow, skeletonColumn);
+      if (newPosition == skeletonLastPosition) {
+        skeletonRow = 1;
+        skeletonColumn = 1;
+      }
     }
   }
 
@@ -28,23 +34,30 @@ class FirstMapEnemiesSpawnManager extends EnemiesSpawnManager {
     while (KICKING_SKELETON_POSITIONS[kickingSkeletonRow][kickingSkeletonColumn] != KICKING_SKELETON) {
       kickingSkeletonRow = int(random(0, 8));
       kickingSkeletonColumn = int(random(0, 12));
+
+      PVector newPosition = new PVector(kickingSkeletonRow, kickingSkeletonColumn);
+      if (newPosition == kickingSkeletonLastPosition) {
+        kickingSkeletonRow = 1;
+        kickingSkeletonColumn = 1;
+      }
     }
   }
 
   void firstBatch() {
-    //println("first batch: \n" + "Skeletons - "  + getEnemiesTotal());
     int max = getMaximumModifier()[0];
 
     while (getEnemiesTotal() < max) {
-      if (skeletonTotal < SKELETON_MAXIMUM[0]) {
+      if (getSkeletonTotal() < SKELETON_MAXIMUM[0]) {
         setSkeletonPosition();
 
-        skeletons.add(new Esqueleto(100 + (skeletonColumn * 85), -150 - (skeletonRow * 150)));
+        skeletons.add(new Esqueleto(100 + (skeletonColumn * 75), -120 - (skeletonRow * 120)));
+        
+        skeletonLastPosition = new PVector(skeletonRow, skeletonColumn);
 
         skeletonRow = 4;
         skeletonColumn = 7;
-        
-        skeletonTotal++;
+
+        setSkeletonTotal(getSkeletonTotal() + 1);
         setEnemiesTotal(getEnemiesTotal() + 1);
       }
     }
@@ -52,55 +65,55 @@ class FirstMapEnemiesSpawnManager extends EnemiesSpawnManager {
 
   void toBeNamed(int max, int index) {
     while (getEnemiesTotal() < max) {
-      if (skeletonTotal < SKELETON_MAXIMUM[index]) {
+      if (getSkeletonTotal() < SKELETON_MAXIMUM[index]) {
         setSkeletonPosition();
 
-        skeletons.add(new Esqueleto(100 + (skeletonColumn * 85), -150 - (skeletonRow * 150)));
+        skeletons.add(new Esqueleto(100 + (skeletonColumn * 75), -120 - (skeletonRow * 120)));
+        
+        skeletonLastPosition = new PVector(skeletonRow, skeletonColumn);
 
         skeletonRow = 4;
         skeletonColumn = 7;
 
-        skeletonTotal++;
+        setSkeletonTotal(getSkeletonTotal() + 1);
         setEnemiesTotal(getEnemiesTotal() + 1);
       }        
 
-      if (kickingSkeletonTotal < KICKING_SKELETON_MAXIMUM[index]) {
+      if (getKickingSkeletonTotal() < KICKING_SKELETON_MAXIMUM[index]) {
         setKickingSkeletonPosition();
 
-        kickingSkeletons.add(new EsqueletoChute(120 + (kickingSkeletonColumn * 50), -150 - (kickingSkeletonRow * 75)));
+        kickingSkeletons.add(new EsqueletoChute(120 + (kickingSkeletonColumn * 50), -75 - (kickingSkeletonRow * 75)));
+        
+        kickingSkeletonLastPosition = new PVector(kickingSkeletonRow, kickingSkeletonColumn);
 
         kickingSkeletonRow = 7;
         kickingSkeletonColumn = 11;
 
-        kickingSkeletonTotal++;
+        setKickingSkeletonTotal(getKickingSkeletonTotal() + 1);
         setEnemiesTotal(getEnemiesTotal() + 1);
       }
     }
   }
 
   void secondBatch() {
-    //println("second batch: \n" + "Skeletons - " + skeletonTotal + "\nKickingSkeleton - " + kickingSkeletonTotal);
     int max = getMaximumModifier()[1];
 
     toBeNamed(max, 1);
   }
 
   void thirdBatch() {
-    //println("third batch: \n" + "Skeletons - " + skeletonTotal + "\nKickingSkeleton - " + kickingSkeletonTotal);
     int max = getMaximumModifier()[2];
 
     toBeNamed(max, 2);
   }
 
   void fourthBatch() {
-    //println("fourth batch: \n" + "Skeletons - " + skeletonTotal + "\nKickingSkeleton - " + kickingSkeletonTotal);
     int max = getMaximumModifier()[3];
 
     toBeNamed(max, 3);
   }
 
   void fifthBatch() {
-    //println("fifth batch: \n" + "Skeletons - " + skeletonTotal + "\nKickingSkeleton - " + kickingSkeletonTotal);
     int max = getMaximumModifier()[4];
 
     toBeNamed(max, 4);
@@ -110,7 +123,7 @@ class FirstMapEnemiesSpawnManager extends EnemiesSpawnManager {
   }
 }
 
-class SecondMapEnemiesSpawnManager extends EnemiesSpawnManager {
+private class SecondMapEnemiesSpawnManager extends EnemiesSpawnManager {
 
   SecondMapEnemiesSpawnManager(int[] maximumModifier) {
     setMaximumModifier(maximumModifier);
@@ -135,7 +148,7 @@ class SecondMapEnemiesSpawnManager extends EnemiesSpawnManager {
   }
 }
 
-class ThirdMapEnemiesSpawnManager extends EnemiesSpawnManager {
+private class ThirdMapEnemiesSpawnManager extends EnemiesSpawnManager {
 
   ThirdMapEnemiesSpawnManager(int[] maximumModifier) {
     setMaximumModifier(maximumModifier);

@@ -13,7 +13,7 @@ float tempoItem;
 float tempoItemAtivo;
 
 int playerCurrentHP;
-int prayerHPMaximum;
+int playerHPMaximum;
 int playerHPMinimum;
 
 int playerX, playerY; 
@@ -48,20 +48,20 @@ void jLeite() {
 
   if (finalMapa) {
     if (playerY + 126 < - 50) {
-      if (gameState == GameState.FIRSTMAP.ordinal()) {
-        gameState = GameState.FIRSTBOSS.ordinal();
+      if (gameState == GameState.FIRST_MAP.getValue()) {
+        gameState = GameState.FIRST_BOSS.getValue();
         if (temaIgreja.isPlaying()) {
           temaIgreja.pause();
         }
       }
-      if (gameState == GameState.SECONDMAP.ordinal()) {
-        gameState = GameState.SECONDBOSS.ordinal();
+      if (gameState == GameState.SECOND_MAP.getValue()) {
+        gameState = GameState.SECOND_BOSS.getValue();
         if (temaFazenda.isPlaying()) {
           temaFazenda.pause();
         }
       }
-      if (gameState == GameState.THIRDMAP.ordinal()) {
-        gameState = GameState.THIRDBOSS.ordinal();
+      if (gameState == GameState.THIRD_MAP.getValue()) {
+        gameState = GameState.THIRD_BOSS.getValue();
         if (temaCidade.isPlaying()) {
           temaCidade.pause();
         }
@@ -85,19 +85,19 @@ void jLeite() {
     if (temaCidade.isPlaying()) {
       temaCidade.pause();
     }
-    if (gameState == GameState.FIRSTBOSS.ordinal()) {
+    if (gameState == GameState.FIRST_BOSS.getValue()) {
       if (isSoundActive) {
         sonsMorteJLeite[0].rewind();
         sonsMorteJLeite[0].play();
       }
     }
-    if (gameState == GameState.SECONDBOSS.ordinal()) {
+    if (gameState == GameState.SECOND_BOSS.getValue()) {
       if (isSoundActive) {
         sonsMorteJLeite[1].rewind();
         sonsMorteJLeite[1].play();
       }
     }
-    if (gameState == GameState.THIRDBOSS.ordinal()) {
+    if (gameState == GameState.THIRD_BOSS.getValue()) {
       if (!padre.padreMudouForma) {
         if (isSoundActive) {
           sonsMorteJLeite[2].rewind();
@@ -113,12 +113,12 @@ void jLeite() {
   }
 
   if (jLeiteMorreu && millis() > tempoMorto + 2500) {
-    if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal()) {
+    if (gameState >= GameState.FIRST_MAP.getValue() && gameState <= GameState.THIRD_MAP.getValue()) {
       variablesPreLoad();
-      gameState = GameState.MAINMENU.ordinal();
-    } else if (gameState >= GameState.FIRSTBOSS.ordinal() && gameState <= GameState.THIRDBOSS.ordinal()) {
+      gameState = GameState.MAIN_MENU.getValue();
+    } else if (gameState >= GameState.FIRST_BOSS.getValue() && gameState <= GameState.THIRD_BOSS.getValue()) {
       lastState = gameState;
-      gameState = GameState.GAMEOVER.ordinal();
+      gameState = GameState.GAMEOVER.getValue();
     }
   }
 
@@ -127,7 +127,7 @@ void jLeite() {
   }
 
   if (!jLeiteMorreu) {
-    if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal()) {
+    if (gameState >= GameState.FIRST_MAP.getValue() && gameState <= GameState.THIRD_MAP.getValue()) {
       if (jLeiteDireita && playerX < width - 163) { 
         playerX = playerX + 3;
       }
@@ -150,7 +150,7 @@ void jLeite() {
       }
     }
 
-    if (gameState >= GameState.FIRSTBOSS.ordinal() && gameState <= GameState.THIRDBOSS.ordinal()) {
+    if (gameState >= GameState.FIRST_BOSS.getValue() && gameState <= GameState.THIRD_BOSS.getValue()) {
       if (!jLeiteLentidao) {
         if (jLeiteDireita && playerX < width - 88) { 
           playerX = playerX + 3;
@@ -188,7 +188,7 @@ void jLeite() {
 
     image(sombraJLeite, playerX + 7, playerY + 112);
 
-    if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal()) {
+    if (gameState >= GameState.FIRST_MAP.getValue() && gameState <= GameState.THIRD_MAP.getValue()) {
       if (!jLeiteUsoItem && !isPlayerImmune) {
         if (millis() > tempoSpriteJLeiteMovimento + 75) { 
           spriteJLeiteMovimento = jLeiteMovimento.get(stepJLeiteMovimento, 0, 63, 126); 

@@ -1,34 +1,29 @@
 PImage coxinha;
 
-public class Coxinha extends Comida {
-  public Coxinha(int x, int y) {
-    this.setX(x);
-    this.setY(y);
-
-    setValues();
+private class Coxinha extends Comida {
+  Coxinha(int x, int y) {
+    setValues(x, y);
   }
 
-  public Coxinha() {
-    setX(int(random(200, 500)));
-    setY(int(random(-300, -1000)));
-
-    setValues();
+  Coxinha() {
+    setValues(int(random(100, 670)), -50);
   }
 
-  void setValues() {
-    setSpriteImage(coxinha);
-    setSpriteInterval(75);
-    setSpriteWidth(28);
-    setSpriteHeight(30);
-    setMotionY(1);
+  private void setValues(int x, int y) {
+    this.setSelf(new PVector(x, y));
+    
+    this.setTypeOfObject(OBJECT_WITH_SHADOW);
+    
+    this.setShadowImage(foodShadow);
+    this.setShadowOffset(new PVector(0, 20));
+    
+    this.setSpriteImage(coxinha);
+    this.setSpriteInterval(75);
+    this.setSpriteWidth(28);
+    this.setSpriteHeight(30);
+    this.setMotionY(1);
 
-    setAmountHeal(5);
-    setAmountRecovered(0);
-  }
-
-  void display() {
-    image (foodShadow, getX(), getY() + 20);
-
-    super.display();
+    this.setAmountHeal(5);
+    this.setAmountRecovered(0);
   }
 }

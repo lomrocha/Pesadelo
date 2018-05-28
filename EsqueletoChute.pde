@@ -4,21 +4,22 @@ PImage kickingSkeletonShadow;
 
 final int KICKING_SKELETON = 2;
 
-public class EsqueletoChute extends Inimigo {
+private class EsqueletoChute extends Enemy {
   private PImage kickingSkeletonSprite;
 
   private int kickingSkeletonStep;
   private int kickingSkeletonSpriteTime;
 
   private boolean hasLostHead;
-  private boolean hasKickedHead;
   private boolean kickHeadTrigger;
 
-  private boolean hasTarget;
+  private boolean hasNewTarget;
 
   public EsqueletoChute(int x, int y) {
     this.setSelf(new PVector(x, y));
     
+    this.setTypeOfObject(OBJECT_WITHOUT_SHADOW);
+
     this.setTarget(new PVector(0, 0));
 
     this.setSpriteImage(headlessKickingSkeleton);
@@ -27,7 +28,8 @@ public class EsqueletoChute extends Inimigo {
     this.setSpriteHeight(74);
 
     this.setDamage(2);
-    this.setType(TypeOfEnemy.KICKING_SKELETON.ordinal());
+    this.setType(KICKING_SKELETON);
+    this.setBools(new boolean[] {false});
   }
 
   void display() {
@@ -35,7 +37,7 @@ public class EsqueletoChute extends Inimigo {
 
     if (!hasLostHead) {
       if (millis() > kickingSkeletonSpriteTime + 200) { 
-        if (getY() < 0) {
+        if (!isOnScreen()) {
           kickingSkeletonSprite = kickingSkeleton.get(0, 0, 49, 74);
         } else {
           kickingSkeletonSprite = kickingSkeleton.get(kickingSkeletonStep, 0, 49, 74); 
@@ -47,7 +49,7 @@ public class EsqueletoChute extends Inimigo {
       image(kickingSkeletonSprite, getX(), getY());
 
       if (kickingSkeletonStep == 196 && !kickHeadTrigger) {
-        hasKickedHead = true;
+        setBools(new boolean[] {true});
         kickHeadTrigger = true;
       }
 
@@ -62,30 +64,32 @@ public class EsqueletoChute extends Inimigo {
     super.display();
   }
 
+  void updateBools() {
+    this.setBools(new boolean[] {false});
+  }
+
   void updateMovement() {
     if (!hasLostHead) {
-      setMotionY((getY() < 0) ? 4 : SCENERY_VELOCITY_Y / 2);
+      setMotionY((!isOnScreen()) ? 4 : SCENERY_VELOCITY / 2);
       setMotionX(0);
     } else {
-      setMotionY(SCENERY_VELOCITY_Y);
+      setMotionY(SCENERY_VELOCITY);
       setMotionX((getX() < getTargetX()) ? 3 : -3);
     }
-    
-    println(getTargetX());
   }
 
   void updateTarget() {
     if (getX() == getTargetX()) {
-      hasTarget = false;
+      hasNewTarget = false;
     }
 
-    if (!hasTarget) {
+    if (!hasNewTarget) {
       int randomX = 1;
       while (randomX % 3 != 0) {
         randomX = (getX() < 386) ? int(random(120, 386)) : int(random(386, 652));
         if (randomX % 3 == 0) {
           setTarget(new PVector(randomX, getTargetY() + 16));
-          hasTarget = true;
+          hasNewTarget = true;
         }
       }
     }
@@ -98,7 +102,7 @@ int indexRandomEsqueletoChuteXMapaBoss;
 
 void esqueletoChute() {
   //if (indexInimigos == 1) {
-  //  if (gameState == GameState.THIRDBOSS.ordinal()) { 
+  //  if (gameState == GameState.THIRDBOSS.getValue()) { 
   //    if (esqueletosChute.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
   //      indexRandomEsqueletoChuteXMapaBoss = int(random(0, valoresInimigosXTerceiroMapaBoss.length));
   //      esqueletosChute.add(new EsqueletoChute(valoresInimigosXTerceiroMapaBoss[indexRandomEsqueletoChuteXMapaBoss], 0));
@@ -108,7 +112,7 @@ void esqueletoChute() {
 
   //  if (!movementTutorialScreenActive) {
   //    /*
-  //    if (gameState >= GameState.FIRSTMAP.ordinal() && gameState <= GameState.THIRDMAP.ordinal() && esqueletosChute.size() < 2 && totalInimigos < 6) {
+  //    if (gameState >= GameState.FIRSTMAP.getValue() && gameState <= GameState.THIRDMAP.getValue() && esqueletosChute.size() < 2 && totalInimigos < 6) {
   //     esqueletoChuteC = int(random(0, 8));
   //     esqueletoChuteL = int(random(0, 12));
 
@@ -122,12 +126,12 @@ void esqueletoChute() {
   //}
 
   if (firstMapEnemiesSpawnManager.kickingSkeletons.size() > 0) {
-    computeEnemy(firstMapEnemiesSpawnManager.kickingSkeletons);
+    computeEnemy(firstMapEnemiesSpawnManager.kickingSkeletons, firstMapEnemiesSpawnManager);
     deleteEnemy(firstMapEnemiesSpawnManager.kickingSkeletons);
   }
 
   if (cabecasEsqueleto.size() > 0) {
-    computeEnemy(cabecasEsqueleto);
+    computeEnemy(cabecasEsqueleto, firstMapEnemiesSpawnManager);
   }
 }
 

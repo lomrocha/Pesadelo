@@ -1,8 +1,16 @@
-public class MaisGeral {
+final int OBJECT_WITH_SHADOW = 1;
+final int OBJECT_WITHOUT_SHADOW = 0;
+
+private class MaisGeral {
   private PImage sprite;
   private PImage spriteImage;
+  private PImage shadowImage;
 
   private PVector self = new PVector();
+
+  private PVector shadowOffset = new PVector();
+
+  private int typeOfObject;
 
   private int step;
   private int spriteTime;
@@ -11,23 +19,20 @@ public class MaisGeral {
   private int spriteWidth;
   private int spriteHeight;
 
-  public PImage getSprite() {
-    return this.sprite;
-  }
-  protected void setSprite(PImage sprite) {
-    this.sprite = sprite;
-  }
-
+  // SPRITE_IMAGE
   public PImage getSpriteImage() {
     return this.spriteImage;
   }
-  protected void setSpriteImage(PImage enemy) {
-    this.spriteImage = enemy;
+  protected void setSpriteImage(PImage spriteImage) {
+    this.spriteImage = spriteImage;
   }
 
-  public PVector getSelf() {
-    return this.self;
+  // SHADOW_IMAGE
+  protected void setShadowImage(PImage shadowImage) {
+    this.shadowImage = shadowImage;
   }
+
+  // SELF
   protected void setSelf(PVector self) {
     this.self = self;
   }
@@ -46,27 +51,27 @@ public class MaisGeral {
     this.self.y = y;
   }
 
+  // SHADOW_OFFSET
+  protected void setShadowOffset(PVector shadowOffset) {
+    this.shadowOffset = shadowOffset;
+  }
+
+  // TYPE_OF_OBJECT
+  protected void setTypeOfObject(int typeOfObject) {
+    this.typeOfObject = typeOfObject;
+  }
+
+  // STEP
   public int getStep() {
     return this.step;
   }
-  protected void setStep(int step) {
-    this.step = step;
-  }
 
-  public int getSpriteTime() {
-    return this.spriteTime;
-  }
-  protected void setSpriteTime(int spriteTime) {
-    this.spriteTime = spriteTime;
-  }
-
-  public int getSpriteInterval() {
-    return this.spriteInterval;
-  }
+  // SPRITE_INTERVAL
   protected void setSpriteInterval(int spriteInterval) {
     this.spriteInterval = spriteInterval;
   }
 
+  // SPRITE_WIDTH
   public int getSpriteWidth() {
     return this.spriteWidth;
   }
@@ -74,6 +79,7 @@ public class MaisGeral {
     this.spriteWidth = spriteWidth;
   }
 
+  // SPRITE_HEIGHT
   public int getSpriteHeight() {
     return this.spriteHeight;
   }
@@ -82,25 +88,33 @@ public class MaisGeral {
   }
 
   void display() {
-    handler.spriteHandler(this);
+    if (typeOfObject == OBJECT_WITH_SHADOW) {
+      image(shadowImage, self.x + shadowOffset.x, self.y + shadowOffset.y);
+    }
+
+    if (millis() > spriteTime + spriteInterval) {
+      sprite = spriteImage.get(step, 0, spriteWidth, spriteHeight);
+      step = step % spriteImage.width + spriteWidth;
+      spriteTime = millis();
+    }
+
+    image(sprite, self.x, self.y);
+
+
     stepHandler();
   }
 
   void stepHandler() {
-    handler.stepHandler(this);
+    if (step == spriteImage.width) {
+      step = 0;
+    }
   }
 }
 
-public class Geral extends MaisGeral {
+private class Geral extends MaisGeral {
   private PVector motion = new PVector();
 
-  public PVector getMotion() {
-    return this.motion;
-  }
-  protected void setMotion(PVector motion) {
-    this.motion = motion;
-  }
-
+  // MOTION
   public int getMotionX() {
     return int(this.motion.x);
   }

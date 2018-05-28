@@ -4,35 +4,30 @@ PImage whipShadow;
 final int WHIP = 2;
 final int WHIPTOTAL = 5;
 
-public class Chicote extends Item {
-  public Chicote() {
-    setX(int(random(100, 599)));
-    setY(int(random(-300, -1000)));
-
-    setValues();
+private class Chicote extends Item {
+  Chicote(int x, int y) {
+    setValues(x, y, 1);
   }
 
-  public Chicote(int x, int y) {
-    this.setX(x);
-    this.setY(y);
-
-    setValues();
+  Chicote() {
+    setValues(int(random(100, 600)), -50, 0);
   }
 
-  void setValues() {
-    setSpriteImage(whip);
-    setSpriteInterval(75);
-    setSpriteWidth(101);
-    setSpriteHeight(91);
-    setMotionY(1);
+  private void setValues(int x, int y, int index) {
+    this.setSelf(new PVector(x, y));
+    
+    this.setTypeOfObject((index == 0) ? OBJECT_WITH_SHADOW : OBJECT_WITHOUT_SHADOW);
 
-    setItemIndex(WHIP);
-    setItemTotal(WHIPTOTAL);
-  }
+    this.setShadowImage(whipShadow);
+    this.setShadowOffset(new PVector(10, 76));
 
-  void display() {
-    image (whipShadow, getX() + 10, getY() + 76);
+    this.setSpriteImage(whip);
+    this.setSpriteInterval(75);
+    this.setSpriteWidth(101);
+    this.setSpriteHeight(91);
+    this.setMotionY(SCENERY_VELOCITY / 2);
 
-    super.display();
+    this.setItemIndex(WHIP);
+    this.setItemTotal(WHIPTOTAL);
   }
 }
