@@ -1,9 +1,10 @@
 // ------------------------------------ FIRST MAP -------------------------------------------------
 
-private class FirstMap {
+private class FirstMap
+{
   private Scenery firstScenery  = new Scenery( 000, 0);
   private Scenery secondScenery = new Scenery(-600, 0);
-  private Scenery[] sceneries = new Scenery[2];
+  private Scenery[] sceneries   = { firstScenery, secondScenery };
 
   //private TransitionGate door =  new TransitionGate(230, 0, DOOR);
 
@@ -11,65 +12,76 @@ private class FirstMap {
 
   //private Player player =  new Player();
 
-  private EnemiesManager enemiesManager = new EnemiesManager();
+  private EnemiesManager enemiesManager                           = new EnemiesManager();
   private FirstMapEnemiesSpawnManager firstMapEnemiesSpawnManager = new FirstMapEnemiesSpawnManager(ENEMIES_MAXIMUM_FIRST_MAP);
 
-  private FoodManager foodManager = new FoodManager();
+  private FoodManager foodManager                               = new FoodManager();
   private RegularMapFoodSpawnManager regularMapFoodSpawnManager = new RegularMapFoodSpawnManager();
-  
-  private ItemManager itemManager = new ItemManager();
+
+  private ItemManager itemManager                               = new ItemManager();
   private RegularMapItemSpawnManager regularMapItemSpawnManager = new RegularMapItemSpawnManager();
-  
+
+  private WeaponManager weaponManager           = new WeaponManager();
   private WeaponSpawnManager weaponSpawnManager = new WeaponSpawnManager();
 
   //private TutorialSprite walking = new TutorialSprite(250, 90, WALKING_SPRITE);
   //private TutorialSprite attacking = new TutorialSprite(540, 60, ATTACKING_SPRITE);
 
-  FirstMap() {
-    addScenery();
-  }
-  
-  private void hud(){
-    hud.display();
+  private void hud()
+  {
+    hud.display(weaponSpawnManager);
   }
 
-  private void enemies() {
+  private void enemies()
+  {
     enemiesManager.computeEnemy(firstMapEnemiesSpawnManager.skeletons, firstMapEnemiesSpawnManager);
-    enemiesManager.deleteEnemy(firstMapEnemiesSpawnManager.skeletons, firstMapEnemiesSpawnManager);
-    enemiesManager.computeEnemy(firstMapEnemiesSpawnManager.kickingSkeletons, firstMapEnemiesSpawnManager);
-    enemiesManager.deleteEnemy(firstMapEnemiesSpawnManager.kickingSkeletons, firstMapEnemiesSpawnManager);
+    enemiesManager.deleteEnemy(firstMapEnemiesSpawnManager.skeletons, firstMapEnemiesSpawnManager, weaponSpawnManager.weapons);
+    
+    //enemiesManager.computeEnemy(firstMapEnemiesSpawnManager.kickingSkeletons, firstMapEnemiesSpawnManager);
+    //enemiesManager.deleteEnemy(firstMapEnemiesSpawnManager.kickingSkeletons, firstMapEnemiesSpawnManager, weaponSpawnManager.weapons);
   }
 
-  private void addScenery() {
-    sceneries[0] = firstScenery;
-    sceneries[1] = secondScenery;
-  }
-
-  private void scenery() {
-    for (Scenery s : sceneries) {
+  private void scenery()
+  {
+    for (Scenery s : sceneries)
+    {
       s.updateMovement();
       s.update();
       s.display();
     }
   }
-  
-  private void itemManager() {
-    if (!movementTutorialScreenActive) {
-      itemManager.computeItem(regularMapItemSpawnManager.items, regularMapItemSpawnManager, weaponSpawnManager);
-      regularMapItemSpawnManager.randomizeItemIndex();
-      regularMapItemSpawnManager.addItem();
-    }
-  }
 
-  private void foodManager() {
-    if (!movementTutorialScreenActive) {
+  private void foodManager()
+  {
+    if (!movementTutorialScreenActive)
+    {
       foodManager.computeFood(regularMapFoodSpawnManager.foods, regularMapFoodSpawnManager);
       regularMapFoodSpawnManager.randomizeFoodIndex();
       regularMapFoodSpawnManager.addFood();
     }
   }
+
+  private void itemManager()
+  {
+    if (!movementTutorialScreenActive)
+    {
+      itemManager.computeItem(regularMapItemSpawnManager.items, weaponSpawnManager);
+      regularMapItemSpawnManager.randomizeItemIndex();
+      regularMapItemSpawnManager.addItem();
+    }
+  }
+
+  private void weaponManager()
+  {
+    if (regularMapItemSpawnManager.getItemTotal() == 1) 
+    {
+      weaponManager.computeWeapon(weaponSpawnManager.weapons);
+    }
+  }
 }
 
-// ------------------------------------ SECOND MAP -------------------------------------------------
+// --------------------------------------- SECOND MAP -------------------------------------------------
 
-// ------------------------------------ THIRD MAP -------------------------------------------------
+
+ 
+// --------------------------------------- THIRD MAP -------------------------------------------------

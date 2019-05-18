@@ -31,8 +31,8 @@ PImage sombraCoveiro;
 int[] valoresCoveiroDestinoX = {27, 42, 57, 72, 87, 102, 117, 132, 147, 162, 177, 192, 207, 222, 237, 252, 267, 282, 297, 312, 327, 342, 357, 372, 387, 402, 417, 432, 447, 462, 477, 492, 507, 522, 537, 552, 567, 582, 597, 612};
 int[] valoresCoveiroDestinoY = {75, 78, 81, 84, 87, 90, 93, 96, 99, 102, 105, 108, 111, 114, 117, 120, 123, 126, 129, 132, 135, 138, 141, 144, 147, 150, 153, 156, 159, 162, 165, 168, 171, 174, 177, 180, 183};
 
-int coveiroX = valoresCoveiroDestinoX[int(random(0, valoresCoveiroDestinoX.length))];
-int coveiroY = valoresCoveiroDestinoY[int(random(0, valoresCoveiroDestinoY.length))];
+int coveiroX = valoresCoveiroDestinoX[(int)random(0, valoresCoveiroDestinoX.length)];
+int coveiroY = valoresCoveiroDestinoY[(int)random(0, valoresCoveiroDestinoY.length)];
 
 int indexRandomSomCoveiroTomandoDano;
 
@@ -50,8 +50,8 @@ private class Coveiro {
   private PImage spriteCoveiroPaFenda;
   private PImage spriteCoveiroMorte;
 
-  private int destinoCoveiroX = valoresCoveiroDestinoX[int(random(0, valoresCoveiroDestinoX.length))];
-  private int destinoCoveiroY = valoresCoveiroDestinoY[int(random(0, valoresCoveiroDestinoY.length))];
+  private int destinoCoveiroX = valoresCoveiroDestinoX[(int)random(0, valoresCoveiroDestinoX.length)];
+  private int destinoCoveiroY = valoresCoveiroDestinoY[(int)random(0, valoresCoveiroDestinoY.length)];
 
   private int stepCoveiroIdle;
   private int tempoSpriteCoveiroIdle;
@@ -99,7 +99,7 @@ private class Coveiro {
       if (!andando && !ataquePa && !novoAtaqueFenda && !carregandoNovoAtaqueLapide && !novoAtaqueLapide && !coveiroTomouDanoAgua) {
         if (!somCoveiroIdleTocando) {
           if (isSoundActive) {
-            indexRandomSomCoveiroIdle = int(random(0, sonsCoveiroIdle.length));
+            indexRandomSomCoveiroIdle = (int)random(0, sonsCoveiroIdle.length);
             sonsCoveiroIdle[indexRandomSomCoveiroIdle].rewind();
             sonsCoveiroIdle[indexRandomSomCoveiroIdle].play();
             somCoveiroIdleTocando = true;
@@ -195,7 +195,7 @@ private class Coveiro {
       if (novoAtaqueLapide && !coveiroTomouDanoAgua) {
         if (stepCoveiroLapide == 760) {
           if (isSoundActive) {
-            indexRandomSomCoveiroEsmaga = int(random(0, sonsCoveiroEsmaga.length));
+            indexRandomSomCoveiroEsmaga = (int)random(0, sonsCoveiroEsmaga.length);
             sonsCoveiroEsmaga[indexRandomSomCoveiroEsmaga].rewind();
             sonsCoveiroEsmaga[indexRandomSomCoveiroEsmaga].play();
           }
@@ -254,8 +254,8 @@ private class Coveiro {
     if (!novoAtaqueFenda && !coveiroDelayTomouDanoAgua && !coveiroTomouDanoAgua && !coveiroMorreu) {
       if (!carregandoNovoAtaqueLapide && !novoAtaqueLapide) {
         if (millis() > tempoNovoDestino + 5000) {
-          destinoCoveiroX = valoresCoveiroDestinoX[int(random(0, valoresCoveiroDestinoX.length))];
-          destinoCoveiroY = valoresCoveiroDestinoY[int(random(0, valoresCoveiroDestinoY.length))];
+          destinoCoveiroX = valoresCoveiroDestinoX[(int)random(0, valoresCoveiroDestinoX.length)];
+          destinoCoveiroY = valoresCoveiroDestinoY[(int)random(0, valoresCoveiroDestinoY.length)];
           tempoNovoDestino = millis();
           gatilhoNovoAtaqueFenda = false;
           gatilhoNovoAtaqueFendaAtivo = false;
@@ -561,7 +561,7 @@ ArrayList<LapideAtaque> lapidesAtaque = new ArrayList<LapideAtaque>();
 
 void lapideAtaque() {
   if (ataqueLapideAcontecendo && lapidesAtaque.size() == 0) {
-    indexLapideAtaque = int(random(0, 3));
+    indexLapideAtaque = (int)random(0, 3);
     lapidesAtaque.add(new LapideAtaque());
   }
 

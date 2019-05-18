@@ -1,29 +1,54 @@
 // -------------------------------------- ITEM ---------------------------------------------------
 
-private class Item extends Geral {
+private class Item extends BaseMovement 
+{
   private int itemIndex;
   private int itemTotal;
 
+  private boolean isDisabled;
+
   // ITEM_INDEX
-  public int getItemIndex() {
+  public int getItemIndex() 
+  {
     return this.itemIndex;
   }
-  protected void setItemIndex(int itemIndex) {
+  protected void setItemIndex(int itemIndex) 
+  {
     this.itemIndex = itemIndex;
   }
 
   // ITEM_TOTAL
-  public int getItemTotal() {
+  public int getItemTotal() 
+  {
     return this.itemTotal;
   }
-  protected void setItemTotal(int itemTotal) {
+  protected void setItemTotal(int itemTotal) 
+  {
     this.itemTotal = itemTotal;
+  }
+
+  // IS DISABLED
+  public boolean getIsDisabled()
+  {
+    return isDisabled;
+  }
+  protected void setIsDisabled(boolean isDisabled)
+  {
+    this.isDisabled = isDisabled;
+  }
+
+  // Reset the position of the item object to the top of the screen.
+  // Make it disabled so it won't move.
+  void resetVariables()
+  {
+    setSelf(new PVector((int)random(100, 670), -50));
+    setIsDisabled(true);
   }
 }
 
 // -------------------------------------- WEAPON ---------------------------------------------------
 
-abstract private class Weapon extends MaisGeral 
+abstract private class Weapon extends BaseStill 
 {
   private int firstCollisionX;
   private int secondCollisionX;
@@ -56,7 +81,7 @@ abstract private class Weapon extends MaisGeral
   {
     this.secondCollisionY = secondCollisionY;
   }
-  
+
   // DELETE_WEAPON
   public boolean getDeleteWeapon() 
   {
@@ -66,7 +91,7 @@ abstract private class Weapon extends MaisGeral
   {
     this.deleteWeapon = deleteWeapon;
   }
-  
+
   // DAMAGE_BOSS
   public boolean getDamageBoss() 
   {
@@ -77,7 +102,8 @@ abstract private class Weapon extends MaisGeral
     this.damageBoss = damageBoss;
   }
 
-  void stepHandler() {
+  void stepHandler() 
+  {
     if (getStep() == getSpriteImage().width) 
     {
       this.deleteWeapon = true;
@@ -86,7 +112,7 @@ abstract private class Weapon extends MaisGeral
 
   abstract void update();
 
-  boolean hasHit(Geral g) 
+  boolean hasHit(BaseMovement g) 
   {
     if (firstCollisionX > g.getX() && secondCollisionX < g.getX() + g.getSpriteWidth() && firstCollisionY > g.getY() && secondCollisionY < g.getY() + g.getSpriteHeight()) {
       hitInimigosMostrando = true;
@@ -141,21 +167,21 @@ abstract private class Weapon extends MaisGeral
 PImage whip;
 PImage whipShadow;
 
-final int WHIP = 2;
+final int WHIP = 1;
 final int WHIPTOTAL = 5;
 
-private class Chicote extends Item {
-  Chicote(int x, int y) {
+private class WhipItem extends Item {
+  WhipItem(int x, int y) {
     setValues(x, y, OBJECT_WITHOUT_SHADOW);
   }
 
-  Chicote() {
-    setValues(int(random(100, 600)), -50, OBJECT_WITH_SHADOW);
+  WhipItem() {
+    setValues((int)random(100, 600), -50, OBJECT_WITH_SHADOW);
   }
 
   private void setValues(int x, int y, int index) {
     this.setSelf(new PVector(x, y));
-    
+
     this.setTypeOfObject(index);
 
     this.setShadowImage(whipShadow);
@@ -169,6 +195,8 @@ private class Chicote extends Item {
 
     this.setItemIndex(WHIP);
     this.setItemTotal(WHIPTOTAL);
+
+    this.setIsDisabled(true);
   }
 }
 
@@ -179,7 +207,7 @@ PImage whipAttack;
 private class ChicoteAtaque extends Weapon {
   ChicoteAtaque() {
     this.setSelf(new PVector(playerX - 70, playerY - 140));
-    
+
     this.setTypeOfObject(OBJECT_WITHOUT_SHADOW);
 
     this.setSpriteImage(whipAttack);
@@ -207,26 +235,26 @@ private class ChicoteAtaque extends Weapon {
 PImage shovel;
 PImage shovelShadow;
 
-final int SHOVEL = 1;
+final int SHOVEL = 0;
 final int SHOVELTOTAL = 5;
 
-private class Pa extends Item {
-  Pa(int x, int y) {
+private class ShovelItem extends Item {
+  ShovelItem(int x, int y) {
     setValues(x, y, OBJECT_WITHOUT_SHADOW);
   }
 
-  Pa() {
-    setValues(int(random(100, 610)), -50, OBJECT_WITH_SHADOW);
+  ShovelItem() {
+    setValues((int)random(100, 610), -50, OBJECT_WITH_SHADOW);
   }
 
   private void setValues(int x, int y, int index) {
     this.setSelf(new PVector(x, y));
-    
+
     this.setTypeOfObject(index);
-    
+
     this.setShadowImage(shovelShadow);
     this.setShadowOffset(new PVector(1, 85));
-    
+
     this.setSpriteImage(shovel);
     this.setSpriteInterval(75);
     this.setSpriteWidth(84);
@@ -235,6 +263,8 @@ private class Pa extends Item {
 
     this.setItemIndex(SHOVEL);
     this.setItemTotal(SHOVELTOTAL);
+
+    this.setIsDisabled(true);
   }
 }
 
@@ -270,21 +300,34 @@ private class PaAtaque extends Weapon {
 
 // ------------------------------------ ITEM MANAGER -------------------------------------------------
 
-private class ItemManager {
-  private void computeItem(ArrayList<Item> items, ItemSpawnManager itemSpawnManager, WeaponSpawnManager weaponSpawnManager) {  
-    for (int i = items.size() - 1; i >= 0; i = i - 1) {
-      Item it = items.get(i);
-      if (gameState >= GameState.FIRST_MAP.getValue() && gameState <= GameState.THIRD_MAP.getValue()) {
-        it.update();
-      }
-      it.display();
-      if (it.hasExitScreen() || it.hasCollided()) {
-        items.remove(it);
-        itemSpawnManager.setSpawnVariables(7000);
+private class ItemManager 
+{
+  private void computeItem(ArrayList<Item> items, WeaponSpawnManager weaponSpawnManager) 
+  {  
+    for (int i = items.size() - 1; i >= 0; i = i - 1) 
+    {
+      Item item = items.get(i);
 
-        if (it.hasCollided()) {
-          weaponSpawnManager.setItemIndex(it.getItemIndex());
-          weaponSpawnManager.setWeaponTotal(it.getItemTotal());
+      // Only the food that is not disabled can be updated and displayed.
+      if (!item.getIsDisabled()) 
+      {  
+
+        if (gameState >= GameState.FIRST_MAP.getValue() && gameState <= GameState.THIRD_MAP.getValue()) 
+        {
+          item.update();
+        }
+
+        item.display();
+        if (item.hasExitScreen() || item.hasCollided()) 
+        {
+
+          if (item.hasCollided()) 
+          {
+            weaponSpawnManager.setItemIndex(item.getItemIndex());
+            weaponSpawnManager.setWeaponTotal(item.getItemTotal());
+          }
+
+          item.resetVariables();
         }
       }
     }
@@ -293,7 +336,8 @@ private class ItemManager {
 
 // ------------------------------------ ITEM SPAWN MANAGER -------------------------------------------------
 
-abstract private class ItemSpawnManager {
+abstract private class ItemSpawnManager 
+{
   private int itemTotal;
   private int itemIndex = 10;
 
@@ -303,62 +347,88 @@ abstract private class ItemSpawnManager {
   private boolean hasItemIndexChanged;
 
   // ITEM_TOTAL
-  public int getItemTotal() {
+  public int getItemTotal() 
+  {
     return this.itemTotal;
   }
-  public void setItemTotal(int itemTotal) {
+  public void setItemTotal(int itemTotal) 
+  {
     this.itemTotal = itemTotal;
   }
 
   // ITEM_INDEX
-  public int getItemIndex() {
+  public int getItemIndex() 
+  {
     return this.itemIndex;
   }
 
   // TIME_TO_GENERATE_ITEM
-  public int getTimeToGenerateItem() {
+  public int getTimeToGenerateItem() 
+  {
     return this.timeToGenerateItem;
   }
 
   // INTERVAL_TO_GENERATE_ITEM
-  public int getIntervalToGenerateItem() {
+  public int getIntervalToGenerateItem() 
+  {
     return this.intervalToGenerateItem;
   }
 
   // HAS_ITEM_INDEX_CHANGED
-  public boolean getHasItemIndexChanged() {
+  public boolean getHasItemIndexChanged() 
+  {
     return this.hasItemIndexChanged;
   }
 
   abstract protected void addItem();
 
-  void randomizeItemIndex() {
-    if (!hasItemIndexChanged) {
-      itemIndex = (int)random(0, 10);
-      hasItemIndexChanged = true;
+  void randomizeItemIndex() 
+  {
+    while (!hasItemIndexChanged) 
+    {
+      int newItemIndex = (int)random(0, 10);
+
+      if (newItemIndex != itemIndex) 
+      {
+        itemIndex = newItemIndex;
+        hasItemIndexChanged = true;
+      }
     }
   }
 
-  void setSpawnVariables(int timeAmount) {
-    itemTotal = (itemTotal == 1) ? itemTotal-- : itemTotal;
+  void setSpawnVariables(int timeAmount) 
+  {
+    itemTotal = 0;
 
-    hasItemIndexChanged = false;
-    timeToGenerateItem = millis();
+    hasItemIndexChanged    = false;
+    timeToGenerateItem     = millis();
     intervalToGenerateItem = timeAmount;
   }
 }
 
 // ------------------------------- REGULAR MAP ITEM SPAWN MANAGER -------------------------------------
 
-private class RegularMapItemSpawnManager extends ItemSpawnManager {
+private class RegularMapItemSpawnManager extends ItemSpawnManager 
+{
   private ArrayList<Item> items = new ArrayList<Item>();
 
-  protected void addItem() {
-    if (getItemTotal() == 0 && getHasItemIndexChanged() && millis() > getTimeToGenerateItem() + getIntervalToGenerateItem() && items.size() == 0) {
-      if (getItemIndex() >= 0 && getItemIndex() <= 4) {
-        items.add(new Pa());
-      } else if (getItemIndex() >=5 && getItemIndex() <= 9) {
-        items.add(new Chicote());
+  RegularMapItemSpawnManager()
+  {
+    items.add(new ShovelItem());
+    items.add(new WhipItem());
+  }
+
+  protected void addItem() 
+  {
+    if (getItemTotal() == 0 && getHasItemIndexChanged() && millis() > getTimeToGenerateItem() + getIntervalToGenerateItem()) 
+    {
+      if (getItemIndex() >= 0 && getItemIndex() <= 4) 
+      {
+        items.get(SHOVEL).setIsDisabled(false);
+      } 
+      else if (getItemIndex() >=5 && getItemIndex() <= 9) 
+      {
+        items.get(WHIP).setIsDisabled(false);
       }
 
       setItemTotal(getItemTotal() + 1);
@@ -388,9 +458,9 @@ private class BossMapItemSpawnManager extends ItemSpawnManager {
   private void setItem(int[] xValues, int[] yValues) {
     int itemRandomMapPositionIndex = (int)random(0, xValues.length);
     if (getItemIndex() >= 0 && getItemIndex() <= 4) {
-      items.add(new Pa(xValues[itemRandomMapPositionIndex], yValues[itemRandomMapPositionIndex]));
+      items.add(new ShovelItem(xValues[itemRandomMapPositionIndex], yValues[itemRandomMapPositionIndex]));
     } else if (getItemIndex() >= 5 && getItemIndex() <= 9) {
-      items.add(new Chicote(xValues[itemRandomMapPositionIndex], yValues[itemRandomMapPositionIndex]));
+      items.add(new WhipItem(xValues[itemRandomMapPositionIndex], yValues[itemRandomMapPositionIndex]));
     }
 
     setItemTotal(getItemTotal() + 1);
@@ -399,14 +469,19 @@ private class BossMapItemSpawnManager extends ItemSpawnManager {
 
 // -------------------------------------- WEAPON MANAGER ---------------------------------------------------
 
-private class WeaponManager {
-  void computeWeapon(ArrayList<Weapon> weapons, WeaponSpawnManager weaponSpawnManager) {
-    for (int i = weapons.size() - 1; i >= 0; i = i - 1) {
-      Weapon a = weapons.get(i);
-      a.update();
-      a.display();
-      if (a.getDeleteWeapon()) {
-        weapons.remove(a);
+private class WeaponManager 
+{
+  void computeWeapon(ArrayList<Weapon> weapons) 
+  {
+    for (int i = weapons.size() - 1; i >= 0; i = i - 1) 
+    {
+      Weapon weapon = weapons.get(i);
+      weapon.update();
+      weapon.display();
+      
+      if (weapon.getDeleteWeapon())
+      {
+        weapons.remove(weapon);
       }
     }
   }
@@ -414,34 +489,45 @@ private class WeaponManager {
 
 // ----------------------------------- WEAPON SPAWN MANAGER ----------------------------------------------
 
-private class WeaponSpawnManager {
+private class WeaponSpawnManager 
+{
   private ArrayList<Weapon> weapons = new ArrayList<Weapon>();
 
   private int itemIndex;
   private int weaponTotal;
 
   // ITEM_INDEX
-  public void setItemIndex(int itemIndex) {
+  public int getItemIndex()
+  {
+    return this.itemIndex;
+  }
+  public void setItemIndex(int itemIndex) 
+  {
     this.itemIndex = itemIndex;
   }
 
   // WEAPON_TOTAL
-  public int getWeaponTotal() {
+  public int getWeaponTotal() 
+  {
     return this.weaponTotal;
   }
-  public void setWeaponTotal(int weaponTotal) {
+  public void setWeaponTotal(int weaponTotal) 
+  {
     this.weaponTotal = weaponTotal;
   }
 
-  private void addWeapon() {
-    if (!oneWeapon) {
-      switch (itemIndex) {
-        case WHIP:
-          weapons.add(new ChicoteAtaque());
-          break;	
-        case SHOVEL:
-          weapons.add(new PaAtaque());
-          break;
+  private void addWeapon() 
+  {
+    if (!oneWeapon)
+    {
+      switch (itemIndex)
+      {
+      case WHIP:
+        weapons.add(new ChicoteAtaque());
+        break;	
+      case SHOVEL:
+        weapons.add(new PaAtaque());
+        break;
       }
 
       weaponTotal--;
@@ -461,10 +547,10 @@ void weapon()
     switch(item) 
     {
     case WHIP: 
-      weapons.add(new ChicoteAtaque());
+      x.add(new ChicoteAtaque());
       break;
     case SHOVEL:
-      weapons.add(new PaAtaque());
+      x.add(new PaAtaque());
       break;
     }
 
@@ -493,28 +579,28 @@ void weapons() {
   //  itemTotal = 0;
   //}
 
-  if (weapons.size() > 0) {
+  if (x.size() > 0) {
     arma();
   }
 
-  if (jLeiteUsoItem && weapons.size() == 0 && weaponTotal > 0) {
+  if (jLeiteUsoItem && x.size() == 0 && weaponTotal > 0) {
     weapon();
   }
 }
 
-ArrayList<Weapon> weapons = new ArrayList<Weapon>();
+ArrayList<Weapon> x = new ArrayList<Weapon>();
 
 
 void arma() 
 {
-  for (int i = weapons.size() - 1; i >= 0; i = i - 1) 
+  for (int i = x.size() - 1; i >= 0; i = i - 1) 
   {
-    Weapon a = weapons.get(i);
+    Weapon a = x.get(i);
     a.update();
     a.display();
     if (a.getDeleteWeapon()) 
     {
-      weapons.remove(a);
+      x.remove(a);
     }
     if (gameState == GameState.FIRST_BOSS.getValue()) 
     {
@@ -522,7 +608,7 @@ void arma()
       {
         if (isSoundActive) 
         {
-          indexRandomSomCoveiroTomandoDano = int(random(0, sonsCoveiroTomandoDano.length));
+          indexRandomSomCoveiroTomandoDano = (int)random(0, sonsCoveiroTomandoDano.length);
           sonsCoveiroTomandoDano[indexRandomSomCoveiroTomandoDano].rewind();
           sonsCoveiroTomandoDano[indexRandomSomCoveiroTomandoDano].play();
         }
@@ -536,7 +622,7 @@ void arma()
       {
         if (isSoundActive) 
         {
-          indexRandomSomFazendeiroTomandoDano = int(random(0, sonsFazendeiroTomandoDano.length));
+          indexRandomSomFazendeiroTomandoDano = (int)random(0, sonsFazendeiroTomandoDano.length);
           sonsFazendeiroTomandoDano[indexRandomSomFazendeiroTomandoDano].rewind();
           sonsFazendeiroTomandoDano[indexRandomSomFazendeiroTomandoDano].play();
         }

@@ -160,14 +160,19 @@ void keyPressed() {
 
   if (gameState != GameState.GAMEOVER.getValue()) {
     if (key == ' ' && !ativaBarraEspaco && !jLeiteUsoItemConfirma && !finalMapa) {
-      if (item != 0) {
+
+      if (firstMap.weaponSpawnManager.getWeaponTotal() != 0) {
         jLeiteUsoItem = true;
         tempoItem = millis();
         tempoItemAtivo = millis();
         ativaBarraEspaco = true;
         jLeiteUsoItemConfirma = true;
         oneWeapon = false;
-        if (firstMap.weaponSpawnManager.getWeaponTotal() == 1) {
+
+        firstMap.weaponSpawnManager.addWeapon();
+        
+        if (firstMap.weaponSpawnManager.getWeaponTotal() == 1)
+        {
           firstMap.regularMapItemSpawnManager.setSpawnVariables(7000);
         }
       }
@@ -177,17 +182,23 @@ void keyPressed() {
     gameState = lastState;
   }
 
-  if (key == 'p' || key == 'P') {
-    if (looping) {
+  if (key == 'p' || key == 'P') 
+  {
+    if (looping) 
+    {
       noLoop();
       timeRemainingFood = (firstMap.regularMapFoodSpawnManager.getTimeToGenerateFood() + firstMap.regularMapFoodSpawnManager.getIntervalToGenerateFood()) - millis();
       timeRemainingItem = (timeToGenerateItem + intervalToGenerateItem) - millis();
-    } else {
+    } 
+    else 
+    {
       loop();
-      if (firstMap.regularMapFoodSpawnManager.foods.size() == 0) {
+      if (firstMap.regularMapFoodSpawnManager.getFoodTotal() == 0) 
+      {
         firstMap.regularMapFoodSpawnManager.setSpawnVariables(timeRemainingFood);
       }
-      if (firstMap.regularMapItemSpawnManager.items.size() == 0 && item == 0) {
+      if (firstMap.regularMapItemSpawnManager.items.size() == 0 && item == 0) 
+      {
         firstMap.regularMapItemSpawnManager.setSpawnVariables(timeRemainingItem);
       }
     }

@@ -280,15 +280,14 @@ void jLeite() {
     }
 
     if (jLeiteUsoItem) {
-      if (item != 0) {
+      if (firstMap.weaponSpawnManager.getWeaponTotal() != 0) {
         if (millis() > tempoSpriteJLeiteItem + 90) { 
           spriteJLeiteItem = jLeiteItem.get(stepJLeiteItem, 0, 94, 126); 
           stepJLeiteItem = stepJLeiteItem % 282 + 94;
-          image(spriteJLeiteItem, playerX, playerY); 
           tempoSpriteJLeiteItem = millis();
-        } else {
-          image(spriteJLeiteItem, playerX, playerY);
         }
+
+        image(spriteJLeiteItem, playerX, playerY);
 
         if (stepJLeiteItem == jLeiteItem.width) {
           stepJLeiteItem = 0;

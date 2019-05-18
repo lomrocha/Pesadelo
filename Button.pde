@@ -4,7 +4,7 @@ abstract private class Button {
   private PImage buttonPlain;
 
   private PVector button = new PVector();
-  
+
   private PVector firstBoundary = new PVector();
   private PVector secondBoundary = new PVector();
 
@@ -23,26 +23,26 @@ abstract private class Button {
   public void setButton(PVector button) {
     this.button = button;
   }
-  
+
   public int getButtonX() {
-    return int(this.button.x);
+    return (int)this.button.x;
   }
   public void setButtonX(int x) {
     this.button.x = x;
   }
 
   public int getButtonY() {
-    return int(this.button.y);
+    return (int)this.button.y;
   }
-  
+
 
   // FIRST_BOUNDARY
-  public void setFirstBoundary(PVector firstBoundary){
+  public void setFirstBoundary(PVector firstBoundary) {
     this.firstBoundary = firstBoundary;
   }
-  
+
   // SECOND_BOUNDARY
-  public void setSecondBoundary(PVector SecondBoundary){
+  public void setSecondBoundary(PVector SecondBoundary) {
     this.secondBoundary = SecondBoundary;
   }
 

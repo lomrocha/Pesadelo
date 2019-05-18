@@ -33,8 +33,8 @@ PImage sombraFazendeiro;
 int[] valoresFazendeiroDestinoX = {25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160, 165, 170, 175, 180, 185, 190, 195, 200, 205, 210, 215, 220, 225, 230, 235, 240, 245, 250, 255, 260, 265, 270, 275, 280, 285, 290, 295, 300, 305, 310, 315, 320, 325, 330, 335, 340, 345, 350, 355, 360, 365, 370, 375, 380, 385, 390, 400, 405, 410, 415, 420, 425, 430, 435, 440, 445, 450, 455, 460, 465, 470, 475, 480, 485, 490, 500, 505, 510, 515, 520, 525, 530, 535, 540, 545, 550, 555, 560, 565, 570, 575, 580, 585}; 
 int[] valoresFazendeiroDestinoY = {75, 80, 85, 90, 95, 100, 105, 110, 115, 120, 130, 135, 140, 145, 150, 155};
 
-int fazendeiroX = valoresFazendeiroDestinoX[int(random(0, valoresFazendeiroDestinoX.length))];
-int fazendeiroY = valoresFazendeiroDestinoY[int(random(0, valoresFazendeiroDestinoY.length))];
+int fazendeiroX = valoresFazendeiroDestinoX[(int)random(0, valoresFazendeiroDestinoX.length)];
+int fazendeiroY = valoresFazendeiroDestinoY[(int)random(0, valoresFazendeiroDestinoY.length)];
 
 int indexRandomSomFazendeiroTomandoDano;
 
@@ -57,8 +57,8 @@ private class Fazendeiro {
   private PImage spriteFazendeiroIdlePneu;
   private PImage spriteFazendeiroMorte;
 
-  private int destinoFazendeiroX = valoresFazendeiroDestinoX[int(random(0, valoresFazendeiroDestinoX.length))];
-  private int destinoFazendeiroY = valoresFazendeiroDestinoY[int(random(0, valoresFazendeiroDestinoY.length))];
+  private int destinoFazendeiroX = valoresFazendeiroDestinoX[(int)random(0, valoresFazendeiroDestinoX.length)];
+  private int destinoFazendeiroY = valoresFazendeiroDestinoY[(int)random(0, valoresFazendeiroDestinoY.length)];
 
   private int stepFazendeiroIdle;
   private int tempoSpriteFazendeiroIdle;
@@ -114,7 +114,7 @@ private class Fazendeiro {
       if (!andando && !ataqueFoice && !novoAtaqueMimosa && !ataqueMimosaAcontecendo && !novoAtaquePneu && !ataquePneuAcontecendo && !fazendeiroTomouDanoPneu) {
         if (!somFazendeiroIdleTocando) {
           if (isSoundActive) {
-            indexRandomSomFazendeiroIdle = int(random(0, sonsFazendeiroIdle.length));
+            indexRandomSomFazendeiroIdle = (int)random(0, sonsFazendeiroIdle.length);
             sonsFazendeiroIdle[indexRandomSomFazendeiroIdle].rewind();
             sonsFazendeiroIdle[indexRandomSomFazendeiroIdle].play();
             somFazendeiroIdleTocando = true;
@@ -170,7 +170,7 @@ private class Fazendeiro {
       if (novoAtaqueMimosa && !ataqueMimosaAcontecendo && !novoAtaquePneu && !ataquePneuAcontecendo && !fazendeiroTomouDanoPneu) {
         if (stepFazendeiroMimosa == 0) {
           if (isSoundActive) {
-            indexRandomSomFazendeiroMimosa = int(random(0, sonsFazendeiroSoltandoMimosa.length));
+            indexRandomSomFazendeiroMimosa = (int)random(0, sonsFazendeiroSoltandoMimosa.length);
             sonsFazendeiroSoltandoMimosa[indexRandomSomFazendeiroMimosa].rewind();
             sonsFazendeiroSoltandoMimosa[indexRandomSomFazendeiroMimosa].play();
           }
@@ -309,8 +309,8 @@ private class Fazendeiro {
   void update() {
     if (!ataquePneuAcontecendo && !fazendeiroTomouDanoPneu && !fazendeiroMorreu) {
       if (millis() > tempoNovoDestino + 5000) {
-        destinoFazendeiroX = valoresFazendeiroDestinoX[int(random(0, valoresFazendeiroDestinoX.length))];
-        destinoFazendeiroY = valoresFazendeiroDestinoY[int(random(0, valoresFazendeiroDestinoY.length))];
+        destinoFazendeiroX = valoresFazendeiroDestinoX[(int)random(0, valoresFazendeiroDestinoX.length)];
+        destinoFazendeiroY = valoresFazendeiroDestinoY[(int)random(0, valoresFazendeiroDestinoY.length)];
         tempoNovoDestino = millis();
         gatilhoNovoAtaqueMimosa = false;
         gatilhoNovoAtaqueMimosaAtivo = false;
@@ -547,8 +547,8 @@ void mimosa() {
       isPlayerImmune = true;
       timeImmune = millis();
       if (isSoundActive) {
-        sonsMimosaHit[int(random(0, 2))].rewind();
-        sonsMimosaHit[int(random(0, 2))].play();
+        sonsMimosaHit[(int)random(0, 2)].rewind();
+        sonsMimosaHit[(int)random(0, 2)].play();
       }
     }
   }
