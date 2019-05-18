@@ -53,8 +53,8 @@ PImage sombraPadre;
 int[] valoresPadreDestinoX = {27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63, 66, 69, 72, 75, 78, 81, 84, 87, 90, 93, 96, 99, 102, 105, 108, 111, 114, 117, 120, 123, 126, 129, 132, 135, 138, 141, 144, 147, 150, 153, 156, 159, 162, 165, 168, 171, 174, 177, 180, 183, 186, 189, 192, 207, 222, 237, 252, 267, 282, 297, 312, 327, 342, 357, 372, 387, 402, 417, 432, 447, 462, 477, 492, 507, 522, 537, 552, 567, 582, 597, 612};
 int[] valoresPadreDestinoY = {75, 78, 81, 84, 87, 90, 93, 96, 99, 102, 105, 108, 111, 114, 117, 120, 123, 126, 129, 132, 135, 138, 141};
 
-int padreX = valoresPadreDestinoX[int(random(0, valoresPadreDestinoX.length))];
-int padreY = valoresPadreDestinoY[int(random(0, valoresPadreDestinoY.length))];
+int padreX = valoresPadreDestinoX[(int)random(0, valoresPadreDestinoX.length)];
+int padreY = valoresPadreDestinoY[(int)random(0, valoresPadreDestinoY.length)];
 
 int indexRandomSomPadreTomandoDano;
 
@@ -78,8 +78,8 @@ private class Padre {
   private PImage spritePadreRaivaRaio;
   private PImage spritePadreMorte;
 
-  private int destinoPadreX = valoresPadreDestinoX[int(random(0, valoresPadreDestinoX.length))];
-  private int destinoPadreY = valoresPadreDestinoY[int(random(0, valoresPadreDestinoY.length))];
+  private int destinoPadreX = valoresPadreDestinoX[(int)random(0, valoresPadreDestinoX.length)];
+  private int destinoPadreY = valoresPadreDestinoY[(int)random(0, valoresPadreDestinoY.length)];
 
   private int stepPadreMovimentoIdle;
   private int tempoSpritePadreMovimentoIdle;
@@ -158,7 +158,7 @@ private class Padre {
       if (!ataqueCruz && !novoAtaqueLevantem && !novoAtaqueCaveira && !caveiraApareceu && !padreCaveiraCaiuCabeca && !padreTomouDanoCaveira) {
         if (!somPadreIdleTocando) {
           if (isSoundActive) {
-            indexRandomSomPadreIdle = int(random(0, sonsPadreIdle.length));
+            indexRandomSomPadreIdle = (int)random(0, sonsPadreIdle.length);
             sonsPadreIdle[indexRandomSomPadreIdle].rewind();
             sonsPadreIdle[indexRandomSomPadreIdle].play();
             somPadreIdleTocando = true;
@@ -294,7 +294,7 @@ private class Padre {
         if (!ataqueCruz && !novoAtaqueLevantem && !novoAtaqueCaveira && !caveiraApareceu && !padreCaveiraCaiuCabeca && !padreTomouDanoCaveira && !padreCarregandoNovoAtaqueRaio) {
           if (!somPadreIdleTocando) {
             if (isSoundActive) {
-              indexRandomSomPadreIdle = int(random(0, sonsPadreRaivaIdle.length));
+              indexRandomSomPadreIdle = (int)random(0, sonsPadreRaivaIdle.length);
               sonsPadreRaivaIdle[indexRandomSomPadreIdle].rewind();
               sonsPadreRaivaIdle[indexRandomSomPadreIdle].play();
               somPadreIdleTocando = true;
@@ -494,8 +494,8 @@ private class Padre {
     if (!padreMudouForma || padreMudouForma) {
       if (!novoAtaqueLevantem && !ataqueLevantemAcontecendo && !ataqueCaveiraAcontecendo && !padreCaveiraCaiuCabeca && !padreTomouDanoCaveira && !padreCarregandoNovoAtaqueRaio && !padreMorreu) {
         if (millis() > tempoNovoDestino + 8000) {
-          destinoPadreX = valoresPadreDestinoX[int(random(0, valoresPadreDestinoX.length))];
-          destinoPadreY = valoresPadreDestinoY[int(random(0, valoresPadreDestinoY.length))];
+          destinoPadreX = valoresPadreDestinoX[(int)random(0, valoresPadreDestinoX.length)];
+          destinoPadreY = valoresPadreDestinoY[(int)random(0, valoresPadreDestinoY.length)];
           tempoNovoDestino = millis();  
           gatilhoNovoAtaqueRaioAtivo = false;
           gatilhoNovoAtaqueCaveiraAtivo = false;
@@ -837,7 +837,7 @@ boolean gatilhoNovaCaveiraAtacar;
 
 void caveiraPadre() {   
   if (caveirasPadre.size() > 0 && millis() > tempoPrimeiraCaveiraAtaque + 1000 && !gatilhoNovaCaveiraAtacar) {
-    randomIndexCaveiraPadre = int(random(0, 4));
+    randomIndexCaveiraPadre = (int)random(0, 4);
     gatilhoNovaCaveiraAtacar = true;
   }
 
@@ -848,10 +848,10 @@ void caveiraPadre() {
   }
 
   if (caveirasPadre.size() == 0 && padre.novoAtaqueCaveira) {
-    caveirasPadre.add(new CaveiraPadre(padreX + 005, padreY + 033, 0, int(random(9, 11))));  
-    caveirasPadre.add(new CaveiraPadre(padreX + 015, padreY + 113, 1, int(random(4, 12))));
-    caveirasPadre.add(new CaveiraPadre(padreX + 105, padreY + 033, 2, int(random(5, 13))));
-    caveirasPadre.add(new CaveiraPadre(padreX + 110, padreY + 113, 3, int(random(8, 10))));
+    caveirasPadre.add(new CaveiraPadre(padreX + 005, padreY + 033, 0, (int)random(9, 11)));  
+    caveirasPadre.add(new CaveiraPadre(padreX + 015, padreY + 113, 1, (int)random(4, 12)));
+    caveirasPadre.add(new CaveiraPadre(padreX + 105, padreY + 033, 2, (int)random(5, 13)));
+    caveirasPadre.add(new CaveiraPadre(padreX + 110, padreY + 113, 3, (int)random(8, 10)));
   }
 
   if (caveirasPadre.size() == 0) {

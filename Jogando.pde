@@ -14,6 +14,8 @@ void jogando() {
     } else {
       firstMap.scenery();
       firstMap.foodManager();
+      firstMap.itemManager();
+      firstMap.weaponManager();
       firstMap.enemies();
       firstMap.hud();
     }
@@ -46,13 +48,12 @@ void jogando() {
     gameState = GameState.WIN.getValue();
   }
 
-  cenario();
   inimigosTodos();
-  armas(); 
+  weapons(); 
   jLeite(); 
   playerHitpoints();
-  ib.updateItemImage();
-  ib.display();
+  //ib.updateItemImage();
+  //ib.display();
   if (movementTutorialScreenActive) {
     telaTutorialAndando();
   }
