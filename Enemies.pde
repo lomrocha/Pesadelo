@@ -49,7 +49,7 @@ abstract private class Enemy extends Geral {
   private int damage;
   private int type;
 
-  private boolean[] bools;
+  private boolean kickingSkeletonHasKicked;
 
   // TARGET
   protected void setTarget(PVector target) {
@@ -83,15 +83,13 @@ abstract private class Enemy extends Geral {
     this.type = type;
   }
 
-  // GET_BOOLS
-  public boolean[] getBools() {
-    return this.bools;
+  // KICKING_SKELETON_HAS_KICKED
+  public boolean getKickingSkeletonHasKicked() {
+    return this.kickingSkeletonHasKicked;
   }
-  public void setBools(boolean[] bools) {
-    this.bools = bools;
+  public void setKickingSkeletonHasKicked(boolean kickingSkeletonHasKicked) {
+    this.kickingSkeletonHasKicked = kickingSkeletonHasKicked;
   }
-
-  abstract void updateBools();
 
   abstract void updateMovement();
 
@@ -118,11 +116,11 @@ void damage(int amount) {
   for (int i = inimigos.size() - 1; i >= 0; i = i - 1) {
     E enemy = inimigos.get(i);
     if (enemy.getType() == KICKING_SKELETON) {
-      if (enemy.getBools()[0]) {
+      if (enemy.getKickingSkeletonHasKicked()) {
         cabecasEsqueleto.add(new CabecaEsqueleto(enemy.getX(), enemy.getY()));
+        enemy.setKickingSkeletonHasKicked(false);
       }
     }
-    enemy.updateBools();
     enemy.updateTarget();
     enemy.updateMovement();
     enemy.update();
@@ -159,8 +157,8 @@ void damage(int amount) {
 <E extends Enemy> void deleteEnemy(ArrayList<E> inimigos) {
   for (int i = inimigos.size() - 1; i >= 0; i--) {
     E enemy = inimigos.get(i);
-    for (int j = armas.size() - 1; j >= 0; j--) {
-      Arma arma = armas.get(j);
+    for (int j = weapons.size() - 1; j >= 0; j--) {
+      Weapon arma = weapons.get(j);
       if (arma.hasHit(enemy)) {
         totalInimigos--;
         hitInimigos(enemy.getX() - 40, enemy.getY() - 20);

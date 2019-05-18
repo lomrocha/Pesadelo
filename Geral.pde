@@ -1,5 +1,5 @@
-final int OBJECT_WITH_SHADOW = 1;
 final int OBJECT_WITHOUT_SHADOW = 0;
+final int OBJECT_WITH_SHADOW = 1;
 
 private class MaisGeral {
   private PImage sprite;

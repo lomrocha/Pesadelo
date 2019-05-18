@@ -23,9 +23,11 @@ PImage menuThumbsUp;
 PImage telaVitoria;
 PImage telaGameOver;
 
-void menu() {
+void menu() 
+{
   winLose();
-  if (gameState == GameState.MAIN_MENU.getValue()) {
+  if (gameState == GameState.MAIN_MENU.getValue()) 
+  {
     if (mm == null) {
       mm = new MainMenu();
     } else {
@@ -35,7 +37,8 @@ void menu() {
   }
 
   // Botões.
-  if (gameState == GameState.CONTROLS_MENU.getValue()) {
+  if (gameState == GameState.CONTROLS_MENU.getValue()) 
+  {
     if (ctrl == null) {
       ctrl = new Controls();
     } else {
@@ -47,7 +50,8 @@ void menu() {
   }
 
   // Créditos
-  if (gameState == GameState.CREDITS_MENU.getValue()) {
+  if (gameState == GameState.CREDITS_MENU.getValue()) 
+  {
     if (cre == null) {
       cre = new Credits();
     } else {
@@ -57,48 +61,52 @@ void menu() {
   }
 
   // Bosses
-  if (gameState == GameState.FIRST_BOSS.getValue()) {
+  if (gameState == GameState.FIRST_BOSS.getValue()) 
+  {
     if (isMusicActive) {
       temaBoss.play();
     }
 
     background(bossSceneryImages[0]);
     coveiro();
-    armas();
+    weapons();
     jLeite();
     playerHitpoints();
     ib.updateItemImage();
     ib.display();
   }
 
-  if (gameState == GameState.SECOND_BOSS.getValue()) {
+  if (gameState == GameState.SECOND_BOSS.getValue()) 
+  {
     if (isMusicActive) {
       temaBoss.play();
     }
     background(bossSceneryImages[1]);
     fazendeiro();
-    armas(); 
+    weapons(); 
     jLeite();
     playerHitpoints();
     ib.updateItemImage();
     ib.display();
   }
 
-  if (gameState == GameState.THIRD_BOSS.getValue()) {
+  if (gameState == GameState.THIRD_BOSS.getValue()) 
+  {
     if (isMusicActive) {
       temaBoss.play();
     }
 
     background(bossSceneryImages[2]);
     padre();
-    armas();
+    weapons();
     jLeite();
     playerHitpoints();
     ib.updateItemImage();
     ib.display();
   }
 
-  if (gameState >= GameState.WIN.getValue() && gameState <= GameState.GAMEOVER.getValue()) {
+  if (gameState >= GameState.WIN.getValue() && gameState <= GameState.GAMEOVER.getValue()) 
+  {
     menuHand();
   }
 }
@@ -107,7 +115,8 @@ PImage telaTutorialAndando, telaTutorialPedra, telaTutorialPedraSeta, telaTutori
 
 boolean movementTutorialScreenActive, weaponTutorialScreenActive;
 
-void telaTutorialAndando() {
+void telaTutorialAndando() 
+{
   image (telaTutorialAndando, 187.5, 119);
 
   playerWalkingSprite(470, 260);
@@ -115,21 +124,25 @@ void telaTutorialAndando() {
   image(telaTutorialX, 584, 139);
 }
 
-void playerWalkingSprite(int spriteX, int spriteY) {
-  if (millis() > tempoSpriteJLeiteMovimento + 75) { 
+void playerWalkingSprite(int spriteX, int spriteY) 
+{
+  if (millis() > tempoSpriteJLeiteMovimento + 75) 
+  { 
     spriteJLeiteMovimento = jLeiteMovimento.get(stepJLeiteMovimento, 0, 63, 126); 
     stepJLeiteMovimento = stepJLeiteMovimento % 378 + 63; 
     tempoSpriteJLeiteMovimento = millis();
   }
 
-  if (stepJLeiteMovimento == jLeiteMovimento.width) {
+  if (stepJLeiteMovimento == jLeiteMovimento.width) 
+  {
     stepJLeiteMovimento = 0;
   }
 
   image(spriteJLeiteMovimento, spriteX, spriteY);
 }
 
-void weaponTutorialScreen() {
+void weaponTutorialScreen() 
+{
   noLoop();
 
   image(telaTutorialPedra, 236, 169);
@@ -140,19 +153,25 @@ void weaponTutorialScreen() {
   weaponTutorialScreenActive = true;
 }
 
-void menuHand() {
+void menuHand() 
+{
   if (mouseX > 20 && mouseX < 125 && mouseY > 520 && mouseY < 573) {
     image(menuThumbsUp, 20, 520);
-    if (mousePressed) {
+    if (mousePressed) 
+    {
       gameState = GameState.MAIN_MENU.getValue();
     }
-  } else {
+  } 
+  else 
+  {
     image(menuPointingBack, 20, 520);
   }
 }
 
-void winLose() {
-  switch (gameState) {
+void winLose() 
+{
+  switch (gameState) 
+  {
   case 9:
     image(telaVitoria, 0, 0);
     break;

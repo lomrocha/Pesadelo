@@ -27,13 +27,8 @@ private class EsqueletoRaiva extends Enemy {
 
     this.setDamage(3);
     this.setType(RED_SKELETON);
-    this.setBools(new boolean[] {hasNewTarget});
 
     this.positionOnGrid = positionOnGrid;
-  }
-
-  void updateBools() {
-    this.setBools(new boolean[] {hasNewTarget});
   }
 
   void updateMovement() {

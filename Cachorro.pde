@@ -31,15 +31,10 @@ private class Cachorro extends Enemy {
 
     this.setDamage(2);
     this.setType(SKELETON_DOG);
-    this.setBools(new boolean[] {hasNewTarget});
-  }
-
-  void updateBools() {    
-    setBools(new boolean[] {hasNewTarget});
   }
 
   void updateMovement() {
-    setMotionY((!getBools()[0]) ? int(velocity.y) + (int)(numberOfStops * 1.5) : 0);
+    setMotionY((!hasNewTarget) ? int(velocity.y) + (int)(numberOfStops * 1.5) : 0);
   }
 
   void updateTarget() {

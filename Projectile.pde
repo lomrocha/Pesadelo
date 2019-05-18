@@ -1,8 +1,7 @@
 private class Projectile extends Enemy {
   private PVector start = new PVector();
   private PVector velocity = new PVector();
-
-  private boolean hasNewTarget;
+  private PVector distance = new PVector();
 
   // START
   public void setStart(PVector start) {
@@ -18,10 +17,6 @@ private class Projectile extends Enemy {
     image(getSpriteImage(), getX(), getY());
   }
 
-  void updateBools() {
-    this.setBools(new boolean[] {hasNewTarget});
-  }
-
   void updateMovement() {
     setMotionY(int(velocity.y));
     if (start.x != getTargetX()) {
@@ -34,10 +29,12 @@ private class Projectile extends Enemy {
   }
 
   void updateTarget() {
-    int distanceX = (getTargetX() > start.x) ? getTargetX() - (int)start.x : (int)start.x - getTargetX();
-    velocity.x = (int)map(distanceX, 0, 500, 1, 12);
+    // Calcula a distância entre o esqueleto e o jogador nos eixos 'x' e 'y'.
+    distance.x = (getTargetX() > start.x) ? getTargetX() - (int)start.x : (int)start.x - getTargetX();
+    distance.y = getTargetY() - (int)start.y;
     
-    int distanceY = getTargetY() - (int)start.y;
-    velocity.y = (int)map(distanceY, 75, 474, 4, 12);
+    // Baseado na distância calculada acima, a velocidade do projétil é mapeada.
+    velocity.x = (int)map(distance.x, 0, 500, 1, 12);
+    velocity.y = (int)map(distance.y, 75, 474, 4, 12);
   }
 }

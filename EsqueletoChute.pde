@@ -29,7 +29,7 @@ private class EsqueletoChute extends Enemy {
 
     this.setDamage(2);
     this.setType(KICKING_SKELETON);
-    this.setBools(new boolean[] {false});
+    this.setKickingSkeletonHasKicked(false);
   }
 
   void display() {
@@ -49,7 +49,7 @@ private class EsqueletoChute extends Enemy {
       image(kickingSkeletonSprite, getX(), getY());
 
       if (kickingSkeletonStep == 196 && !kickHeadTrigger) {
-        setBools(new boolean[] {true});
+        setKickingSkeletonHasKicked(true);
         kickHeadTrigger = true;
       }
 
@@ -62,10 +62,6 @@ private class EsqueletoChute extends Enemy {
     }
 
     super.display();
-  }
-
-  void updateBools() {
-    this.setBools(new boolean[] {false});
   }
 
   void updateMovement() {

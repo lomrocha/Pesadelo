@@ -1,8 +1,10 @@
-private class HUD {
+private class HUD 
+{
   private HitpointsLayout p;
 
   void display() {
-    switch(gameState) {
+    switch(gameState) 
+    {
     case 3:
       coveiroHP.update();
       coveiroHP.display();

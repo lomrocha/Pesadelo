@@ -32,11 +32,6 @@ private class Corvo extends Enemy {
 
     this.setDamage(3);
     this.setType(SKELETON_CROW);
-    this.setBools(new boolean[] {hasNewTarget});
-  }
-
-  void updateBools() {
-    this.setBools(new boolean[] {hasNewTarget});
   }
 
   void updateMovement() {

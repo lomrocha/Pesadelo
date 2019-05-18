@@ -3,11 +3,11 @@ private class EnemiesManager {
     for (int i = inimigos.size() - 1; i >= 0; i = i - 1) {
       E enemy = inimigos.get(i);
       if (enemy.getType() == KICKING_SKELETON) {
-        if (enemy.getBools()[0]) {
+        if (enemy.getKickingSkeletonHasKicked()) {
           cabecasEsqueleto.add(new CabecaEsqueleto(enemy.getX(), enemy.getY()));
+          enemy.setKickingSkeletonHasKicked(false);
         }
       }
-      enemy.updateBools();
       enemy.updateTarget();
       enemy.updateMovement();
       enemy.update();
@@ -25,8 +25,8 @@ private class EnemiesManager {
   private <E extends Enemy> void deleteEnemy(ArrayList<E> inimigos, EnemiesSpawnManager spawnManager) {
     for (int i = inimigos.size() - 1; i >= 0; i--) {
       E enemy = inimigos.get(i);
-      for (int j = armas.size() - 1; j >= 0; j--) {
-        Arma arma = armas.get(j);
+      for (int j = weapons.size() - 1; j >= 0; j--) {
+        Weapon arma = weapons.get(j);
         if (arma.hasHit(enemy)) {
           handleSpawnManagerVariables(enemy, spawnManager);
           hitInimigos(enemy.getX() - 40, enemy.getY() - 20);

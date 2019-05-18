@@ -1,3 +1,5 @@
+// ------------------------------------ FIRST MAP -------------------------------------------------
+
 private class FirstMap {
   private Scenery firstScenery  = new Scenery( 000, 0);
   private Scenery secondScenery = new Scenery(-600, 0);
@@ -50,6 +52,14 @@ private class FirstMap {
       s.display();
     }
   }
+  
+  private void itemManager() {
+    if (!movementTutorialScreenActive) {
+      itemManager.computeItem(regularMapItemSpawnManager.items, regularMapItemSpawnManager, weaponSpawnManager);
+      regularMapItemSpawnManager.randomizeItemIndex();
+      regularMapItemSpawnManager.addItem();
+    }
+  }
 
   private void foodManager() {
     if (!movementTutorialScreenActive) {
@@ -59,3 +69,7 @@ private class FirstMap {
     }
   }
 }
+
+// ------------------------------------ SECOND MAP -------------------------------------------------
+
+// ------------------------------------ THIRD MAP -------------------------------------------------

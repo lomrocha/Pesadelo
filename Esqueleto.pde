@@ -6,8 +6,6 @@ final int SKELETON = 1;
 final int[] valoresEsqueletoXPrimeiroMapaBoss = {200, 520};
 
 private class Esqueleto extends Enemy {
-  private boolean hasNewTarget;
-  
   Esqueleto(int x, int y) {
     this.setSelf(new PVector(x, y));
     
@@ -23,11 +21,6 @@ private class Esqueleto extends Enemy {
 
     this.setDamage(2);
     this.setType(SKELETON);
-    this.setBools(new boolean[] {hasNewTarget});
-  }
-  
-  void updateBools() {
-    this.setBools(new boolean[] {hasNewTarget});
   }
 
   void updateMovement() {
