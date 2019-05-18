@@ -14,7 +14,7 @@ final int[][] ENEMY_POSITIONS_FIRST_MAP  = new int [7][4];
 final int[][] ENEMY_POSITIONS_SECOND_MAP = new int [7][4];
 final int[][] ENEMY_POSITIONS_THIRD_MAP  = new int [7][4];
 
-final int[] ENEMIES_MAXIMUM_FIRST_MAP  = {2, 2, 3, 4, 5, 0};
+final int[] ENEMIES_MAXIMUM_FIRST_MAP  = {1, 1, 2, 3, 4, 0};
 final int[] ENEMIES_MAXIMUM_SECOND_MAP = {};
 final int[] ENEMIES_MAXIMUM_THIRD_MAP  = {};
 
@@ -46,8 +46,6 @@ HitpointsLayout madPadreHP;
 
 ItemBox ib;
 
-FirstMapEnemiesSpawnManager firstMapEnemiesSpawnManager;
-
 void setup() {
   size(800, 600);
 
@@ -69,8 +67,6 @@ void setup() {
   coveiro = new Coveiro();
   fazendeiro = new Fazendeiro();
   padre = new Padre();
-
-  firstMapEnemiesSpawnManager = new FirstMapEnemiesSpawnManager(ENEMIES_MAXIMUM_FIRST_MAP);
 }
 
 void draw() {
@@ -170,7 +166,7 @@ void keyPressed() {
         oneWeapon = false;
 
         firstMap.weaponSpawnManager.addWeapon();
-        
+
         if (firstMap.weaponSpawnManager.getWeaponTotal() == 1)
         {
           firstMap.regularMapItemSpawnManager.setSpawnVariables(7000);
@@ -189,8 +185,7 @@ void keyPressed() {
       noLoop();
       timeRemainingFood = (firstMap.regularMapFoodSpawnManager.getTimeToGenerateFood() + firstMap.regularMapFoodSpawnManager.getIntervalToGenerateFood()) - millis();
       timeRemainingItem = (timeToGenerateItem + intervalToGenerateItem) - millis();
-    } 
-    else 
+    } else 
     {
       loop();
       if (firstMap.regularMapFoodSpawnManager.getFoodTotal() == 0) 

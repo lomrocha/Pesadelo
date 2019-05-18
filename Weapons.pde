@@ -425,8 +425,7 @@ private class RegularMapItemSpawnManager extends ItemSpawnManager
       if (getItemIndex() >= 0 && getItemIndex() <= 4) 
       {
         items.get(SHOVEL).setIsDisabled(false);
-      } 
-      else if (getItemIndex() >=5 && getItemIndex() <= 9) 
+      } else if (getItemIndex() >=5 && getItemIndex() <= 9) 
       {
         items.get(WHIP).setIsDisabled(false);
       }
@@ -478,7 +477,7 @@ private class WeaponManager
       Weapon weapon = weapons.get(i);
       weapon.update();
       weapon.display();
-      
+
       if (weapon.getDeleteWeapon())
       {
         weapons.remove(weapon);

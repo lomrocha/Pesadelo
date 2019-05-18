@@ -183,16 +183,20 @@ void imagesPreLoad()
   playerHPBackground = loadImage ("vidaJLeiteLayoutBackground.png");
   playerHPBar = loadImage ("vidaJLeiteBarra.png");
 
-  skeleton = loadImage ("esqueleto.png");
-  skeletonShadow = loadImage ("sombraEsqueleto.png");
-  kickingSkeleton = loadImage ("esqueletoChuteAtaque.png");
-  headlessKickingSkeleton = loadImage ("esqueletoChuteMovimento.png");
+  skeletonImage = loadImage ("skeletonImage.png");
+  skeletonShadow = loadImage ("skeletonShadow.png");
+  
   skeletonHead = loadImage ("cabecaEsqueletoChute.png");
-  kickingSkeletonShadow = loadImage ("sombraEsqueletoChute.png");
+  headlessSkeletonKickingImage = loadImage ("headlessSkeletonKickingImage.png");
+  headlessSkeletonMovementImage = loadImage ("headlessSkeletonMovementImage.png");
+  headlessSkeletonShadow = loadImage ("headlessSkeletonShadow.png");
+  
   skeletonDog = loadImage ("cachorro.png");
   skeletonDogShadow = loadImage ("sombraCachorro.png");
+  
   skeletonCrow = loadImage ("corvo.png");
   skeletonCrowShadow = loadImage ("sombraCorvo.png");
+  
   redSkeleton = loadImage ("esqueletoRaiva.png");
   redSkeletonShadow = loadImage ("sombraEsqueletoRaiva.png");
 
@@ -321,8 +325,6 @@ void imagesPreLoad()
 
 void variablesPreLoad() 
 {
-  skeletonPositions();
-  kickingSkeletonPositions();
   skeletonDogPositions();
   redSkeletonPositions();
 

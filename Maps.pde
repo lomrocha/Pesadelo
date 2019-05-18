@@ -13,7 +13,7 @@ private class FirstMap
   //private Player player =  new Player();
 
   private EnemiesManager enemiesManager                           = new EnemiesManager();
-  private FirstMapEnemiesSpawnManager firstMapEnemiesSpawnManager = new FirstMapEnemiesSpawnManager(ENEMIES_MAXIMUM_FIRST_MAP);
+  private FirstMapEnemiesSpawnManager firstMapEnemiesSpawnManager = new FirstMapEnemiesSpawnManager();
 
   private FoodManager foodManager                               = new FoodManager();
   private RegularMapFoodSpawnManager regularMapFoodSpawnManager = new RegularMapFoodSpawnManager();
@@ -34,11 +34,14 @@ private class FirstMap
 
   private void enemies()
   {
-    enemiesManager.computeEnemy(firstMapEnemiesSpawnManager.skeletons, firstMapEnemiesSpawnManager);
-    enemiesManager.deleteEnemy(firstMapEnemiesSpawnManager.skeletons, firstMapEnemiesSpawnManager, weaponSpawnManager.weapons);
+    firstMapEnemiesSpawnManager.updateSpawnState();
+    firstMapEnemiesSpawnManager.states();
     
-    //enemiesManager.computeEnemy(firstMapEnemiesSpawnManager.kickingSkeletons, firstMapEnemiesSpawnManager);
-    //enemiesManager.deleteEnemy(firstMapEnemiesSpawnManager.kickingSkeletons, firstMapEnemiesSpawnManager, weaponSpawnManager.weapons);
+    enemiesManager.computeEnemy(firstMapEnemiesSpawnManager.enemies, firstMapEnemiesSpawnManager.skeletonHeads, firstMapEnemiesSpawnManager);
+    enemiesManager.deleteEnemy(firstMapEnemiesSpawnManager.enemies, weaponSpawnManager.weapons, firstMapEnemiesSpawnManager);
+
+    enemiesManager.computeEnemy(firstMapEnemiesSpawnManager.skeletonHeads, firstMapEnemiesSpawnManager.skeletonHeads, firstMapEnemiesSpawnManager);
+    //enemiesManager.deleteEnemy(firstMapEnemiesSpawnManager.skeletonHeads, firstMapEnemiesSpawnManager, weaponSpawnManager.weapons);
   }
 
   private void scenery()
@@ -83,5 +86,5 @@ private class FirstMap
 // --------------------------------------- SECOND MAP -------------------------------------------------
 
 
- 
+
 // --------------------------------------- THIRD MAP -------------------------------------------------

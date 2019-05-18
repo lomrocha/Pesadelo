@@ -5,12 +5,12 @@ void jogando() {
     if (!isFirstMapSet) {
       if (firstMap == null) {
         firstMap = new FirstMap();
-      } else {
-        movementTutorialScreenActive = true;
-        firstMap.regularMapItemSpawnManager.setSpawnVariables(7000);
-        firstMap.regularMapFoodSpawnManager.setSpawnVariables(7000);
-        isFirstMapSet = true;
       }
+
+      movementTutorialScreenActive = true;
+      firstMap.regularMapItemSpawnManager.setSpawnVariables(7000);
+      firstMap.regularMapFoodSpawnManager.setSpawnVariables(7000);
+      isFirstMapSet = true;
     } else {
       firstMap.scenery();
       firstMap.foodManager();
@@ -52,8 +52,6 @@ void jogando() {
   weapons(); 
   jLeite(); 
   playerHitpoints();
-  //ib.updateItemImage();
-  //ib.display();
   if (movementTutorialScreenActive) {
     telaTutorialAndando();
   }

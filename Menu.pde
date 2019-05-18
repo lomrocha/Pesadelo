@@ -28,12 +28,13 @@ void menu()
   winLose();
   if (gameState == GameState.MAIN_MENU.getValue()) 
   {
-    if (mm == null) {
+    if (mm == null) 
+    {
       mm = new MainMenu();
-    } else {
-      mm.images();
-      mm.buttons();
     }
+
+    mm.images();
+    mm.buttons();
   }
 
   // Botões.
@@ -41,12 +42,12 @@ void menu()
   {
     if (ctrl == null) {
       ctrl = new Controls();
-    } else {
-      background(51);
-      ctrl.images();
-      ctrl.sprites();
-      ctrl.button();
     }
+
+    background(51);
+    ctrl.images();
+    ctrl.sprites();
+    ctrl.button();
   }
 
   // Créditos
@@ -54,10 +55,10 @@ void menu()
   {
     if (cre == null) {
       cre = new Credits();
-    } else {
-      cre.credits();
-      cre.button();
     }
+
+    cre.credits();
+    cre.button();
   }
 
   // Bosses

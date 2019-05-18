@@ -196,7 +196,7 @@ private class FoodManager
         food.display();
         if (food.hasExitScreen() || food.hasCollided()) 
         { 
-              
+
           if (food.hasCollided()) 
           {
             heal(food.getAmountHeal(), food);
@@ -296,7 +296,7 @@ abstract private class FoodSpawnManager
 private class RegularMapFoodSpawnManager extends FoodSpawnManager 
 {
   private ArrayList<Food> foods = new ArrayList<Food>();
-  
+
   RegularMapFoodSpawnManager()
   {
     foods.add(new Brigadeiro());
@@ -311,12 +311,10 @@ private class RegularMapFoodSpawnManager extends FoodSpawnManager
       if (getFoodIndex() >= 0 && getFoodIndex() <= 4) 
       {
         foods.get(BRIGADEIRO).setIsDisabled(false);
-      } 
-      else if (getFoodIndex() >= 5 && getFoodIndex() <= 7) 
+      } else if (getFoodIndex() >= 5 && getFoodIndex() <= 7) 
       {
         foods.get(QUEIJO).setIsDisabled(false);
-      } 
-      else if (getFoodIndex() >= 8 && getFoodIndex() <= 9) 
+      } else if (getFoodIndex() >= 8 && getFoodIndex() <= 9) 
       { 
         foods.get(COXINHA).setIsDisabled(false);
       }
