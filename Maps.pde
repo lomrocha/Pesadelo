@@ -6,14 +6,12 @@ private class FirstMap
   private Scenery secondScenery = new Scenery(-600, 0);
   private Scenery[] sceneries   = { firstScenery, secondScenery };
 
-  //private TransitionGate door =  new TransitionGate(230, 0, DOOR);
+  private TransitionGate door =  new TransitionGate(230, 0, DOOR);
 
   private HUD hud =  new HUD();
 
-  //private Player player =  new Player();
-
   private EnemiesManager enemiesManager                           = new EnemiesManager();
-  private SecondMapEnemiesSpawnManager firstMapEnemiesSpawnManager = new SecondMapEnemiesSpawnManager();
+  private FirstMapEnemiesSpawnManager firstMapEnemiesSpawnManager = new FirstMapEnemiesSpawnManager();
 
   private FoodManager foodManager                               = new FoodManager();
   private RegularMapFoodSpawnManager regularMapFoodSpawnManager = new RegularMapFoodSpawnManager();
@@ -46,11 +44,27 @@ private class FirstMap
 
   private void scenery()
   {
+    if (numberOfSceneries == 36)
+    {
+      secondScenery.sceneryIndex = 1;
+      door.setY((int)secondScenery.scenery.y);
+    }
+    
     for (Scenery s : sceneries)
     {
       s.updateMovement();
       s.update();
       s.display();
+    }
+    
+    if (numberOfSceneries >= 36)
+    {
+      door.display();
+    }
+        
+    if (numberOfSceneries == 37)
+    {
+      door.setTriggerOpening(true);
     }
   }
 

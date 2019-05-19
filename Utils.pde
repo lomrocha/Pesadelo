@@ -197,8 +197,8 @@ void imagesPreLoad()
   crowSkeletonImage  = loadImage ("crowSkeletonImage.png");
   crowSkeletonShadow = loadImage ("crowSkeletonShadow.png");
   
-  redSkeleton = loadImage ("esqueletoRaiva.png");
-  redSkeletonShadow = loadImage ("sombraEsqueletoRaiva.png");
+  redSkeletonImage  = loadImage ("redSkeletonImage.png");
+  redSkeletonShadow = loadImage ("redSkeletonShadow.png");
 
   hitInimigos = loadImage ("hitInimigos.png");
 

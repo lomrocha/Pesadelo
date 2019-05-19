@@ -6,7 +6,7 @@ PImage[] bossSceneryImages =  new PImage [3];
 PImage door;
 PImage fence;
 
-final int SCENERY_VELOCITY = 2;
+final int SCENERY_VELOCITY = 8;
 
 int numberOfSceneries;
 
@@ -18,22 +18,19 @@ private class Scenery
   private int sceneryIndex;
 
   public Scenery(int y, int sceneryIndex) 
-
   {
     this.scenery = new PVector(0, y);
     this.sceneryIndex = sceneryIndex;
   }
 
   void display() 
-
   {
     image (sceneryImages[sceneryIndex], scenery.x, scenery.y);
   }
 
   void update()
   {
-    if (scenery.y > height) 
-
+    if (scenery.y > height)
     {
       scenery.y = -600;
       numberOfSceneries = (!movementTutorialScreenActive) ? numberOfSceneries + 1 : 0;
@@ -43,9 +40,8 @@ private class Scenery
   }
 
   void updateMovement() 
-
   {
-    motion.y = (numberOfSceneries < 35) ? SCENERY_VELOCITY : 0;
+    motion.y = (numberOfSceneries < 37) ? SCENERY_VELOCITY : 0;
   }
 }
 
@@ -56,7 +52,15 @@ final int FENCE = 1;
 
 private class TransitionGate extends BaseStill 
 {
+  private PImage stillImage;
+
   private boolean hasOpened;
+  private boolean triggerOpening;
+  
+  void setTriggerOpening(boolean triggerOpening)
+  {
+    this.triggerOpening = triggerOpening;
+  }
 
   TransitionGate(int x, int y, int index) 
   {
@@ -82,12 +86,21 @@ private class TransitionGate extends BaseStill
 
   void display() 
   {
-    if (!hasOpened) 
+    if (triggerOpening)
     {
-      super.display();
-    } else 
+      if (!hasOpened) 
+      {
+        super.display();
+      } else 
+      {
+        stillImage = door.get(1002, 0, 334, 256); 
+        image(stillImage, getX(), getY());
+      }
+    }
+    else
     {
-      image(getSpriteImage(), getX(), getY());
+      stillImage = door.get(0, 0, 334, 256);
+      image(stillImage, getX(), getY());
     }
   }
 

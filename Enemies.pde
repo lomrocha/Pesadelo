@@ -1,6 +1,6 @@
 // -------------------------------------- ENEMY ---------------------------------------------------
 
-final int[] ENEMIES_SPAWN_X_POSITIONS = {102, 204, 300, 402, 504, 600};
+final int[] ENEMIES_SPAWN_X_POSITIONS = {120, 210, 300, 420, 510, 600};
 
 abstract private class Enemy extends BaseMovement
 {
@@ -513,7 +513,7 @@ private class CrowSkeleton extends Enemy
 
 // -------------------------------------- RED SKELETON -----------------------------------------------
 
-PImage redSkeleton;
+PImage redSkeletonImage;
 PImage redSkeletonShadow;
 
 final int RED_SKELETON = 6;
@@ -521,12 +521,14 @@ final int RED_SKELETON = 6;
 final int LEFT_SIDE_ON_GRID = 0;
 final int RIGHT_SIDE_ON_GRID = 1;
 
-private class EsqueletoRaiva extends Enemy {
+private class RedSkeleton extends Enemy
+{
   private int positionOnGrid;
 
   private boolean hasNewTarget;
 
-  EsqueletoRaiva(int x, int y, int positionOnGrid) {
+  RedSkeleton(int x, int y, int positionOnGrid)
+  {
     this.setSelf(new PVector(x, y));
     this.setTarget((positionOnGrid == RIGHT_SIDE_ON_GRID) ? new PVector(100, 0) : new PVector(625, 0));
 
@@ -535,7 +537,7 @@ private class EsqueletoRaiva extends Enemy {
     this.setShadowImage(redSkeletonShadow);
     this.setShadowOffset(new PVector(16, 114));
 
-    this.setSpriteImage(redSkeleton);
+    this.setSpriteImage(redSkeletonImage);
     this.setSpriteInterval(75);
     this.setSpriteWidth(76);
     this.setSpriteHeight(126);
@@ -543,27 +545,38 @@ private class EsqueletoRaiva extends Enemy {
     this.setDamage(3);
     this.setType(RED_SKELETON);
 
+    this.setIsDisabled(true);
+
     this.positionOnGrid = positionOnGrid;
   }
 
-  void updateMovement() {
-    if (isOnScreen()) {
-      setMotionY(1);
+  void updateMovement()
+  {
+    if (getY() > -120)
+    {
+      setMotionY(3);
       setMotionX((getX() < getTargetX()) ? 5 : -5);
-    } else {
-      setMotionY(4);
+    } 
+    else
+    {
+      setMotionY(2);
       setMotionX(0);
     }
   }
 
-  void updateTarget() {
-    if (isOnScreen()) {
-      if (getX() == getTargetX()) {
+  void updateTarget()
+  {
+    if (getY() > -120)
+    {
+      if (getX() == getTargetX())
+      {
         hasNewTarget = false;
       }
 
-      if (!hasNewTarget) {
-        switch(positionOnGrid) {
+      if (!hasNewTarget)
+      {
+        switch(positionOnGrid)
+        {
         case LEFT_SIDE_ON_GRID:
           setTargetX(625);
           positionOnGrid = RIGHT_SIDE_ON_GRID;
@@ -573,6 +586,7 @@ private class EsqueletoRaiva extends Enemy {
           positionOnGrid = LEFT_SIDE_ON_GRID;
           break;
         }
+
         hasNewTarget = true;
       }
     }
@@ -580,6 +594,19 @@ private class EsqueletoRaiva extends Enemy {
   
   void resetVariables(int x)
   {
+    super.resetVariables(x);
+
+    hasNewTarget = true;
+    if (x < 301) 
+    {
+      setTargetX(625);
+      positionOnGrid = RIGHT_SIDE_ON_GRID;
+    }
+    else if (x > 419) 
+    {
+      setTargetX(100);
+      positionOnGrid = LEFT_SIDE_ON_GRID;
+    }
   }
 }
 
@@ -1071,28 +1098,96 @@ private class SecondMapEnemiesSpawnManager extends EnemiesSpawnManager
 private class ThirdMapEnemiesSpawnManager extends EnemiesSpawnManager
 {
 
+  private ArrayList<Enemy> enemies                              = new ArrayList<Enemy>();
+  private ArrayList<HeadlessSkeletonHead> headlessSkeletonHeads = new ArrayList<HeadlessSkeletonHead>();
+
+  final int[] SKELETON_MAXIMUM          = { 1, 0, 1, 1, 0, 0 };
+  final int[] HEADLESS_SKELETON_MAXIMUM = { 1, 1, 1, 1, 1, 0 };
+  final int[] DOG_SKELETON_MAXIMUM      = { 1, 1, 1, 0, 1, 0 };
+  final int[] CROW_SKELETON_MAXIMUM     = { 0, 1, 1, 1, 1, 0 };
+  final int[] RED_SKELETON_MAXIMUM      = { 0, 0, 0, 1, 1, 0 };
+  final int[] ENEMIES_MAXIMUM           = { 3, 3, 4, 4, 4, 0 };
+
   ThirdMapEnemiesSpawnManager()
   {
+    super();
+
+    enemies.add(new Skeleton(300, -200));
+    enemies.add(new Skeleton(500, -200));
+    enemies.add(new HeadlessSkeleton(300, -200));
+    enemies.add(new HeadlessSkeleton(600, -200));
+    enemies.add(new DogSkeleton(300, -200));
+    enemies.add(new DogSkeleton(600, -200));
+    enemies.add(new CrowSkeleton(300, -200));
+    enemies.add(new CrowSkeleton(600, -200));
+    enemies.add(new RedSkeleton(100, -200, LEFT_SIDE_ON_GRID));
+    enemies.add(new RedSkeleton(625, -200, RIGHT_SIDE_ON_GRID));
+  }
+
+  void handleEnemySpawn(int maximum, int index)
+  {
+    while (getEnemiesTotal() < maximum)
+    {
+      if (getSkeletonTotal() < SKELETON_MAXIMUM[index])
+      {
+        spawnEnemy(enemies, SKELETONS_INDEX_RANGE, SKELETON);
+      }       
+
+      if (getHeadlessSkeletonTotal() < HEADLESS_SKELETON_MAXIMUM[index])
+      {
+        spawnEnemy(enemies, HEADLESS_SKELETONS_INDEX_RANGE, HEADLESS_SKELETON);
+      }
+
+      if (getDogSkeletonTotal() < DOG_SKELETON_MAXIMUM[index])
+      {
+        spawnEnemy(enemies, DOG_SKELETONS_INDEX_RANGE, DOG_SKELETON);
+      }
+
+      if (getCrowSkeletonTotal() < CROW_SKELETON_MAXIMUM[index])
+      {
+        spawnEnemy(enemies, CROW_SKELETONS_INDEX_RANGE, CROW_SKELETON);
+      }
+
+      if (getRedSkeletonTotal() < RED_SKELETON_MAXIMUM[index])
+      {
+        spawnEnemy(enemies, RED_SKELETONS_INDEX_RANGE, RED_SKELETON);
+      }
+    }
   }
 
   void firstBatch()
   {
+    int max = ENEMIES_MAXIMUM[0];
+
+    handleEnemySpawn(max, 0);
   }
 
   void secondBatch()
   {
+    int max = ENEMIES_MAXIMUM[1];
+
+    handleEnemySpawn(max, 1);
   }
 
   void thirdBatch()
   {
+    int max = ENEMIES_MAXIMUM[2];
+
+    handleEnemySpawn(max, 2);
   }
 
   void fourthBatch()
   {
+    int max = ENEMIES_MAXIMUM[3];
+
+    handleEnemySpawn(max, 3);
   }
 
   void fifthBatch()
   {
+    int max = ENEMIES_MAXIMUM[4];
+
+    handleEnemySpawn(max, 4);
   }
 
   void sixthBatch()
@@ -1104,14 +1199,11 @@ private class ThirdMapEnemiesSpawnManager extends EnemiesSpawnManager
 
 
 
-
 // ----------------------------------------- SECOND BOSS SPAWN MANAGER ---------------------------------------------------
 
 
 
-
 // ----------------------------------------- THIRD BOSS SPAWN MANAGER ---------------------------------------------------
-
 
 
 
