@@ -48,7 +48,6 @@ void jogando() {
     gameState = GameState.WIN.getValue();
   }
 
-  inimigosTodos();
   weapons(); 
   jLeite(); 
   playerHitpoints();

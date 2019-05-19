@@ -41,7 +41,7 @@ private class Item extends BaseMovement
   // Make it disabled so it won't move.
   void resetVariables()
   {
-    setSelf(new PVector((int)random(100, 670), -50));
+    setSelf(new PVector((int)random(100, 600), -200));
     setIsDisabled(true);
   }
 }
@@ -164,22 +164,27 @@ abstract private class Weapon extends BaseStill
 
 // -------------------------------------- WHIP ITEM ---------------------------------------------------
 
-PImage whip;
+PImage whipItemImage;
 PImage whipShadow;
 
 final int WHIP = 1;
 final int WHIPTOTAL = 5;
 
-private class WhipItem extends Item {
-  WhipItem(int x, int y) {
+private class WhipItem extends Item 
+{
+  
+  WhipItem(int x, int y) 
+  {
     setValues(x, y, OBJECT_WITHOUT_SHADOW);
   }
 
-  WhipItem() {
+  WhipItem() 
+  {
     setValues((int)random(100, 600), -50, OBJECT_WITH_SHADOW);
   }
 
-  private void setValues(int x, int y, int index) {
+  private void setValues(int x, int y, int index) 
+  {
     this.setSelf(new PVector(x, y));
 
     this.setTypeOfObject(index);
@@ -187,7 +192,7 @@ private class WhipItem extends Item {
     this.setShadowImage(whipShadow);
     this.setShadowOffset(new PVector(10, 76));
 
-    this.setSpriteImage(whip);
+    this.setSpriteImage(whipItemImage);
     this.setSpriteInterval(75);
     this.setSpriteWidth(101);
     this.setSpriteHeight(91);
@@ -202,7 +207,7 @@ private class WhipItem extends Item {
 
 // -------------------------------------- WHIP WEAPON ---------------------------------------------------
 
-PImage whipAttack;
+PImage whipWeaponImage;
 
 private class ChicoteAtaque extends Weapon {
   ChicoteAtaque() {
@@ -210,7 +215,7 @@ private class ChicoteAtaque extends Weapon {
 
     this.setTypeOfObject(OBJECT_WITHOUT_SHADOW);
 
-    this.setSpriteImage(whipAttack);
+    this.setSpriteImage(whipWeaponImage);
     this.setSpriteInterval(110);
     this.setSpriteWidth(234);
     this.setSpriteHeight(278);
@@ -232,22 +237,27 @@ private class ChicoteAtaque extends Weapon {
 
 // -------------------------------------- SHOVEL ITEM ---------------------------------------------------
 
-PImage shovel;
+PImage shovelItemImage;
 PImage shovelShadow;
 
 final int SHOVEL = 0;
 final int SHOVELTOTAL = 5;
 
-private class ShovelItem extends Item {
-  ShovelItem(int x, int y) {
+private class ShovelItem extends Item 
+{
+  
+  ShovelItem(int x, int y) 
+  {
     setValues(x, y, OBJECT_WITHOUT_SHADOW);
   }
 
-  ShovelItem() {
+  ShovelItem() 
+  {
     setValues((int)random(100, 610), -50, OBJECT_WITH_SHADOW);
   }
 
-  private void setValues(int x, int y, int index) {
+  private void setValues(int x, int y, int index) 
+  {
     this.setSelf(new PVector(x, y));
 
     this.setTypeOfObject(index);
@@ -255,7 +265,7 @@ private class ShovelItem extends Item {
     this.setShadowImage(shovelShadow);
     this.setShadowOffset(new PVector(1, 85));
 
-    this.setSpriteImage(shovel);
+    this.setSpriteImage(shovelItemImage);
     this.setSpriteInterval(75);
     this.setSpriteWidth(84);
     this.setSpriteHeight(91);
@@ -270,7 +280,7 @@ private class ShovelItem extends Item {
 
 // -------------------------------------- SHOVEL WEAPON ---------------------------------------------------
 
-PImage shovelAttack;
+PImage shovelWeaponImage;
 
 private class PaAtaque extends Weapon {
   PaAtaque() {
@@ -278,7 +288,7 @@ private class PaAtaque extends Weapon {
 
     this.setTypeOfObject(OBJECT_WITHOUT_SHADOW);
 
-    this.setSpriteImage(shovelAttack);
+    this.setSpriteImage(shovelWeaponImage);
     this.setSpriteInterval(90);
     this.setSpriteWidth(234);
     this.setSpriteHeight(173);
@@ -302,16 +312,14 @@ private class PaAtaque extends Weapon {
 
 private class ItemManager 
 {
-  private void computeItem(ArrayList<Item> items, WeaponSpawnManager weaponSpawnManager) 
+  private void computeItem(ArrayList<Item> items, WeaponSpawnManager weaponSpawnManager, ItemSpawnManager itemSpawnManager) 
   {  
     for (int i = items.size() - 1; i >= 0; i = i - 1) 
     {
       Item item = items.get(i);
 
-      // Only the food that is not disabled can be updated and displayed.
       if (!item.getIsDisabled()) 
       {  
-
         if (gameState >= GameState.FIRST_MAP.getValue() && gameState <= GameState.THIRD_MAP.getValue()) 
         {
           item.update();
@@ -320,13 +328,16 @@ private class ItemManager
         item.display();
         if (item.hasExitScreen() || item.hasCollided()) 
         {
-
           if (item.hasCollided()) 
           {
             weaponSpawnManager.setItemIndex(item.getItemIndex());
             weaponSpawnManager.setWeaponTotal(item.getItemTotal());
           }
-
+          else if (item.hasExitScreen())
+          {
+            itemSpawnManager.setSpawnVariables(7000);
+          }
+          
           item.resetVariables();
         }
       }
@@ -384,7 +395,7 @@ abstract private class ItemSpawnManager
 
   void randomizeItemIndex() 
   {
-    while (!hasItemIndexChanged) 
+    while (!hasItemIndexChanged)
     {
       int newItemIndex = (int)random(0, 10);
 
@@ -420,12 +431,13 @@ private class RegularMapItemSpawnManager extends ItemSpawnManager
 
   protected void addItem() 
   {
-    if (getItemTotal() == 0 && getHasItemIndexChanged() && millis() > getTimeToGenerateItem() + getIntervalToGenerateItem()) 
+    if (getItemTotal() == 0 && getHasItemIndexChanged()) 
     {
       if (getItemIndex() >= 0 && getItemIndex() <= 4) 
       {
         items.get(SHOVEL).setIsDisabled(false);
-      } else if (getItemIndex() >=5 && getItemIndex() <= 9) 
+      } 
+      else if (getItemIndex() >=5 && getItemIndex() <= 9) 
       {
         items.get(WHIP).setIsDisabled(false);
       }
@@ -569,8 +581,6 @@ int itemIndex;
 int itemRandomMapPositionIndex;
 
 int intervalToGenerateItem;
-
-boolean hasItemIndexChanged;
 
 void weapons() {
   //if (weaponTotal == 0 && !jLeiteUsoItem && itens.size() == 0) {

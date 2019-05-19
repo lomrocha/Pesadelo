@@ -149,25 +149,25 @@ void imagesPreLoad()
   telaGameOver = loadImage ("telaGameOver.png");
   telaVitoria = loadImage ("telaVitoria.png");
 
-  coxinha = loadImage ("coxinha.png");
-  brigadeiro = loadImage ("brigadeiro.png");
-  queijo = loadImage ("pdqueijo.png");
-  foodShadow = loadImage ("sombraComidas.png");
+  coxinhaImage    = loadImage ("coxinhaImage.png");
+  brigadeiroImage = loadImage ("brigadeiroImage.png");
+  queijoImage     = loadImage ("queijoImage.png");
+  foodShadow      = loadImage ("foodShadow.png");
 
-  shovel = loadImage ("pa.png");
-  shovelShadow = loadImage ("sombraPaChicote.png");
-  shovelAttack = loadImage ("paAtaque.png");
-  shovelBox = loadImage ("caixaItemPa.png");
+  shovelItemImage   = loadImage ("shovelItemImage.png");
+  shovelShadow      = loadImage ("shovelShadow.png");
+  shovelWeaponImage = loadImage ("shovelWeaponImage.png");
+  shovelBoxImage    = loadImage ("shovelBoxImage.png");
 
-  whip = loadImage ("chicote.png");
-  whipShadow = loadImage ("sombraPaChicote.png");
-  whipAttack = loadImage ("chicoteAtaque.png");
-  whipBox = loadImage ("caixaItemChicote.png");
+  whipItemImage   = loadImage ("whipItemImage.png");
+  whipShadow      = loadImage ("whipShadow.png");
+  whipWeaponImage = loadImage ("whipWeaponImage.png");
+  whipBoxImage    = loadImage ("whipBoxImage.png");
 
-  itemBox = loadImage ("caixaNumeroItem.png");
-  for (int i = 0; i < itemNumbers.length; i = i + 1) 
+  itemBoxImage = loadImage ("itemBoxImage.png");
+  for (int i = 0; i < itemNumbers.length; ++i) 
   {
-    itemNumbers[i] = loadImage ("numeroItem" + i + ".png");
+    itemNumbers[i] = loadImage ("itemNumber" + i + ".png");
   }
 
   jLeiteMovimento = loadImage ("joaoleite.png");
@@ -183,19 +183,19 @@ void imagesPreLoad()
   playerHPBackground = loadImage ("vidaJLeiteLayoutBackground.png");
   playerHPBar = loadImage ("vidaJLeiteBarra.png");
 
-  skeletonImage = loadImage ("skeletonImage.png");
+  skeletonImage  = loadImage ("skeletonImage.png");
   skeletonShadow = loadImage ("skeletonShadow.png");
   
-  skeletonHead = loadImage ("cabecaEsqueletoChute.png");
-  headlessSkeletonKickingImage = loadImage ("headlessSkeletonKickingImage.png");
+  headlessSkeletonHeadImage     = loadImage ("headlessSkeletonHeadImage.png");
+  headlessSkeletonKickingImage  = loadImage ("headlessSkeletonKickingImage.png");
   headlessSkeletonMovementImage = loadImage ("headlessSkeletonMovementImage.png");
-  headlessSkeletonShadow = loadImage ("headlessSkeletonShadow.png");
+  headlessSkeletonShadow        = loadImage ("headlessSkeletonShadow.png");
   
-  skeletonDog = loadImage ("cachorro.png");
-  skeletonDogShadow = loadImage ("sombraCachorro.png");
+  dogSkeletonImage  = loadImage ("dogSkeletonImage.png");
+  dogSkeletonShadow = loadImage ("dogSkeletonShadow.png");
   
-  skeletonCrow = loadImage ("corvo.png");
-  skeletonCrowShadow = loadImage ("sombraCorvo.png");
+  crowSkeletonImage  = loadImage ("crowSkeletonImage.png");
+  crowSkeletonShadow = loadImage ("crowSkeletonShadow.png");
   
   redSkeleton = loadImage ("esqueletoRaiva.png");
   redSkeletonShadow = loadImage ("sombraEsqueletoRaiva.png");
@@ -325,13 +325,7 @@ void imagesPreLoad()
 
 void variablesPreLoad() 
 {
-  skeletonDogPositions();
-  redSkeletonPositions();
-
-  gameState = GameState.MAIN_MENU.getValue();
-
-  totalInimigos = 0;
-
+ gameState = GameState.MAIN_MENU.getValue();
   playerX = 360;
   playerY = 345; 
 

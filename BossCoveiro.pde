@@ -387,7 +387,6 @@ void coveiro() {
   lapideCenario();
   vidaCoveiro();
   pocaCenario();
-  esqueleto();
   fenda();
   coveiro.display();
   coveiro.update();

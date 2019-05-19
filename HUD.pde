@@ -31,11 +31,11 @@ private class HUD
 
 // ----------------------------------------- ITEM BOX HUD ---------------------------------------------------
 
-PImage itemBox;
+PImage itemBoxImage;
 PImage[] itemNumbers = new PImage [15];
 
-PImage shovelBox;
-PImage whipBox;
+PImage shovelBoxImage;
+PImage whipBoxImage;
 
 
 private class ItemBox 
@@ -44,7 +44,7 @@ private class ItemBox
 
   void display(WeaponSpawnManager weaponSpawnManager) 
   {
-    image(itemBox, 705, 510);
+    image(itemBoxImage, 705, 510);
 
     if (hasItem(weaponSpawnManager)) 
     {
@@ -55,7 +55,7 @@ private class ItemBox
 
   void updateItemImage(WeaponSpawnManager weaponSpawnManager) 
   {
-    itemImage = (weaponSpawnManager.getItemIndex() == SHOVEL) ? shovelBox : whipBox;
+    itemImage = (weaponSpawnManager.getItemIndex() == SHOVEL) ? shovelBoxImage : whipBoxImage;
   }
 
   boolean hasItem(WeaponSpawnManager weaponSpawnManager) 

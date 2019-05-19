@@ -635,7 +635,6 @@ private class Padre {
 Padre padre;
 
 void padre() {
-  inimigosTodos();
   vidaPadre();
   padre.display();
   padre.update();

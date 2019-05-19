@@ -13,7 +13,7 @@ private class FirstMap
   //private Player player =  new Player();
 
   private EnemiesManager enemiesManager                           = new EnemiesManager();
-  private FirstMapEnemiesSpawnManager firstMapEnemiesSpawnManager = new FirstMapEnemiesSpawnManager();
+  private SecondMapEnemiesSpawnManager firstMapEnemiesSpawnManager = new SecondMapEnemiesSpawnManager();
 
   private FoodManager foodManager                               = new FoodManager();
   private RegularMapFoodSpawnManager regularMapFoodSpawnManager = new RegularMapFoodSpawnManager();
@@ -36,11 +36,11 @@ private class FirstMap
   {
     firstMapEnemiesSpawnManager.updateSpawnState();
     firstMapEnemiesSpawnManager.states();
-    
-    enemiesManager.computeEnemy(firstMapEnemiesSpawnManager.enemies, firstMapEnemiesSpawnManager.skeletonHeads, firstMapEnemiesSpawnManager);
+
+    enemiesManager.computeEnemy(firstMapEnemiesSpawnManager.enemies, firstMapEnemiesSpawnManager.headlessSkeletonHeads, firstMapEnemiesSpawnManager);
     enemiesManager.deleteEnemy(firstMapEnemiesSpawnManager.enemies, weaponSpawnManager.weapons, firstMapEnemiesSpawnManager);
 
-    enemiesManager.computeEnemy(firstMapEnemiesSpawnManager.skeletonHeads, firstMapEnemiesSpawnManager.skeletonHeads, firstMapEnemiesSpawnManager);
+    enemiesManager.computeEnemy(firstMapEnemiesSpawnManager.headlessSkeletonHeads, firstMapEnemiesSpawnManager.headlessSkeletonHeads, firstMapEnemiesSpawnManager);
     //enemiesManager.deleteEnemy(firstMapEnemiesSpawnManager.skeletonHeads, firstMapEnemiesSpawnManager, weaponSpawnManager.weapons);
   }
 
@@ -58,9 +58,13 @@ private class FirstMap
   {
     if (!movementTutorialScreenActive)
     {
-      foodManager.computeFood(regularMapFoodSpawnManager.foods, regularMapFoodSpawnManager);
-      regularMapFoodSpawnManager.randomizeFoodIndex();
-      regularMapFoodSpawnManager.addFood();
+      if (regularMapFoodSpawnManager.getFoodTotal() > 0) foodManager.computeFood(regularMapFoodSpawnManager.foods, regularMapFoodSpawnManager);
+
+      if (!regularMapFoodSpawnManager.getHasFoodIndexChanged() && millis() > regularMapFoodSpawnManager.getTimeToGenerateFood() + regularMapFoodSpawnManager.getIntervalToGenerateFood())
+      {
+        regularMapFoodSpawnManager.randomizeFoodIndex();
+        regularMapFoodSpawnManager.addFood();
+      }
     }
   }
 
@@ -68,9 +72,13 @@ private class FirstMap
   {
     if (!movementTutorialScreenActive)
     {
-      itemManager.computeItem(regularMapItemSpawnManager.items, weaponSpawnManager);
-      regularMapItemSpawnManager.randomizeItemIndex();
-      regularMapItemSpawnManager.addItem();
+      if (regularMapItemSpawnManager.getItemTotal() > 0) itemManager.computeItem(regularMapItemSpawnManager.items, weaponSpawnManager, regularMapItemSpawnManager);
+
+      if (!regularMapItemSpawnManager.getHasItemIndexChanged() &&  millis() > regularMapItemSpawnManager.getTimeToGenerateItem() + regularMapItemSpawnManager.getIntervalToGenerateItem())
+      {
+        regularMapItemSpawnManager.randomizeItemIndex();
+        regularMapItemSpawnManager.addItem();
+      }
     }
   }
 

@@ -1,6 +1,6 @@
 // -------------------------------------- ENEMY ---------------------------------------------------
 
-final int[] ENEMIES_SPAWN_X_POSITIONS = {102, 201, 300, 402, 501, 600};
+final int[] ENEMIES_SPAWN_X_POSITIONS = {102, 204, 300, 402, 504, 600};
 
 abstract private class Enemy extends BaseMovement
 {
@@ -75,7 +75,11 @@ abstract private class Enemy extends BaseMovement
     return false;
   }
 
-  abstract void resetVariables(int x);
+  void resetVariables(int x)
+  {
+    setSelf(new PVector(x, -200));
+    setIsDisabled(true);
+  }
 }
 
 // -------------------------------------- SKELETON ---------------------------------------------------
@@ -118,72 +122,6 @@ private class Skeleton extends Enemy
   {
     // do nothing.
   }
-
-  void resetVariables(int x)
-  {
-    setSelf(new PVector(x, -200));
-    setIsDisabled(true);
-  }
-}
-
-int esqueletoC, esqueletoL;
-int indexRandomEsqueletoXMapaBoss;
-
-void esqueleto() {
-  //if (indexInimigos == 0) {
-  //  if (gameState == GameState.FIRSTBOSS.getValue()) {
-  //    if (esqueletos.size() == 0 && !coveiro.coveiroMorreu && !coveiroTomouDanoAgua) {
-  //      for (int i = 0; i < 2; i = i + 1) {
-  //        indexRandomEsqueletoXMapaBoss = int(random(0, 2));
-  //        esqueletos.add(new Esqueleto(valoresEsqueletoXPrimeiroMapaBoss[indexRandomEsqueletoXMapaBoss], 0));
-  //      }
-  //    }
-  //  }
-
-  //  if (gameState == GameState.THIRDBOSS.getValue()) { 
-  //    if (esqueletos.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
-  //      indexRandomEsqueletoXMapaBoss = int(random(0, valoresInimigosXTerceiroMapaBoss.length));
-  //      esqueletos.add(new Esqueleto(valoresInimigosXTerceiroMapaBoss[indexRandomEsqueletoXMapaBoss], 0));
-  //      totalInimigos = totalInimigos + 1;
-  //    }
-  //  }
-
-  //if (!movementTutorialScreenActive) {
-  //  /*if (gameState == GameState.FIRSTMAP.getValue() && esqueletos.size() < 2 && totalInimigos < 6) {
-  //   esqueletoC = int(random(0, 7));
-  //   esqueletoL = int(random(0, 4));
-
-  //   if (ENEMY_POSITIONS_FIRST_MAP[esqueletoC][esqueletoL] == SKELETON) {
-  //   esqueletos.add(new Esqueleto(100 + (esqueletoC * (600 / 7)), -150 - (esqueletoL * 150)));
-  //   totalInimigos = totalInimigos + 1;
-  //   }
-  //   }*/
-
-  //  if (gameState == GameState.SECONDMAP.getValue() && esqueletos.size() < 2 && totalInimigos < 6) {
-  //    esqueletoC = int(random(0, 7));
-  //    esqueletoL = int(random(0, 4));
-
-  //    if (ENEMY_POSITIONS_SECOND_MAP[esqueletoC][esqueletoL] == SKELETON) {
-  //      esqueletos.add(new Esqueleto(100 + (esqueletoC * (600 / 7)), -150 - (esqueletoL * 150)));
-  //      totalInimigos = totalInimigos + 1;
-  //    }
-  //  }
-
-  //  if (gameState == GameState.THIRDMAP.getValue() && esqueletos.size() < 2 && totalInimigos < 6) {
-  //    esqueletoC = int(random(0, 7));
-  //    esqueletoL = int(random(0, 4));
-
-  //    if (ENEMY_POSITIONS_THIRD_MAP[esqueletoC][esqueletoL] == SKELETON) {
-  //      esqueletos.add(new Esqueleto(100 + (esqueletoC * (600 / 7)), -150 - (esqueletoL * 150)));
-  //      totalInimigos = totalInimigos + 1;
-  //    }
-  //  }
-  //}
-
-  //if (firstMap.firstMapEnemiesSpawnManager.enemies.size() > 0) {
-  //  computeEnemy(firstMapEnemiesSpawnManager.enemies, firstMapEnemiesSpawnManager);
-  //  deleteEnemy(firstMapEnemiesSpawnManager.skeletons, firstMapEnemiesSpawnManager);
-  //}
 }
 
 // -------------------------------------- HEADLESS SKELETON ------------------------------------------
@@ -242,8 +180,6 @@ private class HeadlessSkeleton extends Enemy
 
   void display()
   {
-    //image (headlessSkeletonShadow, getX() + 1, getY() + 50);
-
     if (!hasLostHead) {
       if (millis() > headlessSkeletonSpriteTime + 200)
       { 
@@ -282,12 +218,12 @@ private class HeadlessSkeleton extends Enemy
   {
     if (!hasLostHead)
     {
-      setMotionY((!isOnScreen()) ? 4 : SCENERY_VELOCITY / 2);
+      setMotionY((!isOnScreen()) ? SCENERY_VELOCITY * 2 : SCENERY_VELOCITY / 2);
       setMotionX(0);
     } else
     {
       setMotionY(SCENERY_VELOCITY);
-      setMotionX((getX() < getTargetX()) ? 3 : -3);
+      setMotionX((getX() < getTargetX()) ? SCENERY_VELOCITY : -SCENERY_VELOCITY);
     }
   }
 
@@ -300,13 +236,15 @@ private class HeadlessSkeleton extends Enemy
 
     if (!hasNewTarget)
     {
-      int randomX = 1;
-      while (randomX % 3 != 0)
+      PVector random = new PVector(1, getTargetY() + 16);
+      while (random.x % 2 != 0)
       {
-        randomX = (getX() < 386) ? (int)random(120, 386) : (int)random(386, 652);
-        if (randomX % 3 == 0)
+        random.x = (int)random(getX() - 100, getX() + 100);
+
+        boolean isInBounds = random.x > 120 && random.x < 652;
+        if (random.x % 2 == 0 && isInBounds)
         {
-          setTarget(new PVector(randomX, getTargetY() + 16));
+          setTarget(random);
           hasNewTarget = true;
         }
       }
@@ -315,8 +253,7 @@ private class HeadlessSkeleton extends Enemy
 
   void resetVariables(int x)
   {
-    setSelf(new PVector(x, -200));
-    setIsDisabled(true);
+    super.resetVariables(x);
 
     headlessSkeletonStep = 0;
 
@@ -330,70 +267,30 @@ private class HeadlessSkeleton extends Enemy
   }
 }
 
-int esqueletoChuteC, esqueletoChuteL;
-
-int indexRandomEsqueletoChuteXMapaBoss;
-
-void esqueletoChute() {
-  //if (indexInimigos == 1) {
-  //  if (gameState == GameState.THIRDBOSS.getValue()) { 
-  //    if (esqueletosChute.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
-  //      indexRandomEsqueletoChuteXMapaBoss = int(random(0, valoresInimigosXTerceiroMapaBoss.length));
-  //      esqueletosChute.add(new EsqueletoChute(valoresInimigosXTerceiroMapaBoss[indexRandomEsqueletoChuteXMapaBoss], 0));
-  //      totalInimigos = totalInimigos + 1;
-  //    }
-  //  }
-
-  //  if (!movementTutorialScreenActive) {
-  //    /*
-  //    if (gameState >= GameState.FIRSTMAP.getValue() && gameState <= GameState.THIRDMAP.getValue() && esqueletosChute.size() < 2 && totalInimigos < 6) {
-  //     esqueletoChuteC = int(random(0, 8));
-  //     esqueletoChuteL = int(random(0, 12));
-
-  //     if (KICKING_SKELETON_POSITIONS[esqueletoChuteC][esqueletoChuteL] == KICKING_SKELETON) {
-  //     esqueletosChute.add(new EsqueletoChute(120 + (esqueletoChuteC * 50), -150 - (esqueletoChuteL * 75)));
-  //     totalInimigos = totalInimigos + 1;
-  //     }
-  //     }
-  //     */
-  //  }
-  //}
-
-  //if (firstMapEnemiesSpawnManager.kickingSkeletons.size() > 0) {
-  //  computeEnemy(firstMapEnemiesSpawnManager.kickingSkeletons, firstMapEnemiesSpawnManager);
-  //  deleteEnemy(firstMapEnemiesSpawnManager.kickingSkeletons, firstMapEnemiesSpawnManager);
-  //}
-
-  //if (cabecasEsqueleto.size() > 0) {
-  //  computeEnemy(cabecasEsqueleto, firstMapEnemiesSpawnManager);
-  //}
-}
-
 // -------------------------------------- SKELETON HEAD ----------------------------------------------
 
-PImage skeletonHead;
+PImage headlessSkeletonHeadImage;
 
-final PVector SKELETON_HEAD_VELOCITY = new PVector(0, 12);
+final int HEADLESS_SKELETON_HEAD = 3;
 
-final int SKELETON_HEAD = 3;
-
-private class SkeletonHead extends Projectile 
+private class HeadlessSkeletonHead extends Projectile 
 {
-  SkeletonHead(int x, int y) {
+  HeadlessSkeletonHead(int x, int y) 
+  {
     this.setSelf(new PVector(x, y));
     this.setTarget(new PVector(playerX, playerY));
 
     this.setTypeOfObject(OBJECT_WITHOUT_SHADOW);
 
     this.setStart(new PVector(x, y));
-    this.setVelocity(SKELETON_HEAD_VELOCITY);
+    this.setVelocity(new PVector(0, 0));
 
-    this.setSpriteImage(skeletonHead);
+    this.setSpriteImage(headlessSkeletonHeadImage);
     this.setSpriteWidth(36);
     this.setSpriteHeight(89);
 
     this.setDamage(2);
-    this.setType(SKELETON_HEAD);
+    this.setType(HEADLESS_SKELETON_HEAD);
   }
 }
 
@@ -453,140 +350,165 @@ private class Projectile extends Enemy
 
 // -------------------------------------- DOG SKELETON -----------------------------------------------
 
-PImage skeletonDog;
-PImage skeletonDogShadow;
+PImage dogSkeletonImage;
+PImage dogSkeletonShadow;
 
-final PVector SKELETON_DOG_VELOCITY = new PVector(0, 4);
+final PVector DOG_SKELETON_VELOCITY = new PVector(0, 4);
+final int DOG_SKELETON = 4;
 
-final int SKELETON_DOG = 4;
-
-final int[] SKELETON_DOG_SPAWNPOINTS_BOSS = {70, 382, 695};
-
-private class Cachorro extends Enemy 
+private class DogSkeleton extends Enemy 
 {
-  void resetVariables(int x)
-  {
-  }
-  private PVector velocity = new PVector(SKELETON_DOG_VELOCITY.x, SKELETON_DOG_VELOCITY.y);
+  private PVector velocity = new PVector(DOG_SKELETON_VELOCITY.x, DOG_SKELETON_VELOCITY.y);
 
   private int timeToMove = 0;
   private int numberOfStops;
 
   private boolean hasNewTarget;
 
-  Cachorro(int x, int y) {
+  DogSkeleton(int x, int y) 
+  {
     this.setSelf(new PVector(x, y));
     this.setTarget(new PVector(x, height));
 
     this.setTypeOfObject(OBJECT_WITH_SHADOW);
 
-    this.setShadowImage(skeletonDogShadow);
+    this.setShadowImage(dogSkeletonShadow);
     this.setShadowOffset(new PVector(0, 45));
 
-    this.setSpriteImage(skeletonDog);
+    this.setSpriteImage(dogSkeletonImage);
     this.setSpriteInterval(55);
     this.setSpriteWidth(45);
     this.setSpriteHeight(83);
 
     this.setDamage(2);
-    this.setType(SKELETON_DOG);
+    this.setType(DOG_SKELETON);
+    
+    this.setIsDisabled(true);
   }
 
-  void updateMovement() {
-    setMotionY((!hasNewTarget) ? (int)velocity.y + (int)(numberOfStops * 1.5) : 0);
+  void updateMovement() 
+  {
+    setMotionY((!hasNewTarget) ? (int)velocity.y + (int)(numberOfStops * 2) : SCENERY_VELOCITY);
   }
 
   void updateTarget() {
-    if (isOnScreen() && getY() > 125) {
-      if (!hasNewTarget && millis() > timeToMove + 1250) {
+    if (isOnScreen() && getY() > 15) 
+    {
+      if (!hasNewTarget && millis() > timeToMove + 1550) 
+      {
         numberOfStops++;
         timeToMove = millis();
         hasNewTarget = true;
       }
 
-      if (millis() > timeToMove + 750) {
+      if (millis() > timeToMove + 750) 
+      {
         hasNewTarget = false;
       }
     }
   }
+
+  void resetVariables(int x)
+  {
+    super.resetVariables(x);
+    
+    timeToMove = 0;
+    numberOfStops = 0;
+    
+    hasNewTarget = false;
+    setTarget(new PVector(0, 0));
+  }
 }
 
-ArrayList<Cachorro> cachorros = new ArrayList<Cachorro>();
+// -------------------------------------- CROW SKELETON ----------------------------------------------
 
-int cachorroC, cachorroL;
+PImage crowSkeletonImage;
+PImage crowSkeletonShadow;
 
-int indexRandomCachorroXMapaBoss;
+final int CROW_SKELETON = 5;
 
-void cachorro() {
-  if (gameState == GameState.SECOND_BOSS.getValue()) {
-    if (cachorros.size() == 0 && !fazendeiroTomouDanoPneu && !fazendeiro.fazendeiroMorreu) {
-      for (int i = 0; i < 2; i = i + 1) {
-        indexRandomCachorroXMapaBoss = (int)random(0, SKELETON_DOG_SPAWNPOINTS_BOSS.length);
-        cachorros.add(new Cachorro(SKELETON_DOG_SPAWNPOINTS_BOSS[indexRandomCachorroXMapaBoss], 0));
+private class CrowSkeleton extends Enemy 
+{
+  private int newTargetInterval;
+
+  private boolean hasNewTarget;
+
+  CrowSkeleton(int x, int y) 
+  {
+    setValues(x, y);
+  }
+
+  private void setValues(int x, int y) 
+  {
+    this.setSelf(new PVector(x, y));
+    this.setTarget(new PVector(playerX, playerY));
+
+    this.setTypeOfObject(OBJECT_WITH_SHADOW);
+
+    this.setShadowImage(crowSkeletonShadow);
+    this.setShadowOffset(new PVector(24, 86));
+
+    this.setSpriteImage(crowSkeletonImage);
+    this.setSpriteInterval(75);
+    this.setSpriteWidth(121);
+    this.setSpriteHeight(86);
+
+    this.setDamage(3);
+    this.setType(CROW_SKELETON);
+    
+    this.setIsDisabled(true);
+  }
+
+  void updateMovement() 
+  {
+    setMotionY(3);
+    if (getX() != getTargetX() && isOnScreen()) 
+    {
+      setMotionX((getX() < getTargetX()) ? 3 : -3);
+      
+      return;
+    }
+
+    setMotionX(0);
+  }
+
+  void updateTarget()
+  {
+    if (isOnScreen()) 
+    {
+      if (!hasNewTarget) 
+      {
+        setTargetX(3 * (int)(playerX / 3));
+        newTargetInterval = millis();
+        hasNewTarget = true;
+      }
+
+      if (millis() > newTargetInterval + 1050) 
+      {
+        hasNewTarget = false;
       }
     }
   }
 
-  if (indexInimigos == 2) {
-    if (gameState == GameState.SECOND_BOSS.getValue()) {
-      if (cachorros.size() == 0 && !fazendeiroTomouDanoPneu && !fazendeiro.fazendeiroMorreu) {
-        for (int i = 0; i < 2; i = i + 1) {
-          indexRandomCachorroXMapaBoss = (int)random(0, SKELETON_DOG_SPAWNPOINTS_BOSS.length);
-          cachorros.add(new Cachorro(SKELETON_DOG_SPAWNPOINTS_BOSS[indexRandomCachorroXMapaBoss], 0));
-        }
-      }
+  boolean hasCollided() 
+  {
+    if (getX() + 95 > playerX && getX() + 25 < playerX + 63 && getY() + 86 > playerY && getY() < playerY + 126) 
+    {
+      return true;
     }
 
-    if (gameState == GameState.THIRD_BOSS.getValue()) { 
-      if (cachorros.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
-        indexRandomCachorroXMapaBoss = int(random(0, valoresInimigosXTerceiroMapaBoss.length));
-        cachorros.add(new Cachorro(valoresInimigosXTerceiroMapaBoss[indexRandomCachorroXMapaBoss], 0));
-        totalInimigos = totalInimigos + 1;
-      }
-    }
-
-    if (!movementTutorialScreenActive) {
-      if (gameState == GameState.SECOND_MAP.getValue() && cachorros.size() < 2 && totalInimigos < 6) {
-        cachorroC = int(random(0, 7));
-        cachorroL = int(random(0, 4));
-
-        if (ENEMY_POSITIONS_SECOND_MAP[cachorroC][cachorroL] == SKELETON_DOG) {
-          cachorros.add(new Cachorro(100 + (cachorroC * (600 / 7)), -150 - (cachorroL * 150)));
-          totalInimigos = totalInimigos + 1;
-        }
-      }
-
-      if (gameState == GameState.THIRD_MAP.getValue() && cachorros.size() < 2 && totalInimigos < 6) {
-        cachorroC = int(random(0, 7));
-        cachorroL = int(random(0, 4));
-
-        if (ENEMY_POSITIONS_THIRD_MAP[cachorroC][cachorroL] == SKELETON_DOG) {
-          cachorros.add(new Cachorro(100 + (cachorroC * (600 / 7)), -150 - (cachorroL * 150)));
-          totalInimigos = totalInimigos + 1;
-        }
-      }
-    }
+    return false;
   }
 
-  //if (cachorros.size() > 0) {
-  //  computeEnemy(cachorros, firstMapEnemiesSpawnManager);
-  //  deleteEnemy(cachorros, firstMapEnemiesSpawnManager);
-  //}
-}
-
-void skeletonDogPositions() {
-  ENEMY_POSITIONS_SECOND_MAP [0][0] = SKELETON_DOG;
-  ENEMY_POSITIONS_SECOND_MAP [1][1] = SKELETON_DOG;
-  ENEMY_POSITIONS_SECOND_MAP [2][2] = SKELETON_DOG;
-  ENEMY_POSITIONS_SECOND_MAP [3][0] = SKELETON_DOG;
-  ENEMY_POSITIONS_SECOND_MAP [4][3] = SKELETON_DOG;
-  ENEMY_POSITIONS_SECOND_MAP [5][2] = SKELETON_DOG;
-  ENEMY_POSITIONS_SECOND_MAP [6][2] = SKELETON_DOG;
-
-  ENEMY_POSITIONS_THIRD_MAP  [1][0] = SKELETON_DOG;
-  ENEMY_POSITIONS_THIRD_MAP  [3][0] = SKELETON_DOG;
-  ENEMY_POSITIONS_THIRD_MAP  [5][2] = SKELETON_DOG;
-  ENEMY_POSITIONS_THIRD_MAP  [6][1] = SKELETON_DOG;
+  void resetVariables(int x)
+  {
+    super.resetVariables(x);
+    
+    println(getX());
+    
+    hasNewTarget = false;
+    setTarget(new PVector(0, 0));
+  }
 }
 
 // -------------------------------------- RED SKELETON -----------------------------------------------
@@ -600,9 +522,6 @@ final int LEFT_SIDE_ON_GRID = 0;
 final int RIGHT_SIDE_ON_GRID = 1;
 
 private class EsqueletoRaiva extends Enemy {
-  void resetVariables(int x)
-  {
-  }
   private int positionOnGrid;
 
   private boolean hasNewTarget;
@@ -658,180 +577,17 @@ private class EsqueletoRaiva extends Enemy {
       }
     }
   }
-}
-
-ArrayList<EsqueletoRaiva> esqueletosRaiva = new ArrayList<EsqueletoRaiva>();
-
-int esqueletoRaivaC = 1, esqueletoRaivaL = 1;
-
-int indexRandomEsqueletoRaivaXMapaBoss;
-
-void esqueletoRaiva() {
-  if (gameState == GameState.THIRD_MAP.getValue() && esqueletosRaiva.size() < 2 && totalInimigos < 6) {
-    while (RED_SKELETON_POSITIONS[esqueletoRaivaL][esqueletoRaivaC] != RED_SKELETON) {
-      esqueletoRaivaL = (int)random(0, 5);
-      esqueletoRaivaC = (int)random(0, 8);
-    }
-    int gridSide = 2;
-    if (esqueletoRaivaC == 0) {
-      gridSide = 0;
-    } else if (esqueletoRaivaC == 7) {
-      gridSide = 1;
-    }
-
-    esqueletosRaiva.add(new EsqueletoRaiva(100 + (esqueletoRaivaC * 75), -120 - (esqueletoRaivaL * 120), gridSide));
-  }
-  /*
-  if (indexInimigos == 4) {
-   if (gameState == GameState.THIRDBOSS.getValue()) { 
-   if (esqueletosRaiva.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
-   indexRandomEsqueletoRaivaXMapaBoss = int(random(0, valoresInimigosXTerceiroMapaBoss.length));
-   esqueletosRaiva.add(new EsqueletoRaiva(valoresInimigosXTerceiroMapaBoss[indexRandomEsqueletoRaivaXMapaBoss], 0));
-   totalInimigos = totalInimigos + 1;
-   }
-   }
-   
-   if (!movementTutorialScreenActive) {
-   if (gameState == GameState.THIRDMAP.getValue() && esqueletosRaiva.size() < 2 && totalInimigos < 6) {
-   esqueletoRaivaC = int(random(0, 7));
-   esqueletoRaivaL = int(random(0, 4));
-   
-   if (ENEMY_POSITIONS_THIRD_MAP[esqueletoRaivaC][esqueletoRaivaL] == RED_SKELETON) {
-   esqueletosRaiva.add(new EsqueletoRaiva(100 + (esqueletoRaivaC * (600 / 7)), -150 - (esqueletoRaivaL * 150)));
-   totalInimigos = totalInimigos + 1;
-   }
-   }
-   }
-   }
-   */
-
-  //if (esqueletosRaiva.size() > 0) {
-  //  computeEnemy(esqueletosRaiva, firstMapEnemiesSpawnManager);
-  //  deleteEnemy(esqueletosRaiva, firstMapEnemiesSpawnManager);
-  //}
-}
-
-final int[][] RED_SKELETON_POSITIONS = new int [5][8];
-
-void redSkeletonPositions() {
-  RED_SKELETON_POSITIONS[0][0] = RED_SKELETON;
-  RED_SKELETON_POSITIONS[0][7] = RED_SKELETON;
-  RED_SKELETON_POSITIONS[2][0] = RED_SKELETON;
-  RED_SKELETON_POSITIONS[2][7] = RED_SKELETON;
-  RED_SKELETON_POSITIONS[4][0] = RED_SKELETON;
-  RED_SKELETON_POSITIONS[4][7] = RED_SKELETON;
-}
-
-
-// -------------------------------------- CROW SKELETON ----------------------------------------------
-
-PImage skeletonCrow;
-PImage skeletonCrowShadow;
-
-final int SKELETON_CROW = 5;
-
-private class Corvo extends Enemy {
+  
   void resetVariables(int x)
   {
   }
-  private int newTargetInterval;
-
-  private boolean hasNewTarget;
-
-  Corvo(int x, int y) {
-    setValues(x, y);
-  }
-
-  Corvo() {
-    setValues(360, (int)random(-300, -1000));
-  }
-
-  private void setValues(int x, int y) {
-    this.setSelf(new PVector(x, y));
-    this.setTarget(new PVector(playerX, playerY));
-
-    this.setTypeOfObject(OBJECT_WITH_SHADOW);
-
-    this.setShadowImage(skeletonCrowShadow);
-    this.setShadowOffset(new PVector(24, 86));
-
-    this.setSpriteImage(skeletonCrow);
-    this.setSpriteInterval(75);
-    this.setSpriteWidth(121);
-    this.setSpriteHeight(86);
-
-    this.setDamage(3);
-    this.setType(SKELETON_CROW);
-  }
-
-  void updateMovement() {
-    setMotionY(3);
-    if (getX() != getTargetX()) {
-      setMotionX((getX() < getTargetX()) ? 3 : -3);
-      return;
-    }
-
-    setMotionX(0);
-  }
-
-  void updateTarget() {
-    if (isOnScreen()) {
-      if (!hasNewTarget) {
-        setTargetX(playerX);
-        newTargetInterval = millis();
-        hasNewTarget = true;
-      }
-
-      if (millis() > newTargetInterval + 750) {
-        hasNewTarget = false;
-      }
-    }
-  }
-
-  boolean hasCollided() {
-    if (getX() + 95 > playerX && getX() + 25 < playerX + 63 && getY() + 86 > playerY && getY() < playerY + 126) {
-      return true;
-    }
-
-    return false;
-  }
-}
-
-ArrayList<Corvo> corvos = new ArrayList<Corvo>();
-
-int indexRandomCorvoXMapaBoss;
-
-void corvo() {
-  if (indexInimigos == 3) {
-    if (gameState == GameState.THIRD_BOSS.getValue()) {
-      if (corvos.size() == 0 && totalInimigos < maximoInimigosPadre && !padre.padreMorreu) {
-        indexRandomCorvoXMapaBoss = int(random(0, valoresInimigosXTerceiroMapaBoss.length));
-        corvos.add(new Corvo(valoresInimigosXTerceiroMapaBoss[indexRandomCorvoXMapaBoss], 0));
-      }
-    }
-
-    if (!movementTutorialScreenActive) {
-      if (gameState == GameState.SECOND_MAP.getValue() && corvos.size() < 1) {
-        corvos.add(new Corvo());
-      }
-
-      if (gameState == GameState.THIRD_MAP.getValue() && corvos.size() < 1) {
-        corvos.add(new Corvo());
-      }
-    }
-  }
-
-  //if (corvos.size() > 0) {
-  //  computeEnemy(corvos, firstMapEnemiesSpawnManager);
-  //  deleteEnemy(corvos, firstMapEnemiesSpawnManager);
-  //}
 }
 
 // ----------------------------------------- ENEMIES MANAGER ---------------------------------------------------
 
 private class EnemiesManager
 {
-  private <T_Enemy extends Enemy> void computeEnemy(ArrayList<T_Enemy> enemies, ArrayList<SkeletonHead> skeletonHeads, EnemiesSpawnManager spawnManager)
+  private <T_Enemy extends Enemy> void computeEnemy(ArrayList<T_Enemy> enemies, ArrayList<HeadlessSkeletonHead> headlessSkeletonHeads, EnemiesSpawnManager spawnManager)
   {
     for (int i = 0; i < enemies.size(); ++i)
     {
@@ -839,7 +595,7 @@ private class EnemiesManager
 
       if (!enemy.getIsDisabled()) 
       {
-        if (enemy.getType() == HEADLESS_SKELETON) triggerHeadlessSkeleton(enemy, skeletonHeads);
+        if (enemy.getType() == HEADLESS_SKELETON) triggerHeadlessSkeleton(enemy, headlessSkeletonHeads);
 
         enemy.updateTarget();
         enemy.updateMovement();
@@ -848,7 +604,7 @@ private class EnemiesManager
 
         if (enemy.hasExitScreen())
         {
-           disableEnemy(enemy, spawnManager);
+          disableEnemy(enemy, spawnManager);
         }
 
         if (enemy.hasCollided())
@@ -877,7 +633,7 @@ private class EnemiesManager
     }
   }
 
-  private void triggerHeadlessSkeleton(Enemy enemy, ArrayList<SkeletonHead> skeletonHeads)
+  private void triggerHeadlessSkeleton(Enemy enemy, ArrayList<HeadlessSkeletonHead> headlessSkeletonHeads)
   {
     try
     {
@@ -885,7 +641,7 @@ private class EnemiesManager
 
       if (tmp.getHeadlessSkeletonHasKicked())
       {
-        skeletonHeads.add(new SkeletonHead(tmp.getX(), tmp.getY()));
+        headlessSkeletonHeads.add(new HeadlessSkeletonHead(tmp.getX(), tmp.getY()));
         tmp.setHeadlessSkeletonHasKicked(false);
       }
     }
@@ -897,7 +653,7 @@ private class EnemiesManager
 
   private void handleSpawnManagerVariables(Enemy enemy, EnemiesSpawnManager spawnManager)
   {
-    if (enemy.getType() != SKELETON_HEAD)
+    if (enemy.getType() != HEADLESS_SKELETON_HEAD)
     {
       switch(enemy.getType()) {
       case SKELETON:
@@ -906,10 +662,10 @@ private class EnemiesManager
       case HEADLESS_SKELETON:
         spawnManager.setHeadlessSkeletonTotal(spawnManager.getHeadlessSkeletonTotal() - 1);
         break;
-      case SKELETON_DOG:
+      case DOG_SKELETON:
         spawnManager.setDogSkeletonTotal(spawnManager.getDogSkeletonTotal() - 1);
         break;
-      case SKELETON_CROW:
+      case CROW_SKELETON:
         spawnManager.setCrowSkeletonTotal(spawnManager.getCrowSkeletonTotal() - 1);
         break;
       case RED_SKELETON:
@@ -1077,6 +833,29 @@ abstract private class EnemiesSpawnManager
     }
   }
 
+  void spawnEnemy(ArrayList<Enemy> enemies, PVector range, int enemyType)
+  {
+    enableEnemy(enemies, range);
+
+    switch(enemyType)
+    {
+    case SKELETON:
+      setSkeletonTotal(getSkeletonTotal() + 1);
+      break;
+    case HEADLESS_SKELETON:
+      setHeadlessSkeletonTotal(getHeadlessSkeletonTotal() + 1);
+      break;
+    case DOG_SKELETON:
+      setDogSkeletonTotal(getDogSkeletonTotal() + 1);
+      break;
+    case CROW_SKELETON:
+      setCrowSkeletonTotal(getCrowSkeletonTotal() + 1);
+      break;
+    case RED_SKELETON:
+      setRedSkeletonTotal(getRedSkeletonTotal() + 1);
+    }
+  }
+
   void enableEnemy(ArrayList<Enemy> enemies, PVector range)
   {
     int disabledEnemyIndex = getDisabledEnemyIndex(enemies, range);
@@ -1113,21 +892,20 @@ abstract private class EnemiesSpawnManager
 
 // ----------------------------------------- FIRST MAP SPAWN MANAGER ---------------------------------------------------
 
-final PVector SKELETONS_INDEX_RANGE               = new PVector(0, 2);
-final PVector HEADLESS_SKELETONS_INDEX_RANGE      = new PVector(2, 4);
-final PVector HEADLESS_SKELETONS_HEAD_INDEX_RANGE = new PVector(4, 6);
-final PVector DOG_SKELETONS_INDEX_RANGE           = new PVector(4, 6);
-final PVector CROW_SKELETONS_INDEX_RANGE          = new PVector(6, 8);
-final PVector RED_SKELETONS_INDEX_RANGE           = new PVector(8, 10);
+final PVector SKELETONS_INDEX_RANGE          = new PVector(0, 2);
+final PVector HEADLESS_SKELETONS_INDEX_RANGE = new PVector(2, 4);
+final PVector DOG_SKELETONS_INDEX_RANGE      = new PVector(4, 6);
+final PVector CROW_SKELETONS_INDEX_RANGE     = new PVector(6, 8);
+final PVector RED_SKELETONS_INDEX_RANGE      = new PVector(8, 10);
 
 private class FirstMapEnemiesSpawnManager extends EnemiesSpawnManager
 {
-  private ArrayList<Enemy> enemies              = new ArrayList<Enemy>();
-  private ArrayList<SkeletonHead> skeletonHeads = new ArrayList<SkeletonHead>();
+  private ArrayList<Enemy> enemies                              = new ArrayList<Enemy>();
+  private ArrayList<HeadlessSkeletonHead> headlessSkeletonHeads = new ArrayList<HeadlessSkeletonHead>();
 
-  final int[] ENEMIES_MAXIMUM          = { 1, 1, 2, 3, 4, 0 };
-  final int[] SKELETON_MAXIMUM         = { 1, 0, 1, 2, 2, 0 };
-  final int[] KICKING_SKELETON_MAXIMUM = { 0, 1, 1, 1, 2, 0 };
+  final int[] SKELETON_MAXIMUM          = { 1, 0, 1, 2, 2, 0 };
+  final int[] HEADLESS_SKELETON_MAXIMUM = { 0, 1, 1, 1, 2, 0 };
+  final int[] ENEMIES_MAXIMUM           = { 1, 1, 2, 3, 4, 0 };
 
   FirstMapEnemiesSpawnManager()
   {
@@ -1137,8 +915,6 @@ private class FirstMapEnemiesSpawnManager extends EnemiesSpawnManager
     enemies.add(new Skeleton(500, -200));
     enemies.add(new HeadlessSkeleton(300, -200));
     enemies.add(new HeadlessSkeleton(600, -200));
-    enemies.add(new HeadlessSkeleton(600, -200));
-    enemies.add(new HeadlessSkeleton(600, -200));
   }
 
   void handleEnemySpawn(int maximum, int index)
@@ -1147,16 +923,12 @@ private class FirstMapEnemiesSpawnManager extends EnemiesSpawnManager
     {
       if (getSkeletonTotal() < SKELETON_MAXIMUM[index])
       {
-        enableEnemy(enemies, SKELETONS_INDEX_RANGE);
-
-        setSkeletonTotal(getSkeletonTotal() + 1);
+        spawnEnemy(enemies, SKELETONS_INDEX_RANGE, SKELETON);
       }       
 
-      if (getHeadlessSkeletonTotal() < KICKING_SKELETON_MAXIMUM[index])
+      if (getHeadlessSkeletonTotal() < HEADLESS_SKELETON_MAXIMUM[index])
       {
-        enableEnemy(enemies, HEADLESS_SKELETONS_INDEX_RANGE);
-
-        setHeadlessSkeletonTotal(getHeadlessSkeletonTotal() + 1);
+        spawnEnemy(enemies, HEADLESS_SKELETONS_INDEX_RANGE, HEADLESS_SKELETON);
       }
     }
   }
@@ -1205,29 +977,88 @@ private class FirstMapEnemiesSpawnManager extends EnemiesSpawnManager
 
 private class SecondMapEnemiesSpawnManager extends EnemiesSpawnManager
 {
+  private ArrayList<Enemy> enemies                              = new ArrayList<Enemy>();
+  private ArrayList<HeadlessSkeletonHead> headlessSkeletonHeads = new ArrayList<HeadlessSkeletonHead>();
+
+  final int[] SKELETON_MAXIMUM          = { 1, 1, 0, 1, 1, 0 };
+  final int[] HEADLESS_SKELETON_MAXIMUM = { 1, 0, 1, 0, 1, 0 };
+  final int[] DOG_SKELETON_MAXIMUM      = { 0, 1, 1, 1, 1, 0 };
+  final int[] CROW_SKELETON_MAXIMUM     = { 0, 0, 0, 1, 1, 0 };
+  final int[] ENEMIES_MAXIMUM           = { 2, 2, 2, 3, 4, 0 };
 
   SecondMapEnemiesSpawnManager()
   {
+    super();
+
+    enemies.add(new Skeleton(300, -200));
+    enemies.add(new Skeleton(500, -200));
+    enemies.add(new HeadlessSkeleton(300, -200));
+    enemies.add(new HeadlessSkeleton(600, -200));
+    enemies.add(new DogSkeleton(300, -200));
+    enemies.add(new DogSkeleton(600, -200));
+    enemies.add(new CrowSkeleton(300, -200));
+    enemies.add(new CrowSkeleton(600, -200));
+  }
+
+  void handleEnemySpawn(int maximum, int index)
+  {
+    while (getEnemiesTotal() < maximum)
+    {
+      if (getSkeletonTotal() < SKELETON_MAXIMUM[index])
+      {
+        spawnEnemy(enemies, SKELETONS_INDEX_RANGE, SKELETON);
+      }       
+
+      if (getHeadlessSkeletonTotal() < HEADLESS_SKELETON_MAXIMUM[index])
+      {
+        spawnEnemy(enemies, HEADLESS_SKELETONS_INDEX_RANGE, HEADLESS_SKELETON);
+      }
+
+      if (getDogSkeletonTotal() < DOG_SKELETON_MAXIMUM[index])
+      {
+        spawnEnemy(enemies, DOG_SKELETONS_INDEX_RANGE, DOG_SKELETON);
+      }
+
+      if (getCrowSkeletonTotal() < CROW_SKELETON_MAXIMUM[index])
+      {
+        spawnEnemy(enemies, CROW_SKELETONS_INDEX_RANGE, CROW_SKELETON);
+      }
+    }
   }
 
   void firstBatch()
   {
+    int max = ENEMIES_MAXIMUM[0];
+
+    handleEnemySpawn(max, 0);
   }
 
   void secondBatch()
   {
+    int max = ENEMIES_MAXIMUM[1];
+
+    handleEnemySpawn(max, 1);
   }
 
   void thirdBatch()
   {
+    int max = ENEMIES_MAXIMUM[2];
+
+    handleEnemySpawn(max, 2);
   }
 
   void fourthBatch()
   {
+    int max = ENEMIES_MAXIMUM[3];
+
+    handleEnemySpawn(max, 3);
   }
 
   void fifthBatch()
   {
+    int max = ENEMIES_MAXIMUM[4];
+
+    handleEnemySpawn(max, 4);
   }
 
   void sixthBatch()
@@ -1285,169 +1116,3 @@ private class ThirdMapEnemiesSpawnManager extends EnemiesSpawnManager
 
 
 // ------------------------------------------------- EXTRA ----------------------------------------------------------
-
-// void damage(int amount)
-// {
-//   if (!isPlayerImmune)
-//   {
-//     playerCurrentHP -= amount;
-//     isPlayerImmune = true;
-//     timeImmune = millis();
-//   }
-// }
-
-// <T_Enemy extends Enemy> void computeEnemy(ArrayList<T_Enemy> inimigos, EnemiesSpawnManager spawnManager) {
-//   for (int i = inimigos.size() - 1; i >= 0; i = i - 1) {
-//     T_Enemy enemy = inimigos.get(i);
-
-//     if (!enemy.getIsDisabled())
-//     {
-
-//       if (enemy.getType() == HEADLESS_SKELETON) 
-//       {
-
-//         HeadlessSkeleton tmp = (HeadlessSkeleton)enemy;
-//         if (tmp.getHeadlessSkeletonHasKicked()) 
-//         {
-//           cabecasEsqueleto.add(new CabecaEsqueleto(tmp.getX(), tmp.getY()));
-//           tmp.setHeadlessSkeletonHasKicked(false);
-//         }
-//       }
-
-//       enemy.updateTarget();
-//       enemy.updateMovement();
-//       enemy.update();
-//       enemy.display();
-
-//       if (enemy.hasExitScreen()) 
-//       {
-//         if (enemy.getType() != SKELETON_HEAD) 
-//         {
-//           switch(enemy.getType()) {
-//           case SKELETON:
-//             spawnManager.setSkeletonTotal(spawnManager.getSkeletonTotal() - 1);
-//             break;
-//           case HEADLESS_SKELETON:
-//             spawnManager.setHeadlessSkeletonTotal(spawnManager.getHeadlessSkeletonTotal() - 1);
-//             break;
-//           case SKELETON_DOG:
-//             spawnManager.setDogSkeletonTotal(spawnManager.getDogSkeletonTotal() - 1);
-//             break;
-//           case SKELETON_CROW:
-//             spawnManager.setCrowSkeletonTotal(spawnManager.getCrowSkeletonTotal() - 1);
-//             break;
-//           case RED_SKELETON:
-//             spawnManager.setRedSkeletonTotal(spawnManager.getRedSkeletonTotal() - 1);
-//             break;
-//           }
-
-//           firstMapEnemiesSpawnManager.setEnemiesTotal(firstMapEnemiesSpawnManager.getEnemiesTotal() - 1);
-//         }
-
-//         int enemyPosition = -1;
-//         do {
-//           enemyPosition = (int)random(0, ENEMIES_SPAWN_X_POSITIONS.length);
-//         } while (enemyPosition == enemyLastPosition);
-
-//         enemyLastPosition = enemyPosition;
-//         enemy.resetVariables(ENEMIES_SPAWN_X_POSITIONS[enemyPosition]);
-//       }
-
-//       if (enemy.hasCollided()) 
-//       {
-//         damage(enemy.getDamage());
-//       }
-//     }
-//   }
-// }
-
-// int enemyLastPosition = -1;
-
-// <E extends Enemy> void deleteEnemy(ArrayList<E> inimigos, EnemiesSpawnManager spawnManager) {
-//   for (int i = inimigos.size() - 1; i >= 0; i--) {
-//     E enemy = inimigos.get(i);
-//     for (int j = firstMap.weaponSpawnManager.weapons.size() - 1; j >= 0; j--) {
-//       Weapon arma = firstMap.weaponSpawnManager.weapons.get(j);
-//       if (arma.hasHit(enemy)) {
-//         totalInimigos--;
-//         hitInimigos(enemy.getX() - 40, enemy.getY() - 20);
-//         if (enemy.getType() != SKELETON_HEAD) {
-//           //switch(enemy.getType()) {
-//           //case SKELETON:
-//           //  spawnManager.setSkeletonTotal(spawnManager.getSkeletonTotal() - 1);
-//           //  break;
-//           //case HEADLESS_SKELETON:
-//           //  spawnManager.setKickingSkeletonTotal(spawnManager.getKickingSkeletonTotal() - 1);
-//           //  break;
-//           //case SKELETON_DOG:
-//           //  spawnManager.setSkeletonDogTotal(spawnManager.getSkeletonDogTotal() - 1);
-//           //  break;
-//           //case SKELETON_CROW:
-//           //  spawnManager.setSkeletonCrowTotal(spawnManager.getSkeletonCrowTotal() - 1);
-//           //  break;
-//           //case RED_SKELETON:
-//           //  spawnManager.setRedSkeletonTotal(spawnManager.getRedSkeletonTotal() - 1);
-//           //  break;
-//           //}
-//           firstMapEnemiesSpawnManager.setEnemiesTotal(firstMapEnemiesSpawnManager.getEnemiesTotal() - 1);
-//         }
-//         inimigos.remove(enemy);
-//       }
-//     }
-//   }
-// }
-
-int tempoGerarInimigo;
-int indexInimigos;
-
-int totalInimigos;
-int maximoInimigosPadre = 2;
-
-int[] valoresInimigosXTerceiroMapaBoss =
-  {25, 350, 679};
-
-void inimigosTodos()
-{
-  if (!jLeiteMorreu)
-  {
-    if (!movementTutorialScreenActive)
-    {
-      if (millis() > tempoGerarInimigo + 250)
-      {
-        if (gameState == GameState.FIRST_MAP.getValue())
-        {
-          indexInimigos = int(random(0, 2));
-        } 
-        if (gameState == GameState.SECOND_MAP.getValue())
-        {
-          indexInimigos = int(random(0, 4));
-        } 
-        if (gameState == GameState.THIRD_MAP.getValue())
-        {
-          indexInimigos = int(random(1, 5));
-        } 
-        if (gameState == GameState.THIRD_BOSS.getValue())
-        {
-          indexInimigos = int(random(0, 5));
-          if (!ataqueLevantemAcontecendo)
-          {
-            maximoInimigosPadre = 2;
-          } else
-          {
-            maximoInimigosPadre = 4;
-          }
-        }
-        tempoGerarInimigo = millis();
-      }
-    }
-  } else
-  {
-    indexInimigos = 6;
-  }
-
-  esqueleto();
-  esqueletoChute();
-  cachorro();
-  corvo();
-  esqueletoRaiva();
-}

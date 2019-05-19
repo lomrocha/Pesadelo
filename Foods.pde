@@ -48,7 +48,7 @@ private class Food extends BaseMovement
   // Reset the amount of health it has recovered.
   void resetVariables()
   {
-    setSelf(new PVector((int)random(100, 670), -50));
+    setSelf(new PVector((int)random(100, 670), -200));
     setIsDisabled(true);
     setAmountRecovered(0);
   }
@@ -56,7 +56,7 @@ private class Food extends BaseMovement
 
 // -------------------------------------- COXINHA ---------------------------------------------------
 
-PImage coxinha;
+PImage coxinhaImage;
 
 final int COXINHA_HEAL = 5;
 
@@ -81,7 +81,7 @@ private class Coxinha extends Food
     this.setShadowImage(foodShadow);
     this.setShadowOffset(new PVector(0, 20));
 
-    this.setSpriteImage(coxinha);
+    this.setSpriteImage(coxinhaImage);
     this.setSpriteInterval(75);
     this.setSpriteWidth(28);
     this.setSpriteHeight(30);
@@ -96,7 +96,7 @@ private class Coxinha extends Food
 
 // -------------------------------------- BRIGADEIRO ---------------------------------------------------
 
-PImage brigadeiro;
+PImage brigadeiroImage;
 
 final int BRIGADEIRO_HEAL = 3;
 
@@ -121,7 +121,7 @@ private class Brigadeiro extends Food
     this.setShadowImage(foodShadow);
     this.setShadowOffset(new PVector(0, 20));
 
-    this.setSpriteImage(brigadeiro);
+    this.setSpriteImage(brigadeiroImage);
     this.setSpriteInterval(75);
     this.setSpriteWidth(32);
     this.setSpriteHeight(31);
@@ -136,7 +136,7 @@ private class Brigadeiro extends Food
 
 // ------------------------------------ PÃO DE QUEIJO -------------------------------------------------
 
-PImage queijo;
+PImage queijoImage;
 
 final int QUEIJO_HEAL = 4;
 
@@ -161,7 +161,7 @@ private class Queijo extends Food
 
     this.setTypeOfObject(index);
 
-    this.setSpriteImage(queijo);
+    this.setSpriteImage(queijoImage);
     this.setSpriteInterval(75);
     this.setSpriteWidth(31);
     this.setSpriteHeight(29);
@@ -306,15 +306,17 @@ private class RegularMapFoodSpawnManager extends FoodSpawnManager
 
   void addFood() 
   {
-    if (getFoodTotal() == 0 && getHasFoodIndexChanged() && millis() > getTimeToGenerateFood() + getIntervalToGenerateFood()) 
+    if (getFoodTotal() == 0 && getHasFoodIndexChanged()) 
     {
       if (getFoodIndex() >= 0 && getFoodIndex() <= 4) 
       {
         foods.get(BRIGADEIRO).setIsDisabled(false);
-      } else if (getFoodIndex() >= 5 && getFoodIndex() <= 7) 
+      } 
+      else if (getFoodIndex() >= 5 && getFoodIndex() <= 7) 
       {
         foods.get(QUEIJO).setIsDisabled(false);
-      } else if (getFoodIndex() >= 8 && getFoodIndex() <= 9) 
+      } 
+      else if (getFoodIndex() >= 8 && getFoodIndex() <= 9) 
       { 
         foods.get(COXINHA).setIsDisabled(false);
       }

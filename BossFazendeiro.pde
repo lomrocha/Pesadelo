@@ -412,7 +412,6 @@ private class Fazendeiro {
 Fazendeiro fazendeiro;
 
 void fazendeiro() {
-  cachorro();
   vidaFazendeiro();
   pneu();
   mimosa();
